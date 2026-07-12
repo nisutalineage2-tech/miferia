@@ -20,7 +20,7 @@
     body { font-family: '<%= fonts.body || 'Inter' %>', sans-serif; background: #fff5f5; color: #831843; }
     h1,h2,h3 { font-family: 'Playfair Display', Georgia, serif; font-weight: 600; }
     :root {
-      --primary: #db2777; --accent: #fdf2f8;
+      --primary: <%= col.btn_primary_bg || store.primary_color || '#db2777' %>; --accent: <%= col.btn_secondary_bg || store.accent_color || '#fdf2f8' %>;
       --body-bg: <%= col.body_bg || '#fff5f5' %>;
       --body-text: <%= col.body_text || '#831843' %>;
       --btn-primary-bg: <%= col.btn_primary_bg || '#db2777' %>;
@@ -30,8 +30,8 @@
     }
     body { background-color: var(--body-bg); color: var(--body-text); }
     .product-card { background: #fff; border: 1px solid #fce7f3; border-radius: 16px; transition: all 0.3s ease; overflow: hidden; }
-    .product-card:hover { transform: translateY(-4px); box-shadow: 0 12px 40px rgba(219,39,119,0.1); border-color: #db2777; }
-    .btn-primary { background: linear-gradient(135deg, #db2777, #be185d); color: #fff; border-radius: 9999px; font-weight: 600; }
+    .product-card:hover { transform: translateY(-4px); box-shadow: 0 12px 40px color-mix(in srgb, var(--primary) 20%, transparent); border-color: var(--primary); }
+    .btn-primary { background: linear-gradient(135deg, var(--primary), var(--accent)); color: #fff; border-radius: 9999px; font-weight: 600; }
     .section-title-serif { font-family: 'Playfair Display', serif; font-weight: 600; letter-spacing: -0.01em; }
     <% if (store.advanced_css) { %><%= store.advanced_css %><% } %>
   </style>
