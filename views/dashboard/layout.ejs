@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= title %> - <%= store.name %></title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/dashboard.css">
+  <style>
+    body { font-family: 'Inter', sans-serif; }
+    .dash-gradient { background: linear-gradient(135deg, #0f0f1a 0%, #1a1a2e 50%, #0f0f1a 100%); }
+    .sidebar-active { background: linear-gradient(135deg, rgba(99,102,241,0.15), rgba(124,58,237,0.15)); border-color: rgba(99,102,241,0.4); }
+    .sidebar-section { font-size: 10px; letter-spacing: 0.1em; }
+  </style>
+</head>
+<body class="dash-gradient min-h-screen">
+  <div class="flex h-screen overflow-hidden">
+    <!-- Sidebar -->
+    <aside class="hidden lg:flex flex-col w-64 bg-[#0f0f1a]/80 border-r border-gray-800/50">
+      <!-- Header -->
+      <div class="p-5 border-b border-gray-800/50">
+        <a href="/dashboard" class="flex items-center gap-2">
+          <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center">
+            <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+            </svg>
+          </div>
+          <div>
+            <span class="text-sm font-bold text-white block leading-tight">TuFerIA</span>
+            <span class="text-xs text-gray-500">Panel de Control</span>
+          </div>
+        </a>
+      </div>
+
+      <!-- Store info -->
+      <div class="px-5 py-3 border-b border-gray-800/30">
+        <div class="flex items-center gap-3">
+          <% if (store.logo) { %>
+            <img src="<%= store.logo %>" alt="" class="w-9 h-9 rounded-lg object-cover">
+          <% } else { %>
+            <div class="w-9 h-9 rounded-lg bg-gradient-to-br from-indigo-500/30 to-purple-500/30 flex items-center justify-center text-indigo-400 text-sm font-bold">
+              <%= store.name.charAt(0).toUpperCase() %>
+            </div>
+          <% } %>
+          <div class="min-w-0">
+            <p class="text-sm font-medium text-white truncate"><%= store.name %></p>
+            <a href="/<%= store.slug %>" target="_blank" class="text-xs text-indigo-400 hover:text-indigo-300 truncate block">
+              /<%= store.slug %> ↗
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Navigation -->
+      <nav class="flex-1 overflow-y-auto p-3 space-y-1">
+        <!-- INICIO -->
+        <a href="/dashboard" class="flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium transition-all <%= section === 'overview' ? 'sidebar-active text-white' : 'text-gray-400 hover:text-white hover:bg-white/5' %>">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
+          </svg>
+          Inicio
+        </a>
+
+        <!-- GESTIÓN -->
+        <div class="sidebar-section px-4 pt-4 pb-1 text-gray-600 font-semibold uppercase tracking-widest">Gestión</div>
+        <a href="/dashboard/productos" class="flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium transition-all pl-9 <%= section === 'products' ? 'sidebar-active text-white' : 'text-gray-400 hover:text-white hover:bg-white/5' %>">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/>
+          </svg>
+          Productos
+        </a>
+        <a href="/dashboard/categorias" class="flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium transition-all pl-9 <%= section === 'categories' ? 'sidebar-active text-white' : 'text-gray-400 hover:text-white hover:bg-white/5' %>">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/>
+          </svg>
+          Categorías
+        </a>
+        <a href="/dashboard/combos" class="flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium transition-all pl-9 <%= section === 'combos' ? 'sidebar-active text-white' : 'text-gray-400 hover:text-white hover:bg-white/5' %>">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z"/>
+          </svg>
+          Combos
+        </a>
+        <a href="/dashboard/pedidos" class="flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium transition-all pl-9 <%= section === 'orders' ? 'sidebar-active text-white' : 'text-gray-400 hover:text-white hover:bg-white/5' %>">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"/>
+          </svg>
+          Pedidos
+        </a>
+
+        <!-- VENTAS -->
+        <div class="sidebar-section px-4 pt-4 pb-1 text-gray-600 font-semibold uppercase tracking-widest">Ventas</div>
+        <a href="/dashboard/configuracion/ventas" class="flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium transition-all pl-9 <%= section === 'sales' ? 'sidebar-active text-white' : 'text-gray-400 hover:text-white hover:bg-white/5' %>">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+          </svg>
+          Precios y Descuentos
+        </a>
+
+        <!-- CANALES DE VENTA -->
+        <div class="sidebar-section px-4 pt-4 pb-1 text-gray-600 font-semibold uppercase tracking-widest">Canales de Venta</div>
+        <a href="/<%= store.slug %>" target="_blank" class="flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium transition-all pl-9 text-gray-400 hover:text-white hover:bg-white/5">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/>
+          </svg>
+          Tienda Online
+        </a>
+
+        <!-- PERSONALIZACIÓN -->
+        <div class="sidebar-section px-4 pt-4 pb-1 text-gray-600 font-semibold uppercase tracking-widest">Personalización</div>
+          <a href="/dashboard/editor" class="flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium transition-all pl-9 <%= section === 'editor' ? 'sidebar-active text-white' : 'text-gray-400 hover:text-white hover:bg-white/5' %>">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+            Diseño
+          </a>
+      </nav>
+
+      <!-- Bottom -->
+      <div class="p-3 border-t border-gray-800/50 space-y-0.5">
+        <!-- CONFIGURACIÓN section -->
+        <div class="sidebar-section px-4 pb-1 text-gray-600 font-semibold uppercase tracking-widest">Configuración</div>
+        <a href="/dashboard/configuracion" class="flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium transition-all pl-9 <%= section === 'settings' ? 'sidebar-active text-white' : 'text-gray-400 hover:text-white hover:bg-white/5' %>">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.066 2.573c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.573 1.066c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.066-2.573c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/>
+          </svg>
+          General
+        </a>
+        <a href="/auth/logout" class="flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium transition-all pl-9 text-gray-400 hover:text-red-400 hover:bg-red-500/5">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
+          </svg>
+          Cerrar Sesión
+        </a>
+      </div>
+    </aside>
+
+    <!-- Mobile Header -->
+    <div class="lg:hidden fixed top-0 left-0 right-0 z-50 bg-[#0f0f1a]/95 backdrop-blur-xl border-b border-gray-800/50">
+      <div class="flex items-center justify-between px-4 h-14">
+        <button id="mobileMenuBtn" class="p-2 text-gray-400 hover:text-white">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+          </svg>
+        </button>
+        <span class="text-sm font-bold text-white"><%= store.name %></span>
+        <a href="/<%= store.slug %>" target="_blank" class="p-2 text-gray-400 hover:text-indigo-400">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/>
+          </svg>
+        </a>
+      </div>
+    </div>
+
+    <!-- Mobile Sidebar Overlay -->
+    <div id="mobileSidebar" class="lg:hidden fixed inset-0 z-40 hidden">
+      <div class="absolute inset-0 bg-black/50" id="sidebarOverlay"></div>
+      <div class="relative w-64 h-full bg-[#0f0f1a] border-r border-gray-800/50 overflow-y-auto pb-8">
+        <div class="p-5 border-b border-gray-800/50">
+          <div class="flex items-center gap-2">
+            <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center">
+              <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+              </svg>
+            </div>
+            <span class="text-sm font-bold text-white">TuFerIA</span>
+          </div>
+        </div>
+
+        <!-- Store info mobile -->
+        <div class="px-5 py-3 border-b border-gray-800/30">
+          <div class="flex items-center gap-3">
+            <% if (store.logo) { %>
+              <img src="<%= store.logo %>" alt="" class="w-8 h-8 rounded-lg object-cover">
+            <% } else { %>
+              <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-indigo-500/30 to-purple-500/30 flex items-center justify-center text-indigo-400 text-sm font-bold">
+                <%= store.name.charAt(0).toUpperCase() %>
+              </div>
+            <% } %>
+            <div class="min-w-0">
+              <p class="text-sm font-medium text-white truncate"><%= store.name %></p>
+              <span class="text-xs text-gray-500 truncate">/<%= store.slug %></span>
+            </div>
+          </div>
+        </div>
+
+        <nav class="p-3 space-y-1">
+          <!-- INICIO -->
+          <a href="/dashboard" class="flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium transition-all <%= section === 'overview' ? 'sidebar-active text-white' : 'text-gray-400 hover:text-white hover:bg-white/5' %>">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+            Inicio
+          </a>
+
+          <!-- GESTIÓN -->
+          <div class="sidebar-section px-4 pt-4 pb-1 text-gray-600 font-semibold uppercase tracking-widest text-[10px]">Gestión</div>
+          <a href="/dashboard/productos" class="flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium transition-all pl-9 <%= section === 'products' ? 'sidebar-active text-white' : 'text-gray-400 hover:text-white hover:bg-white/5' %>">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg>
+            Productos
+          </a>
+          <a href="/dashboard/categorias" class="flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium transition-all pl-9 <%= section === 'categories' ? 'sidebar-active text-white' : 'text-gray-400 hover:text-white hover:bg-white/5' %>">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg>
+            Categorías
+          </a>
+          <a href="/dashboard/combos" class="flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium transition-all pl-9 <%= section === 'combos' ? 'sidebar-active text-white' : 'text-gray-400 hover:text-white hover:bg-white/5' %>">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z"/></svg>
+            Combos
+          </a>
+          <a href="/dashboard/pedidos" class="flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium transition-all pl-9 <%= section === 'orders' ? 'sidebar-active text-white' : 'text-gray-400 hover:text-white hover:bg-white/5' %>">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"/></svg>
+            Pedidos
+          </a>
+
+          <!-- VENTAS -->
+          <div class="sidebar-section px-4 pt-4 pb-1 text-gray-600 font-semibold uppercase tracking-widest text-[10px]">Ventas</div>
+          <a href="/dashboard/configuracion/ventas" class="flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium transition-all pl-9 <%= section === 'sales' ? 'sidebar-active text-white' : 'text-gray-400 hover:text-white hover:bg-white/5' %>">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            Precios y Descuentos
+          </a>
+
+          <!-- CANALES DE VENTA -->
+          <div class="sidebar-section px-4 pt-4 pb-1 text-gray-600 font-semibold uppercase tracking-widest text-[10px]">Canales de Venta</div>
+          <a href="/<%= store.slug %>" target="_blank" class="flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium transition-all pl-9 text-gray-400 hover:text-white hover:bg-white/5">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
+            Tienda Online
+          </a>
+
+          <!-- PERSONALIZACIÓN -->
+          <div class="sidebar-section px-4 pt-4 pb-1 text-gray-600 font-semibold uppercase tracking-widest text-[10px]">Personalización</div>
+          <a href="/dashboard/editor" class="flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium transition-all pl-9 <%= section === 'editor' ? 'sidebar-active text-white' : 'text-gray-400 hover:text-white hover:bg-white/5' %>">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+            Diseño
+          </a>
+
+          <!-- CONFIGURACIÓN -->
+          <div class="sidebar-section px-4 pt-4 pb-1 text-gray-600 font-semibold uppercase tracking-widest text-[10px]">Configuración</div>
+          <a href="/dashboard/configuracion" class="flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium transition-all pl-9 <%= section === 'settings' ? 'sidebar-active text-white' : 'text-gray-400 hover:text-white hover:bg-white/5' %>">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.066 2.573c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.573 1.066c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.066-2.573c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/></svg>
+            General
+          </a>
+          <a href="/auth/logout" class="flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium transition-all pl-9 text-gray-400 hover:text-red-400 hover:bg-red-500/5">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
+            Cerrar Sesión
+          </a>
+        </nav>
+      </div>
+    </div>
+
+    <!-- Main Content -->
+    <main class="flex-1 overflow-y-auto lg:pt-0 pt-14">
+      <div class="p-4 lg:p-8 max-w-7xl mx-auto">
+        <%- body %>
+      </div>
+    </main>
+  </div>
+
+  <script src="/js/dashboard.js"></script>
+</body>
+</html>

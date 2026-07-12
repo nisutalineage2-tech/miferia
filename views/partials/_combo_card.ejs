@@ -1,0 +1,9 @@
+<div class="group relative p-6 rounded-2xl border border-gray-700/30 hover:border-indigo-500/30 bg-[#1a1a2e] hover:bg-[#1e1e32] transition-all overflow-hidden">
+  <div class="text-4xl mb-4">🔥</div>
+  <h3 class="text-lg font-bold text-white mb-1"><%= combo.name %></h3>
+  <p class="text-xs mb-3" style="color: rgba(255,255,255,0.4);"><%= combo.description %></p>
+  <p class="text-2xl font-black mb-4" style="color: var(--primary, '#818cf8');">$<%= combo.price.toFixed(2) %></p>
+  <button onclick="addComboToCart('<%= combo.id %>')" class="btn-primary w-full px-3 py-2 rounded-lg text-xs font-bold uppercase tracking-wider">
+    Agregar
+  </button>
+</div>

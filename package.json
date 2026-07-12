@@ -1,0 +1,24 @@
+{
+  "name": "tuferia",
+  "version": "1.0.0",
+  "description": "Plataforma SaaS de tiendas online - Crea tu tienda rápida",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "seed": "node seed.js",
+    "dev": "node --watch app.js"
+  },
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "better-sqlite3": "^12.11.1",
+    "connect-sqlite3": "^0.9.15",
+    "ejs": "^3.1.10",
+    "express": "^4.21.0",
+    "express-ejs-layouts": "^2.5.1",
+    "express-session": "^1.18.0",
+    "multer": "^1.4.5-lts.1",
+    "slugify": "^1.6.6",
+    "sql.js": "^1.14.1",
+    "uuid": "^10.0.0"
+  }
+}

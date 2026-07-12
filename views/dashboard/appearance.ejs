@@ -1,0 +1,236 @@
+<div class="max-w-2xl mx-auto">
+  <h1 class="text-2xl font-bold text-white mb-2">Apariencia</h1>
+  <p class="text-gray-400 text-sm mb-8">Personalizá el diseño de tu tienda</p>
+
+  <form method="POST" action="/dashboard/apariencia" class="space-y-6">
+    <!-- Template Selection -->
+    <div class="p-6 rounded-2xl bg-[#0f0f1a] border border-gray-800/50">
+      <h2 class="text-lg font-semibold text-white mb-1">Diseño de Tienda</h2>
+      <p class="text-sm text-gray-500 mb-4">Elegí el diseño que más te guste</p>
+      <div class="grid grid-cols-3 gap-4">
+        <% const templates = [
+          { value: 'template1', label: 'Belleza', desc: 'Romántico floral', color: 'pink' },
+          { value: 'template1_v2', label: 'Belleza Gold', desc: 'Premium elegante', color: 'yellow' },
+          { value: 'template1_v3', label: 'Belleza Soft', desc: 'Clean rosado', color: 'pink' },
+          { value: 'template2', label: 'Moda', desc: 'Fashion clean', color: 'gray' },
+          { value: 'template2_v2', label: 'Moda Edit', desc: 'Editorial serif', color: 'gray' },
+          { value: 'template2_v3', label: 'Moda Street', desc: 'Urbano bold', color: 'gray' },
+          { value: 'template3', label: 'Hogar', desc: 'Deco cálido', color: 'amber' },
+          { value: 'template3_v2', label: 'Hogar Rust', desc: 'Rústico natural', color: 'amber' },
+          { value: 'template3_v3', label: 'Hogar Nordic', desc: 'Escandinavo', color: 'emerald' },
+          { value: 'template4', label: 'Tecno', desc: 'Cyber oscuro', color: 'cyan' },
+          { value: 'template4_v2', label: 'Tecno Game', desc: 'Neon vibrante', color: 'fuchsia' },
+          { value: 'template4_v3', label: 'Tecno Apple', desc: 'Minimal clean', color: 'blue' },
+          { value: 'template5', label: 'Alimentos', desc: 'Gourmet clásico', color: 'amber' },
+          { value: 'template5_v2', label: 'Alimentos Org', desc: 'Orgánico verde', color: 'emerald' },
+          { value: 'template5_v3', label: 'Alimentos Fast', desc: 'Fast vibrante', color: 'orange' },
+          { value: 'template6', label: 'Bebés', desc: 'Infantil pastel', color: 'sky' },
+          { value: 'template6_v2', label: 'Bebés Modern', desc: 'Flat moderno', color: 'sky' },
+          { value: 'template6_v3', label: 'Bebés Adv', desc: 'Aventura', color: 'rose' },
+          { value: 'template7', label: 'Deportes', desc: 'Fitness clean', color: 'orange' },
+          { value: 'template7_v2', label: 'Deportes X', desc: 'Extreme neón', color: 'rose' },
+          { value: 'template7_v3', label: 'Deportes Retro', desc: 'Vintage', color: 'amber' },
+          { value: 'template8', label: 'Joyería', desc: 'Lujo oscuro', color: 'yellow' },
+          { value: 'template8_v2', label: 'Joyería Min', desc: 'Minimal blanco', color: 'gray' },
+          { value: 'template8_v3', label: 'Joyería Boho', desc: 'Artesanal', color: 'emerald' },
+          { value: 'template9', label: 'Mascotas', desc: 'Pets friendly', color: 'green' },
+          { value: 'template9_v2', label: 'Mascotas Prem', desc: 'Premium dark', color: 'green' },
+          { value: 'template9_v3', label: 'Mascotas Wild', desc: 'Selva aventura', color: 'emerald' },
+          { value: 'template10', label: 'Librería', desc: 'Clásico libros', color: 'stone' },
+          { value: 'template10_v2', label: 'Librería Mod', desc: 'Académico dark', color: 'stone' },
+          { value: 'template10_v3', label: 'Librería Kids', desc: 'Infantil color', color: 'rose' }
+        ]; %>
+        <% templates.forEach(t => { %>
+          <label class="cursor-pointer relative p-4 rounded-xl bg-[#1a1a2e] border-2 <%= store.template === t.value ? 'border-indigo-500 bg-indigo-500/10' : 'border-gray-700/50 hover:border-gray-600' %> transition-all text-center">
+            <input type="radio" name="template" value="<%= t.value %>" class="sr-only" <%= store.template === t.value ? 'checked' : '' %>>
+            <div class="w-10 h-10 mx-auto rounded-lg bg-gradient-to-br from-<%= t.color %>-500/20 to-<%= t.color %>-500/20 flex items-center justify-center mb-2">
+              <svg class="w-5 h-5 text-<%= t.color %>-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6z"/>
+              </svg>
+            </div>
+            <span class="text-sm font-medium text-white block"><%= t.label %></span>
+            <span class="text-xs text-gray-500"><%= t.desc %></span>
+          </label>
+        <% }); %>
+      </div>
+    </div>
+
+    <!-- Images Section -->
+    <div class="p-6 rounded-2xl bg-[#0f0f1a] border border-gray-800/50">
+      <h2 class="text-lg font-semibold text-white mb-4">Imágenes de la Tienda</h2>
+      
+      <!-- Logo -->
+      <div class="mb-6">
+        <label class="block text-sm font-medium text-gray-300 mb-2">Logo de la Tienda</label>
+        <div class="flex items-center gap-4">
+          <div id="logoPreview" class="w-20 h-20 rounded-xl bg-[#1a1a2e] border-2 border-dashed border-gray-700/50 flex items-center justify-center overflow-hidden">
+            <% if (store.logo) { %>
+              <img src="<%= store.logo %>" class="w-full h-full object-contain">
+            <% } else { %>
+              <svg class="w-8 h-8 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+              </svg>
+            <% } %>
+          </div>
+          <div class="flex-1">
+            <label class="cursor-pointer inline-flex items-center gap-2 px-4 py-2.5 text-sm font-medium text-gray-300 bg-white/5 border border-gray-700/50 rounded-xl hover:bg-white/10 hover:text-white transition-colors">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/>
+              </svg>
+              Subir Logo
+              <input type="file" accept="image/*" class="hidden" id="logoInput">
+            </label>
+            <input type="hidden" name="logo" id="logoUrl" value="<%= store.logo || '' %>">
+            <% if (store.logo) { %>
+              <button type="button" onclick="removeImage('logo')" class="ml-2 text-xs text-red-400 hover:text-red-300">Eliminar</button>
+            <% } %>
+            <p class="text-xs text-gray-500 mt-2">Recomendado: 400x400px, PNG o SVG con fondo transparente</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Banner -->
+      <div>
+        <label class="block text-sm font-medium text-gray-300 mb-2">Banner / Portada</label>
+        <div id="bannerPreview" class="w-full h-40 rounded-xl bg-[#1a1a2e] border-2 border-dashed border-gray-700/50 flex items-center justify-center overflow-hidden mb-3 cursor-pointer hover:border-indigo-500/30 transition-colors" onclick="document.getElementById('bannerInput').click()">
+          <% if (store.banner) { %>
+            <img src="<%= store.banner %>" class="w-full h-full object-cover">
+          <% } else { %>
+            <div class="text-center">
+              <svg class="w-10 h-10 text-gray-600 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+              </svg>
+              <span class="text-sm text-gray-500">Click para subir banner</span>
+              <p class="text-xs text-gray-600 mt-1">Recomendado: 1920x400px</p>
+            </div>
+          <% } %>
+          <input type="file" accept="image/*" class="hidden" id="bannerInput">
+        </div>
+        <input type="hidden" name="banner" id="bannerUrl" value="<%= store.banner || '' %>">
+        <% if (store.banner) { %>
+          <button type="button" onclick="removeImage('banner')" class="text-xs text-red-400 hover:text-red-300">Eliminar banner</button>
+        <% } %>
+      </div>
+    </div>
+
+    <!-- Colors -->
+    <div class="p-6 rounded-2xl bg-[#0f0f1a] border border-gray-800/50">
+      <h2 class="text-lg font-semibold text-white mb-4">Colores</h2>
+      <div class="grid grid-cols-2 gap-6">
+        <div>
+          <label class="block text-sm font-medium text-gray-300 mb-2">Color Principal</label>
+          <div class="flex gap-3 items-center">
+            <input type="color" name="primary_color" value="<%= store.primary_color %>"
+              class="w-12 h-12 rounded-xl border border-gray-700/50 cursor-pointer">
+            <span class="text-sm text-gray-400"><%= store.primary_color %></span>
+          </div>
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-300 mb-2">Color de Acento</label>
+          <div class="flex gap-3 items-center">
+            <input type="color" name="accent_color" value="<%= store.accent_color %>"
+              class="w-12 h-12 rounded-xl border border-gray-700/50 cursor-pointer">
+            <span class="text-sm text-gray-400"><%= store.accent_color %></span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Info -->
+    <div class="p-6 rounded-2xl bg-[#0f0f1a] border border-gray-800/50">
+      <h2 class="text-lg font-semibold text-white mb-4">Información de la Tienda</h2>
+      <div class="space-y-4">
+        <div>
+          <label class="block text-sm font-medium text-gray-300 mb-2">Nombre de la Tienda</label>
+          <input type="text" name="name" value="<%= store.name %>"
+            class="w-full px-4 py-3 bg-[#1a1a2e] border border-gray-700/50 rounded-xl text-white focus:outline-none focus:border-indigo-500/50 transition-colors">
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-300 mb-2">Descripción</label>
+          <textarea name="description" rows="2"
+            class="w-full px-4 py-3 bg-[#1a1a2e] border border-gray-700/50 rounded-xl text-white focus:outline-none focus:border-indigo-500/50 transition-colors"><%= store.description %></textarea>
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-300 mb-2">Texto "Sobre nosotros"</label>
+          <textarea name="about_text" rows="3"
+            class="w-full px-4 py-3 bg-[#1a1a2e] border border-gray-700/50 rounded-xl text-white focus:outline-none focus:border-indigo-500/50 transition-colors"><%= store.about_text || '' %></textarea>
+        </div>
+      </div>
+    </div>
+
+    <!-- Social -->
+    <div class="p-6 rounded-2xl bg-[#0f0f1a] border border-gray-800/50">
+      <h2 class="text-lg font-semibold text-white mb-4">Redes Sociales y Contacto</h2>
+      <div class="space-y-4">
+        <div>
+          <label class="block text-sm font-medium text-gray-300 mb-2">WhatsApp (con código de país)</label>
+          <input type="text" name="whatsapp" value="<%= store.whatsapp || '' %>" placeholder="Ej: 5491123456789"
+            class="w-full px-4 py-3 bg-[#1a1a2e] border border-gray-700/50 rounded-xl text-white focus:outline-none focus:border-indigo-500/50 transition-colors">
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-300 mb-2">Instagram</label>
+          <input type="text" name="instagram" value="<%= store.instagram || '' %>" placeholder="Ej: @tutienda"
+            class="w-full px-4 py-3 bg-[#1a1a2e] border border-gray-700/50 rounded-xl text-white focus:outline-none focus:border-indigo-500/50 transition-colors">
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-300 mb-2">Facebook</label>
+          <input type="text" name="facebook" value="<%= store.facebook || '' %>" placeholder="Ej: tutienda"
+            class="w-full px-4 py-3 bg-[#1a1a2e] border border-gray-700/50 rounded-xl text-white focus:outline-none focus:border-indigo-500/50 transition-colors">
+        </div>
+      </div>
+    </div>
+
+    <button type="submit"
+      class="w-full py-3 px-6 bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-semibold rounded-xl hover:from-indigo-500 hover:to-purple-500 transition-all shadow-lg shadow-indigo-600/25">
+      Guardar Cambios
+    </button>
+  </form>
+</div>
+
+<script>
+// Upload image via API and update preview
+async function uploadImage(file, type) {
+  const formData = new FormData();
+  formData.append('file', file);
+  
+  const endpoint = type === 'logo' ? '/api/upload/logo' : '/api/upload/banner';
+  formData.append('store_id', '<%= store.id %>');
+
+  const res = await fetch(endpoint, { method: 'POST', body: formData });
+  const data = await res.json();
+  
+  if (data.url) {
+    if (type === 'logo') {
+      document.getElementById('logoUrl').value = data.url;
+      document.getElementById('logoPreview').innerHTML = `<img src="${data.url}" class="w-full h-full object-contain">`;
+    } else {
+      document.getElementById('bannerUrl').value = data.url;
+      document.getElementById('bannerPreview').innerHTML = `<img src="${data.url}" class="w-full h-full object-cover">`;
+    }
+  }
+}
+
+function removeImage(type) {
+  if (type === 'logo') {
+    document.getElementById('logoUrl').value = '';
+    document.getElementById('logoPreview').innerHTML = `<svg class="w-8 h-8 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>`;
+  } else {
+    document.getElementById('bannerUrl').value = '';
+    document.getElementById('bannerPreview').innerHTML = `<div class="text-center">
+      <svg class="w-10 h-10 text-gray-600 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+      </svg>
+      <span class="text-sm text-gray-500">Click para subir banner</span>
+      <p class="text-xs text-gray-600 mt-1">Recomendado: 1920x400px</p>
+    </div>`;
+  }
+}
+
+document.getElementById('logoInput')?.addEventListener('change', function(e) {
+  if (this.files && this.files[0]) uploadImage(this.files[0], 'logo');
+});
+
+document.getElementById('bannerInput')?.addEventListener('change', function(e) {
+  if (this.files && this.files[0]) uploadImage(this.files[0], 'banner');
+});
+</script>

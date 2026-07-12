@@ -1,0 +1,142 @@
+<!-- Header -->
+<div class="flex items-center justify-between mb-8">
+  <div>
+    <h1 class="text-2xl lg:text-3xl font-bold text-white">¡Bienvenido, <%= user.name %>!</h1>
+    <p class="text-gray-400 mt-1">Panel de control de <strong class="text-white"><%= store.name %></strong></p>
+  </div>
+  <a href="/<%= store.slug %>" target="_blank"
+    class="hidden sm:inline-flex items-center gap-2 px-4 py-2.5 text-sm font-medium text-white bg-gradient-to-r from-indigo-600 to-purple-600 rounded-xl hover:from-indigo-500 hover:to-purple-500 transition-all shadow-lg shadow-indigo-600/25">
+    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/>
+    </svg>
+    Ver Tienda
+  </a>
+</div>
+
+<!-- Store URL card -->
+<div class="mb-8 p-4 bg-indigo-500/5 border border-indigo-500/20 rounded-xl">
+  <p class="text-sm text-gray-400 mb-1">🌐 URL de tu tienda:</p>
+  <a href="/<%= store.slug %>" target="_blank" class="text-indigo-400 hover:text-indigo-300 font-medium text-lg">
+    tuferia.com/<%= store.slug %> ↗
+  </a>
+</div>
+
+<!-- Stats Cards -->
+<div class="grid grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6 mb-8">
+  <div class="p-5 rounded-2xl bg-[#0f0f1a] border border-gray-800/50">
+    <div class="w-10 h-10 rounded-xl bg-blue-500/20 flex items-center justify-center mb-3">
+      <svg class="w-5 h-5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/>
+      </svg>
+    </div>
+    <p class="text-3xl font-bold text-white"><%= productsCount %></p>
+    <p class="text-sm text-gray-500">Productos</p>
+  </div>
+  <div class="p-5 rounded-2xl bg-[#0f0f1a] border border-gray-800/50">
+    <div class="w-10 h-10 rounded-xl bg-purple-500/20 flex items-center justify-center mb-3">
+      <svg class="w-5 h-5 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/>
+      </svg>
+    </div>
+    <p class="text-3xl font-bold text-white"><%= categoriesCount %></p>
+    <p class="text-sm text-gray-500">Categorías</p>
+  </div>
+  <div class="p-5 rounded-2xl bg-[#0f0f1a] border border-gray-800/50">
+    <div class="w-10 h-10 rounded-xl bg-green-500/20 flex items-center justify-center mb-3">
+      <svg class="w-5 h-5 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
+      </svg>
+    </div>
+    <p class="text-3xl font-bold text-white"><%= ordersCount %></p>
+    <p class="text-sm text-gray-500">Pedidos</p>
+  </div>
+  <div class="p-5 rounded-2xl bg-[#0f0f1a] border border-gray-800/50">
+    <div class="w-10 h-10 rounded-xl bg-amber-500/20 flex items-center justify-center mb-3">
+      <svg class="w-5 h-5 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+      </svg>
+    </div>
+    <p class="text-3xl font-bold text-white"><%= ({'template1':'Belleza Clásico','template1_v2':'Belleza Gold','template1_v3':'Belleza Soft','template2':'Moda Clean','template2_v2':'Moda Editorial','template2_v3':'Moda Street','template3':'Hogar Deco','template3_v2':'Hogar Rústico','template3_v3':'Hogar Nórdico','template4':'Tecno Dark','template4_v2':'Tecno Gamer','template4_v3':'Tecno Apple','template5':'Alimentos Gourmet','template5_v2':'Alimentos Orgánico','template5_v3':'Alimentos Fast','template6':'Bebés Pastel','template6_v2':'Bebés Modern','template6_v3':'Bebés Aventura','template7':'Deportes Fitness','template7_v2':'Deportes Extreme','template7_v3':'Deportes Retro','template8':'Joyería Lujo','template8_v2':'Joyería Minimal','template8_v3':'Joyería Boho','template9':'Mascotas Pets','template9_v2':'Mascotas Premium','template9_v3':'Mascotas Wild','template10':'Librería Clásico','template10_v2':'Librería Moderno','template10_v3':'Librería Kids'})[store.template] || 'Personalizado' %>
+    <p class="text-sm text-gray-500">Diseño Activo</p>
+  </div>
+</div>
+
+<!-- Quick Actions -->
+<div class="grid lg:grid-cols-2 gap-6 mb-8">
+  <div class="p-6 rounded-2xl bg-[#0f0f1a] border border-gray-800/50">
+    <h3 class="text-lg font-semibold text-white mb-4">Acciones Rápidas</h3>
+    <div class="grid grid-cols-2 gap-3">
+      <a href="/dashboard/productos/nuevo" class="p-4 rounded-xl bg-white/5 border border-gray-700/30 hover:bg-indigo-500/10 hover:border-indigo-500/30 transition-all text-center">
+        <svg class="w-6 h-6 text-indigo-400 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
+        </svg>
+        <span class="text-sm text-gray-300">Nuevo Producto</span>
+      </a>
+      <a href="/dashboard/categorias" class="p-4 rounded-xl bg-white/5 border border-gray-700/30 hover:bg-purple-500/10 hover:border-purple-500/30 transition-all text-center">
+        <svg class="w-6 h-6 text-purple-400 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
+        </svg>
+        <span class="text-sm text-gray-300">Nueva Categoría</span>
+      </a>
+      <a href="/dashboard/apariencia" class="p-4 rounded-xl bg-white/5 border border-gray-700/30 hover:bg-amber-500/10 hover:border-amber-500/30 transition-all text-center">
+        <svg class="w-6 h-6 text-amber-400 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01"/>
+        </svg>
+        <span class="text-sm text-gray-300">Personalizar</span>
+      </a>
+      <a href="/<%= store.slug %>" target="_blank" class="p-4 rounded-xl bg-white/5 border border-gray-700/30 hover:bg-green-500/10 hover:border-green-500/30 transition-all text-center">
+        <svg class="w-6 h-6 text-green-400 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/>
+        </svg>
+        <span class="text-sm text-gray-300">Ver Tienda</span>
+      </a>
+    </div>
+  </div>
+
+  <!-- Recent Orders -->
+  <div class="p-6 rounded-2xl bg-[#0f0f1a] border border-gray-800/50">
+    <h3 class="text-lg font-semibold text-white mb-4">Últimos Pedidos</h3>
+    <% if (recentOrders.length > 0) { %>
+      <div class="space-y-3">
+        <% recentOrders.forEach(order => { %>
+          <div class="flex items-center justify-between p-3 rounded-xl bg-white/[0.03] border border-white/[0.05]">
+            <div class="min-w-0">
+              <p class="text-sm font-medium text-white truncate"><%= order.customer_name %></p>
+              <p class="text-xs text-gray-500"><%= new Date(order.created_at).toLocaleDateString('es-AR') %> - $<%= order.total.toFixed(2) %></p>
+            </div>
+            <span class="text-xs px-2.5 py-1 rounded-full font-medium <%= order.status === 'completed' ? 'bg-green-500/10 text-green-400' : order.status === 'cancelled' ? 'bg-red-500/10 text-red-400' : 'bg-amber-500/10 text-amber-400' %>">
+              <%= order.status === 'pending' ? 'Pendiente' : order.status === 'completed' ? 'Completado' : order.status === 'cancelled' ? 'Cancelado' : order.status %>
+            </span>
+          </div>
+        <% }); %>
+      </div>
+    <% } else { %>
+      <div class="text-center py-8">
+        <svg class="w-12 h-12 text-gray-600 mx-auto mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
+        </svg>
+        <p class="text-gray-500 text-sm">Aún no tenés pedidos</p>
+        <p class="text-gray-600 text-xs mt-1">Compartí tu tienda para empezar a recibir ventas</p>
+      </div>
+    <% } %>
+  </div>
+</div>
+
+<!-- Tips -->
+<div class="p-6 rounded-2xl bg-gradient-to-br from-indigo-500/5 to-purple-500/5 border border-indigo-500/10">
+  <h3 class="text-lg font-semibold text-white mb-3">🚀 Tips para empezar</h3>
+  <div class="grid sm:grid-cols-3 gap-4">
+    <div class="flex gap-3">
+      <span class="w-6 h-6 rounded-full bg-indigo-500/20 text-indigo-400 text-xs font-bold flex items-center justify-center shrink-0 mt-0.5">1</span>
+      <p class="text-sm text-gray-400">Creá categorías para organizar tus productos</p>
+    </div>
+    <div class="flex gap-3">
+      <span class="w-6 h-6 rounded-full bg-purple-500/20 text-purple-400 text-xs font-bold flex items-center justify-center shrink-0 mt-0.5">2</span>
+      <p class="text-sm text-gray-400">Agregá productos con fotos y precios claros</p>
+    </div>
+    <div class="flex gap-3">
+      <span class="w-6 h-6 rounded-full bg-pink-500/20 text-pink-400 text-xs font-bold flex items-center justify-center shrink-0 mt-0.5">3</span>
+      <p class="text-sm text-gray-400">Personalizá colores y subí tu logo en Apariencia</p>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,303 @@
+<%# Shared page content for all templates -- new pages: shop, subscriptions, about, contact, account, login, register %>
+
+<% if (page === 'shop') { %>
+  <!-- SHOP WITH SIMPLE FILTERS -->
+  <% const q = query || {}; %>
+  <div class="max-w-7xl mx-auto px-4 py-6">
+    <div class="flex gap-6">
+      <!-- Filters Sidebar - sticky -->
+      <div class="w-72 shrink-0 hidden lg:block">
+        <div class="sticky top-24">
+          <div class="bg-white border border-gray-200 rounded-xl p-5 space-y-5">
+            <h3 class="text-sm font-bold text-gray-900">Filtros</h3>
+            <form method="GET" action="/<%= store.slug %>/tienda" id="filterForm">
+
+              <!-- Categorías -->
+              <% if ((categories || []).length > 0) { %>
+              <div>
+                <h4 class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Categorías</h4>
+                <div class="space-y-1">
+                  <label class="flex items-center gap-2 cursor-pointer py-1 px-1.5 rounded hover:bg-gray-50">
+                    <input type="radio" name="category" value="" <%= !q.category ? 'checked' : '' %> class="w-3.5 h-3.5 text-gray-900" onchange="this.form.submit()">
+                    <span class="text-sm text-gray-700">Todas</span>
+                  </label>
+                  <% categories.forEach(c => { %>
+                    <label class="flex items-center gap-2 cursor-pointer py-1 px-1.5 rounded hover:bg-gray-50">
+                      <input type="radio" name="category" value="<%= c.id %>" <%= q.category === c.id ? 'checked' : '' %> class="w-3.5 h-3.5 text-gray-900" onchange="this.form.submit()">
+                      <span class="text-sm text-gray-700"><%= c.name %></span>
+                    </label>
+                  <% }); %>
+                </div>
+              </div>
+              <% } %>
+
+              <!-- Precio -->
+              <div>
+                <h4 class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Precio</h4>
+                <% const pr = priceRange || {}; %>
+                <input type="range" name="max_price" min="<%= pr.min_price || 0 %>" max="<%= pr.max_price || 100000 %>" value="<%= q.max_price || pr.max_price || 100000 %>" class="w-full accent-gray-900" oninput="document.getElementById('priceLabel').textContent = '$' + Number(this.value).toLocaleString(); document.getElementById('priceHidden').value = this.value" onchange="this.form.submit()">
+                <div class="flex justify-between text-xs text-gray-500 mt-1">
+                  <span>$<%= (pr.min_price || 0).toLocaleString() %></span>
+                  <span id="priceLabel">$<%= Number(q.max_price || pr.max_price || 100000).toLocaleString() %></span>
+                </div>
+                <input type="hidden" id="priceHidden" name="max_price" value="<%= q.max_price || pr.max_price || '' %>">
+              </div>
+
+              <!-- Colores / Talles -->
+              <% const allVariants = (typeof filterData !== 'undefined' && filterData && filterData.variants) ? filterData.variants : []; %>
+              <% if (allVariants.length > 0) { %>
+              <div>
+                <h4 class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Colores / Talles</h4>
+                <div class="space-y-1 max-h-40 overflow-y-auto">
+                  <% allVariants.forEach(v => { %>
+                    <label class="flex items-center gap-2 cursor-pointer py-1 px-1.5 rounded hover:bg-gray-50">
+                      <input type="radio" name="variant" value="<%= v %>" <%= q.variant === v ? 'checked' : '' %> class="w-3.5 h-3.5 text-gray-900" onchange="this.form.submit()">
+                      <span class="text-sm text-gray-700"><%= v %></span>
+                    </label>
+                  <% }); %>
+                </div>
+              </div>
+              <% } %>
+
+              <!-- Envío -->
+              <div class="pt-1">
+                <label class="flex items-center gap-2.5 cursor-pointer py-2 px-1.5 rounded hover:bg-gray-50 border border-gray-100">
+                  <input type="checkbox" name="free_shipping" value="1" <%= q.free_shipping === '1' ? 'checked' : '' %> class="w-4 h-4 rounded border-gray-300 text-gray-900 focus:ring-gray-900" onchange="this.form.submit()">
+                  <div>
+                    <span class="text-sm font-medium text-gray-800">Envío gratis</span>
+                    <p class="text-xs text-gray-400">Solo productos con envío sin cargo</p>
+                  </div>
+                </label>
+              </div>
+
+              <div class="pt-2 space-y-2">
+                <button type="submit" class="w-full py-2.5 bg-gray-900 text-white text-sm font-semibold rounded-lg hover:bg-gray-800 transition-colors">Aplicar</button>
+                <a href="/<%= store.slug %>/tienda" class="block text-center text-xs text-gray-400 hover:text-gray-700">Limpiar filtros</a>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <!-- Product Grid -->
+      <div class="flex-1 min-w-0">
+        <div class="flex items-center justify-between mb-4">
+          <h1 class="text-xl font-bold text-gray-900">Tienda</h1>
+          <div class="flex items-center gap-3">
+            <span class="text-sm text-gray-500"><%= (products || []).length %> productos</span>
+            <select name="order_by" form="filterForm" class="text-sm border border-gray-300 rounded-lg px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-gray-900" onchange="this.form.submit()">
+              <option value="">Más recientes</option>
+              <option value="price_asc" <%= q.order_by === 'price_asc' ? 'selected' : '' %>>Menor precio</option>
+              <option value="price_desc" <%= q.order_by === 'price_desc' ? 'selected' : '' %>>Mayor precio</option>
+              <option value="name" <%= q.order_by === 'name' ? 'selected' : '' %>>A-Z</option>
+            </select>
+          </div>
+        </div>
+        <!-- Mobile filters -->
+        <div class="lg:hidden mb-4 flex flex-wrap gap-2">
+          <% (categories || []).forEach(c => { %>
+            <a href="/<%= store.slug %>/tienda?category=<%= c.id %>" class="shrink-0 px-3 py-1.5 text-xs font-medium rounded-full <%= q.category === c.id ? 'bg-gray-900 text-white' : 'bg-gray-100 text-gray-700' %>"><%= c.name %></a>
+          <% }); %>
+        </div>
+        <% if ((products || []).length > 0) { %>
+          <div class="grid grid-cols-2 md:grid-cols-3 gap-4 lg:gap-6">
+            <% products.forEach(p => { %>
+              <%- include('_product_card', { product: p, store, locals }); %>
+            <% }); %>
+          </div>
+        <% } else { %>
+          <div class="text-center py-16 text-gray-400">
+            <svg class="w-16 h-16 mx-auto mb-4 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"/></svg>
+            <p>No se encontraron productos con esos filtros</p>
+            <a href="/<%= store.slug %>/tienda" class="text-sm text-gray-600 underline mt-2 inline-block">Limpiar filtros</a>
+          </div>
+        <% } %>
+      </div>
+    </div>
+  </div>
+
+<% } else if (page === 'subscriptions') { %>
+  <!-- NEWSLETTER SUBSCRIPTION PAGE -->
+  <div class="max-w-2xl mx-auto px-4 py-16 lg:py-24 text-center">
+    <div class="text-6xl mb-6">📬</div>
+    <h1 class="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">Suscribite a nuestro Newsletter</h1>
+    <p class="text-gray-500 mb-8">Recibí ofertas exclusivas, novedades y contenido especial directamente en tu email.</p>
+
+    <form onsubmit="event.preventDefault(); var f=this; fetch('/api/newsletter/subscribe',{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:new URLSearchParams(new FormData(f))}).then(r=>r.json()).then(d=>{alert(d.message||'¡Gracias por suscribirte!');f.reset()})" class="max-w-md mx-auto">
+      <input type="hidden" name="store_id" value="<%= store.id %>">
+      <div class="flex gap-3">
+        <input type="email" name="email" required placeholder="tu@email.com" class="flex-1 px-4 py-3 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-gray-900">
+        <button type="submit" class="px-6 py-3 bg-gray-900 text-white rounded-xl text-sm font-medium hover:bg-gray-800 transition-colors">Suscribir</button>
+      </div>
+      <p class="text-xs text-gray-400 mt-3">Sin spam. Podés darte de baja cuando quieras.</p>
+    </form>
+
+    <!-- Combos section -->
+    <% if ((combos || []).length > 0) { %>
+      <div class="mt-16">
+        <h2 class="text-2xl font-bold text-gray-900 mb-6">🔥 Combos Especiales</h2>
+        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6 text-left">
+          <% combos.forEach(combo => { %>
+            <div class="p-6 rounded-2xl bg-white border border-gray-100 shadow-sm">
+              <h3 class="text-lg font-bold text-gray-900"><%= combo.name %></h3>
+              <p class="text-sm text-gray-500 mb-3"><%= combo.description %></p>
+              <p class="text-2xl font-extrabold" style="color: <%= store.primary_color %>">$<%= combo.price.toFixed(2) %></p>
+              <button onclick="addComboToCart('<%= combo.id %>')" class="mt-3 w-full px-4 py-2.5 text-sm font-semibold text-white rounded-xl transition-all" style="background-color: <%= store.primary_color %>;">Agregar al Carrito</button>
+            </div>
+          <% }); %>
+        </div>
+      </div>
+    <% } %>
+  </div>
+
+<% } else if (page === 'about') { %>
+  <!-- ABOUT / NOSOTROS -->
+  <div class="max-w-3xl mx-auto px-4 py-16 lg:py-24">
+    <h1 class="text-3xl lg:text-4xl font-bold text-gray-900 mb-6">Nosotros</h1>
+    <% if (store.banner) { %>
+      <img src="<%= store.banner %>" alt="" class="w-full h-48 sm:h-64 object-cover rounded-2xl mb-8">
+    <% } %>
+    <div class="prose prose-gray max-w-none">
+      <p class="text-lg text-gray-600 leading-relaxed mb-6"><%= store.description %></p>
+      <% if (store.about_text) { %>
+        <div class="text-gray-600 leading-relaxed whitespace-pre-line"><%= store.about_text %></div>
+      <% } else { %>
+        <p class="text-gray-400 italic">Completá la información de tu tienda desde el panel de administración.</p>
+      <% } %>
+    </div>
+    <% if (store.whatsapp || store.instagram) { %>
+      <div class="mt-8 pt-8 border-t border-gray-100">
+        <p class="text-sm text-gray-500 mb-3">Seguinos en redes:</p>
+        <div class="flex gap-3">
+          <% if (store.instagram) { %><a href="https://instagram.com/<%= store.instagram.replace('@','') %>" target="_blank" class="px-4 py-2 bg-gray-100 rounded-lg text-sm text-gray-700 hover:bg-gray-200">Instagram</a><% } %>
+          <% if (store.whatsapp) { %><a href="https://wa.me/<%= store.whatsapp %>" target="_blank" class="px-4 py-2 bg-gray-100 rounded-lg text-sm text-gray-700 hover:bg-gray-200">WhatsApp</a><% } %>
+        </div>
+      </div>
+    <% } %>
+  </div>
+
+<% } else if (page === 'contact') { %>
+  <!-- CONTACT PAGE -->
+  <div class="max-w-2xl mx-auto px-4 py-16 lg:py-24">
+    <h1 class="text-3xl lg:text-4xl font-bold text-gray-900 mb-2">Contacto</h1>
+    <p class="text-gray-500 mb-8">Escribinos y te respondemos a la brevedad.</p>
+    <% if (msg === 'ok') { %>
+      <div class="p-4 mb-6 bg-green-50 border border-green-200 rounded-xl text-green-700 text-sm">✅ Mensaje enviado correctamente. Te contactaremos pronto.</div>
+    <% } %>
+    <form method="POST" action="/<%= store.slug %>/contacto" class="space-y-4">
+      <div class="grid grid-cols-2 gap-4">
+        <input type="text" name="name" required placeholder="Tu nombre" class="w-full px-4 py-3 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-gray-900">
+        <input type="email" name="email" required placeholder="Tu email" class="w-full px-4 py-3 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-gray-900">
+      </div>
+      <textarea name="message" required rows="5" placeholder="Escribí tu mensaje..." class="w-full px-4 py-3 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-gray-900"></textarea>
+      <button type="submit" class="w-full py-3 bg-gray-900 text-white text-sm font-medium rounded-xl hover:bg-gray-800 transition-colors">Enviar Mensaje</button>
+    </form>
+    <% if (store.whatsapp) { %>
+      <div class="mt-8 p-4 bg-gray-50 rounded-xl text-center">
+        <p class="text-sm text-gray-500 mb-2">O escribinos por WhatsApp</p>
+        <a href="https://wa.me/<%= store.whatsapp %>" target="_blank" class="inline-flex items-center gap-2 px-4 py-2 bg-green-500 text-white rounded-lg text-sm font-medium hover:bg-green-600">💬 Chat de WhatsApp</a>
+      </div>
+    <% } %>
+  </div>
+
+<% } else if (page === 'login') { %>
+  <!-- CUSTOMER LOGIN -->
+  <div class="max-w-md mx-auto px-4 py-16 lg:py-24">
+    <h1 class="text-2xl font-bold text-gray-900 text-center mb-2">Iniciar Sesión</h1>
+    <p class="text-gray-500 text-center text-sm mb-8">Ingresá a tu cuenta para ver tus pedidos</p>
+    <% if (error) { %><div class="p-3 mb-4 bg-red-50 border border-red-200 rounded-xl text-red-600 text-sm"><%= error %></div><% } %>
+    <form method="POST" action="/customer/<%= store.slug %>/login" class="space-y-4">
+      <input type="email" name="email" required placeholder="Email" class="w-full px-4 py-3 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-gray-900">
+      <input type="password" name="password" required placeholder="Contraseña" class="w-full px-4 py-3 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-gray-900">
+      <button type="submit" class="w-full py-3 bg-gray-900 text-white text-sm font-medium rounded-xl hover:bg-gray-800 transition-colors">Ingresar</button>
+    </form>
+    <p class="text-center text-sm text-gray-500 mt-4">¿No tenés cuenta? <a href="/customer/<%= store.slug %>/registro" class="text-gray-900 font-medium underline">Registrate</a></p>
+  </div>
+
+<% } else if (page === 'register') { %>
+  <!-- CUSTOMER REGISTER -->
+  <div class="max-w-md mx-auto px-4 py-16 lg:py-24">
+    <h1 class="text-2xl font-bold text-gray-900 text-center mb-2">Crear Cuenta</h1>
+    <p class="text-gray-500 text-center text-sm mb-8">Registrate para gestionar tus pedidos y datos</p>
+    <% if (error) { %><div class="p-3 mb-4 bg-red-50 border border-red-200 rounded-xl text-red-600 text-sm"><%= error %></div><% } %>
+    <form method="POST" action="/customer/<%= store.slug %>/registro" class="space-y-4">
+      <input type="text" name="name" required placeholder="Nombre completo" class="w-full px-4 py-3 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-gray-900">
+      <input type="email" name="email" required placeholder="Email" class="w-full px-4 py-3 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-gray-900">
+      <input type="tel" name="phone" placeholder="Teléfono" class="w-full px-4 py-3 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-gray-900">
+      <input type="password" name="password" required placeholder="Contraseña (mín. 6 caracteres)" class="w-full px-4 py-3 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-gray-900">
+      <button type="submit" class="w-full py-3 bg-gray-900 text-white text-sm font-medium rounded-xl hover:bg-gray-800 transition-colors">Crear Cuenta</button>
+    </form>
+    <p class="text-center text-sm text-gray-500 mt-4">¿Ya tenés cuenta? <a href="/customer/<%= store.slug %>/login" class="text-gray-900 font-medium underline">Iniciar Sesión</a></p>
+  </div>
+
+<% } else if (page === 'account') { %>
+  <!-- CUSTOMER ACCOUNT DASHBOARD -->
+  <div class="max-w-4xl mx-auto px-4 py-8">
+    <div class="flex items-center justify-between mb-8">
+      <div>
+        <h1 class="text-2xl font-bold text-gray-900">Mi Cuenta</h1>
+        <p class="text-sm text-gray-500">Bienvenido, <%= customer?.name || '' %></p>
+      </div>
+      <a href="/customer/<%= store.slug %>/logout" class="text-sm text-red-500 hover:text-red-700">Cerrar Sesión</a>
+    </div>
+
+    <% if (msg === 'ok') { %><div class="p-3 mb-6 bg-green-50 border border-green-200 rounded-xl text-green-700 text-sm">✅ Datos actualizados correctamente</div><% } %>
+
+    <!-- Profile Form -->
+    <div class="bg-white border border-gray-100 rounded-2xl p-6 mb-8">
+      <h2 class="text-lg font-semibold text-gray-900 mb-4">Datos Personales</h2>
+      <form method="POST" action="/customer/<%= store.slug %>/micuenta" class="space-y-4">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <input type="text" name="name" value="<%= customer?.name || '' %>" placeholder="Nombre completo" class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-gray-900">
+          <input type="email" name="email" value="<%= customer?.email || '' %>" placeholder="Email" class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-gray-900">
+          <input type="tel" name="phone" value="<%= customer?.phone || '' %>" placeholder="Teléfono" class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-gray-900">
+        </div>
+
+        <h3 class="text-sm font-semibold text-gray-700 pt-4 border-t border-gray-100">Dirección de Envío / Facturación</h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <input type="text" name="address_street" value="<%= customer?.address_street || '' %>" placeholder="Calle" class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-gray-900">
+          <input type="text" name="address_number" value="<%= customer?.address_number || '' %>" placeholder="Número" class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-gray-900">
+          <input type="text" name="address_floor" value="<%= customer?.address_floor || '' %>" placeholder="Piso / Depto" class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-gray-900">
+          <input type="text" name="address_zip" value="<%= customer?.address_zip || '' %>" placeholder="Código Postal" class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-gray-900">
+          <input type="text" name="address_neighborhood" value="<%= customer?.address_neighborhood || '' %>" placeholder="Barrio" class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-gray-900">
+          <input type="text" name="address_city" value="<%= customer?.address_city || '' %>" placeholder="Ciudad" class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-gray-900">
+          <input type="text" name="address_province" value="<%= customer?.address_province || '' %>" placeholder="Provincia" class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-gray-900">
+        </div>
+        <button type="submit" class="px-6 py-2.5 bg-gray-900 text-white text-sm font-medium rounded-xl hover:bg-gray-800 transition-colors">Guardar Datos</button>
+      </form>
+    </div>
+
+    <!-- Order History -->
+    <div class="bg-white border border-gray-100 rounded-2xl p-6">
+      <h2 class="text-lg font-semibold text-gray-900 mb-4">Mis Pedidos</h2>
+      <% if ((orders || []).length > 0) { %>
+        <div class="space-y-3">
+          <% orders.forEach(o => { %>
+            <div class="p-4 border border-gray-100 rounded-xl">
+              <div class="flex items-center justify-between mb-2">
+                <span class="text-sm font-medium text-gray-900">#<%= o.id.slice(0, 8) %></span>
+                <span class="text-xs px-2 py-1 rounded-full <%= o.status === 'completed' ? 'bg-green-100 text-green-700' : o.status === 'cancelled' ? 'bg-red-100 text-red-700' : 'bg-yellow-100 text-yellow-700' %>">
+                  <%= {pending:'Pendiente',processing:'Procesando',completed:'Completado',cancelled:'Cancelado'}[o.status] || o.status %>
+                </span>
+              </div>
+              <div class="flex items-center justify-between text-sm">
+                <span class="text-gray-500"><%= new Date(o.created_at).toLocaleDateString('es-AR') %></span>
+                <span class="font-semibold text-gray-900">$<%= o.total.toFixed(2) %></span>
+              </div>
+              <% if (o.items) { try { const items = JSON.parse(o.items); if (items.length > 0) { %>
+                <div class="mt-2 text-xs text-gray-400">
+                  <%= items.map(i => i.name).join(', ') %>
+                </div>
+              <% } } catch(e) {} } %>
+            </div>
+          <% }); %>
+        </div>
+      <% } else { %>
+        <div class="text-center py-8 text-gray-400">
+          <svg class="w-12 h-12 mx-auto mb-3 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"/></svg>
+          <p>Todavía no hiciste ningún pedido.</p>
+        </div>
+      <% } %>
+    </div>
+  </div>
+<% } %>

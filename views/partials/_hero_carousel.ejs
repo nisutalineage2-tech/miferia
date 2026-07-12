@@ -1,0 +1,101 @@
+<%# Hero Carousel Partial - Shows 3-5 images with auto-play and navigation %>
+<% const imgs = typeof images !== 'undefined' && images ? images : []; %>
+<% const hClass = typeof height !== 'undefined' ? height : 'h-64 lg:h-96'; %>
+<% const cClass = typeof className !== 'undefined' ? className : 'rounded-2xl shadow-lg'; %>
+
+<% if (imgs.length > 0) { %>
+<div class="hero-carousel relative overflow-hidden <%= cClass %> <%= hClass %>" data-interval="5000">
+  <div class="hero-carousel-track flex transition-transform duration-700 ease-in-out h-full">
+    <% imgs.forEach((img, i) => { %>
+      <div class="hero-carousel-slide w-full h-full shrink-0 <%= i === 0 ? 'active' : '' %>">
+        <img src="<%= img %>" alt="" class="w-full h-full object-cover" loading="<%= i === 0 ? 'eager' : 'lazy' %>">
+      </div>
+    <% }); %>
+  </div>
+  <!-- Dots -->
+  <% if (imgs.length > 1) { %>
+  <div class="hero-carousel-dots absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-2 z-10">
+    <% imgs.forEach((_, i) => { %>
+      <button class="hero-dot w-2.5 h-2.5 rounded-full transition-all duration-300 <%= i === 0 ? 'bg-white scale-110' : 'bg-white/40 hover:bg-white/70' %>" data-index="<%= i %>" aria-label="Slide <%= i + 1 %>"></button>
+    <% }); %>
+  </div>
+  <!-- Arrows -->
+  <button class="hero-prev absolute left-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-black/20 hover:bg-black/40 text-white flex items-center justify-center transition-all opacity-0 group-hover:opacity-100 z-10 backdrop-blur-sm" aria-label="Anterior">
+    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+  </button>
+  <button class="hero-next absolute right-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-black/20 hover:bg-black/40 text-white flex items-center justify-center transition-all opacity-0 group-hover:opacity-100 z-10 backdrop-blur-sm" aria-label="Siguiente">
+    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+  </button>
+  <% } %>
+</div>
+<% } else if (typeof fallback !== 'undefined' && fallback) { %>
+  <img src="<%= fallback %>" alt="" class="w-full <%= hClass %> object-cover <%= cClass %>">
+<% } %>
+
+<!-- Carousel JS (only once per page) -->
+<% if (typeof heroCarouselLoaded === 'undefined') { %>
+<script>
+(function() {
+  if (window.__heroCarouselLoaded) return;
+  window.__heroCarouselLoaded = true;
+
+  function initCarousel(container) {
+    const track = container.querySelector('.hero-carousel-track');
+    const slides = container.querySelectorAll('.hero-carousel-slide');
+    const dots = container.querySelectorAll('.hero-dot');
+    const prevBtn = container.querySelector('.hero-prev');
+    const nextBtn = container.querySelector('.hero-next');
+    if (!track || slides.length < 2) return;
+
+    let current = 0;
+    const total = slides.length;
+    let interval = parseInt(container.dataset.interval) || 5000;
+    let timer = null;
+
+    function goTo(index) {
+      if (index < 0) index = total - 1;
+      if (index >= total) index = 0;
+      current = index;
+      track.style.transform = 'translateX(-' + (current * 100) + '%)';
+      dots.forEach((d, i) => {
+        d.classList.toggle('bg-white', i === current);
+        d.classList.toggle('scale-110', i === current);
+        d.classList.toggle('bg-white/40', i !== current);
+      });
+      resetTimer();
+    }
+
+    function next() { goTo(current + 1); }
+    function prev() { goTo(current - 1); }
+    function resetTimer() {
+      if (timer) clearInterval(timer);
+      timer = setInterval(next, interval);
+    }
+
+    if (prevBtn) prevBtn.addEventListener('click', prev);
+    if (nextBtn) nextBtn.addEventListener('click', next);
+    dots.forEach(d => d.addEventListener('click', () => goTo(parseInt(d.dataset.index))));
+
+    // Pause on hover
+    container.addEventListener('mouseenter', () => { if (timer) clearInterval(timer); });
+    container.addEventListener('mouseleave', resetTimer);
+
+    // Touch support
+    let startX = 0;
+    container.addEventListener('touchstart', (e) => { startX = e.touches[0].clientX; }, { passive: true });
+    container.addEventListener('touchend', (e) => {
+      const diff = startX - e.changedTouches[0].clientX;
+      if (Math.abs(diff) > 50) {
+        if (diff > 0) next();
+        else prev();
+      }
+    }, { passive: true });
+
+    resetTimer();
+  }
+
+  // Initialize all carousels
+  document.querySelectorAll('.hero-carousel').forEach(initCarousel);
+})();
+</script>
+<% } %>

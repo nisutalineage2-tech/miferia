@@ -1,0 +1,72 @@
+<div class="max-w-2xl mx-auto">
+  <h1 class="text-2xl font-bold text-white mb-2">Configuración</h1>
+  <p class="text-gray-400 text-sm mb-8">Configuración de tu cuenta y tienda</p>
+
+  <div class="space-y-6">
+    <!-- Account Info -->
+    <div class="p-6 rounded-2xl bg-[#0f0f1a] border border-gray-800/50">
+      <h2 class="text-lg font-semibold text-white mb-1">Tu Cuenta</h2>
+      <p class="text-sm text-gray-500 mb-4">Información de tu cuenta de TuFerIA</p>
+      <div class="space-y-3">
+        <div>
+          <label class="block text-sm text-gray-400">Nombre</label>
+          <p class="text-white font-medium"><%= user.name %></p>
+        </div>
+        <div>
+          <label class="block text-sm text-gray-400">Email</label>
+          <p class="text-white font-medium"><%= user.email %></p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Store Info -->
+    <div class="p-6 rounded-2xl bg-[#0f0f1a] border border-gray-800/50">
+      <h2 class="text-lg font-semibold text-white mb-1">Información de la Tienda</h2>
+      <p class="text-sm text-gray-500 mb-4">Datos clave de tu tienda</p>
+      <div class="space-y-3">
+        <div>
+          <label class="block text-sm text-gray-400">Nombre</label>
+          <p class="text-white font-medium"><%= store.name %></p>
+        </div>
+        <div>
+          <label class="block text-sm text-gray-400">URL</label>
+          <a href="/<%= store.slug %>" target="_blank" class="text-indigo-400 hover:text-indigo-300 font-medium">
+            tuferia.com/<%= store.slug %> ↗
+          </a>
+        </div>
+        <div>
+          <label class="block text-sm text-gray-400">Diseño</label>
+          <p class="text-white font-medium">
+            <%= ({'template1':'Belleza Clásico','template1_v2':'Belleza Gold','template1_v3':'Belleza Soft','template2':'Moda Clean','template2_v2':'Moda Editorial','template2_v3':'Moda Street','template3':'Hogar Deco','template3_v2':'Hogar Rústico','template3_v3':'Hogar Nórdico','template4':'Tecno Dark','template4_v2':'Tecno Gamer','template4_v3':'Tecno Apple','template5':'Alimentos Gourmet','template5_v2':'Alimentos Orgánico','template5_v3':'Alimentos Fast','template6':'Bebés Pastel','template6_v2':'Bebés Modern','template6_v3':'Bebés Aventura','template7':'Deportes Fitness','template7_v2':'Deportes Extreme','template7_v3':'Deportes Retro','template8':'Joyería Lujo','template8_v2':'Joyería Minimal','template8_v3':'Joyería Boho','template9':'Mascotas Pets','template9_v2':'Mascotas Premium','template9_v3':'Mascotas Wild','template10':'Librería Clásico','template10_v2':'Librería Moderno','template10_v3':'Librería Kids'})[store.template] || 'Personalizado' %>
+          </p>
+        </div>
+        <div>
+          <label class="block text-sm text-gray-400">Miembro desde</label>
+          <p class="text-white font-medium"><%= new Date(store.created_at).toLocaleDateString('es-AR') %></p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Quick Links -->
+    <div class="p-6 rounded-2xl bg-gradient-to-br from-indigo-500/5 to-purple-500/5 border border-indigo-500/10">
+      <h2 class="text-lg font-semibold text-white mb-4">Enlaces Rápidos</h2>
+      <div class="grid grid-cols-2 gap-3">
+        <a href="/dashboard/configuracion/ventas" class="p-4 rounded-xl bg-white/5 border border-gray-700/30 hover:bg-indigo-500/10 hover:border-indigo-500/30 transition-all text-center">
+          <span class="text-sm text-gray-300">Configuración de Ventas</span>
+        </a>
+        <a href="/dashboard/apariencia" class="p-4 rounded-xl bg-white/5 border border-gray-700/30 hover:bg-indigo-500/10 hover:border-indigo-500/30 transition-all text-center">
+          <span class="text-sm text-gray-300">Personalizar Apariencia</span>
+        </a>
+        <a href="/dashboard/productos/nuevo" class="p-4 rounded-xl bg-white/5 border border-gray-700/30 hover:bg-purple-500/10 hover:border-purple-500/30 transition-all text-center">
+          <span class="text-sm text-gray-300">Agregar Producto</span>
+        </a>
+        <a href="/<%= store.slug %>" target="_blank" class="p-4 rounded-xl bg-white/5 border border-gray-700/30 hover:bg-green-500/10 hover:border-green-500/30 transition-all text-center">
+          <span class="text-sm text-gray-300">Ver Tienda</span>
+        </a>
+        <a href="/auth/logout" class="p-4 rounded-xl bg-white/5 border border-gray-700/30 hover:bg-red-500/10 hover:border-red-500/30 transition-all text-center">
+          <span class="text-sm text-red-400">Cerrar Sesión</span>
+        </a>
+      </div>
+    </div>
+  </div>
+</div>

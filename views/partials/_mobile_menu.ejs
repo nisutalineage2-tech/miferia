@@ -1,0 +1,24 @@
+<!-- Mobile menu button -->
+<button onclick="document.getElementById('mobileNav').classList.toggle('hidden')" class="md:hidden p-2" aria-label="Menú">
+  <svg class="w-6 h-6 <%= locals.iconColor || 'text-gray-700' %>" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+  </svg>
+</button>
+
+<!-- Mobile nav overlay -->
+<div id="mobileNav" class="hidden fixed inset-0 z-50 md:hidden">
+  <div class="absolute inset-0 bg-black/50" onclick="document.getElementById('mobileNav').classList.toggle('hidden')"></div>
+  <div class="absolute top-0 right-0 w-72 h-full bg-white shadow-xl p-6 transform transition-transform">
+    <div class="flex items-center justify-between mb-8">
+      <span class="text-lg font-bold" style="color: var(--primary)">Menú</span>
+      <button onclick="document.getElementById('mobileNav').classList.toggle('hidden')" class="p-1">
+        <svg class="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+        </svg>
+      </button>
+    </div>
+    <div class="flex flex-col gap-4">
+      <%- include('_nav_links', { locals: { navLinkClass: 'text-base font-medium text-gray-700 hover:text-gray-900 block py-2 border-b border-gray-100' } }) %>
+    </div>
+  </div>
+</div>

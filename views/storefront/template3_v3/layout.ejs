@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= (title || store.name || '') %></title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Overpass:wght@300;400;600;700&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet">
+  <style>
+    <% let tc = {}; try { tc = JSON.parse(store.theme_settings || '{}'); } catch(e) {} const col = tc.colors || {}; const fonts = tc.fonts || {}; const hdr = tc.header || {}; %>
+    body { font-family: '<%= fonts.body || 'DM Sans' %>', sans-serif; background: <%= col.body_bg || '#ffffff' %>; color: <%= col.body_text || '#1c1c1c' %>; }
+    h1,h2,h3 { font-family: 'Overpass', sans-serif; font-weight: 600; letter-spacing: -0.02em; }
+    :root { --primary: <%= col.btn_primary_bg || '#4a9082' %>; --accent: <%= col.btn_secondary_bg || '#e5f0ed' %>; --body-bg: <%= col.body_bg || '#ffffff' %>; --body-text: <%= col.body_text || '#1c1c1c' %>; --btn-primary-bg: <%= col.btn_primary_bg || '#4a9082' %>; --btn-primary-text: <%= col.btn_primary_text || '#ffffff' %>; --footer-bg: <%= col.footer_bg || '#e5f0ed' %>; --footer-text: <%= col.footer_text || '#4a6b63' %>; }
+    body { background-color: var(--body-bg); color: var(--body-text); }
+    .product-card { background: #fff; border: none; border-radius: 0; transition: all 0.3s ease; overflow: hidden; }
+    .product-card:hover { box-shadow: 0 4px 20px rgba(74,144,130,0.08); }
+    .product-card img { transition: transform 0.4s ease; }
+    .product-card:hover img { transform: scale(1.04); }
+    .btn-primary { background: #4a9082; color: #fff; border-radius: 0; font-weight: 600; letter-spacing: 0.02em; padding: 0.75rem 2rem; }
+    .btn-primary:hover { background: #3a7367; }
+    .section-title { font-family: 'Overpass', sans-serif; font-weight: 600; letter-spacing: -0.02em; font-size: 1.75rem; }
+    .scandi-line { width: 40px; height: 3px; background: #4a9082; border-radius: 0; }
+    .product-card .product-name { font-weight: 400; letter-spacing: 0.05em; text-transform: uppercase; font-size: 0.7rem; }
+    <% if (store.advanced_css) { %><%= store.advanced_css %><% } %>
+  </style>
+</head>
+<body>
+  <nav class="bg-white sticky top-0 z-40">
+    <div class="max-w-7xl mx-auto px-4 lg:px-8">
+      <div class="flex items-center justify-between h-20 border-b border-gray-100">
+        <a href="/<%= store.slug %>" class="flex items-center gap-2">
+          <% if (store.logo) { %><img src="<%= store.logo %>" alt="<%= store.name %>" class="h-8 w-auto"><% } else { %><span class="text-xl font-semibold tracking-tight text-[#1c1c1c]"><%= store.name %></span><% } %>
+        </a>
+        <div class="hidden md:flex items-center gap-10">
+          <%- include('../../partials/_nav_links', { locals: { navLinkClass: 'text-sm text-gray-500 hover:text-[#4a9082] transition-colors' } }) %>
+        </div>
+        <a href="/<%= store.slug %>/carrito" class="relative p-2">
+          <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15.75 10.5V6a3.75 3.75 0 10-7.5 0v4.5m11.356-1.993l1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 01-1.12-1.243l1.264-12A1.125 1.125 0 015.513 7.5h12.974c.576 0 1.059.435 1.119 1.007zM8.625 10.5a.375.375 0 11-.75 0 .375.375 0 01.75 0zm7.5 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z"/></svg>
+          <% if (cartCount > 0) { %><span class="absolute -top-1 -right-1 w-5 h-5 bg-[#4a9082] text-white text-[10px] font-bold rounded-full flex items-center justify-center"><%= cartCount %></span><% } %>
+        </a>
+      
+            <%- include('../../partials/_mobile_menu', { locals: { iconColor: 'text-gray-600' } }) %>
+</div>
+    </div>
+  </nav>
+
+  <main>
+    <%- include('../../partials/_flash', { locals }); %>
+    <% if (page === 'home') { %>
+      <section class="py-20 lg:py-28">
+        <div class="max-w-7xl mx-auto px-4 lg:px-8">
+          <div class="flex flex-col lg:flex-row items-end justify-between gap-12">
+            <div class="max-w-xl">
+              <span class="text-xs uppercase tracking-[0.15em] text-[#4a9082] mb-3 block">Diseño Nórdico</span>
+              <h1 class="text-5xl lg:text-7xl font-semibold tracking-tight text-[#1c1c1c] mb-6 leading-[0.95]"><%= store.name %></h1>
+              <p class="text-gray-500 mb-8 text-lg leading-relaxed"><%= store.description %></p>
+              <a href="/<%= store.slug %>/tienda" class="btn-primary inline-flex items-center gap-2">Ver Colección <span>→</span></a>
+            </div>
+            <div class="w-full lg:w-96">
+              <%- include('../../partials/_hero_carousel', { images: heroImages, fallback: store.banner, className: 'rounded-none', height: 'h-64 sm:h-80' }); %>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <div class="max-w-7xl mx-auto px-4 lg:px-8 py-20">
+        <% if (store.about_text) { %>
+          <div class="max-w-2xl mb-20">
+            <div class="scandi-line mb-4"></div>
+            <p class="text-gray-500 leading-relaxed text-lg"><%= store.about_text %></p>
+          </div>
+        <% } %>
+
+        <% if (categories.length > 0) { %>
+          <div class="mb-16 border-b border-gray-100 pb-4">
+            <a href="/<%= store.slug %>" class="inline-block text-xs uppercase tracking-widest text-[#4a9082] mr-6 pb-4 border-b-2 border-[#4a9082]">Todos</a>
+            <% categories.forEach(c => { %>
+              <a href="/<%= store.slug %>/categoria/<%= c.name.toLowerCase().replace(/ /g, '-') %>" class="inline-block text-xs uppercase tracking-widest text-gray-400 hover:text-[#4a9082] transition-colors mr-6 pb-4"><%= c.name %></a>
+            <% }); %>
+          </div>
+        <% } %>
+
+        <% if (products.length > 0) { %>
+          <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-8 gap-y-12">
+            <% products.forEach(p => { %><%- include('../../partials/_product_card', { product: p, store, locals }); %><% }); %>
+          </div>
+        <% } else { %>
+          <div class="text-center py-16 text-gray-300 tracking-tight text-2xl">Próximamente...</div>
+        <% } %>
+      </div>
+    <% } else if (page === 'category') { %>
+      <div class="max-w-7xl mx-auto px-4 lg:px-8 py-12">
+        <a href="/<%= store.slug %>" class="inline-flex items-center gap-2 text-xs uppercase tracking-widest text-gray-500 hover:text-[#4a9082] transition-colors mb-8"><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 12H5m7-7l-7 7 7 7"/></svg> Volver</a>
+        <h1 class="text-4xl font-semibold tracking-tight text-[#1c1c1c] mb-8"><%= category.name %></h1>
+        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-8 gap-y-12"><% products.forEach(p => { %><%- include('../../partials/_product_card', { product: p, store, locals }); %><% }); %></div>
+      </div>
+    <% } else if (page === 'product') { %>
+      <%- include('../../partials/_product_detail', { product, store, locals }); %>
+    <% } else if (page === 'cart') { %>
+      <%- include('../../partials/_cart', { store, locals }); %>
+    <% } else if (page === 'checkout') { %>
+      <%- include('../../partials/_checkout', { store, locals }); %>
+    <% } else { %>
+      <%- include('../../partials/_page_content', { store, locals }); %>
+    <% } %>
+  </main>
+
+  <footer class="bg-[#e5f0ed] py-16 mt-20">
+    <div class="max-w-7xl mx-auto px-4 lg:px-8">
+      <div class="flex flex-col md:flex-row items-center justify-between gap-6">
+        <div>
+          <h3 class="text-lg font-semibold tracking-tight text-[#1c1c1c]"><%= store.name %></h3>
+          <% if (store.description) { %><p class="text-sm text-gray-500 mt-2"><%= store.description %></p><% } %>
+        </div>
+        <div class="flex gap-6">
+          <% if (store.instagram) { %><a href="https://instagram.com/<%= store.instagram %>" target="_blank" class="text-gray-500 hover:text-[#4a9082] transition-colors text-sm">Instagram</a><% } %>
+          <% if (store.whatsapp) { %><a href="https://wa.me/<%= store.whatsapp %>" target="_blank" class="text-gray-500 hover:text-[#4a9082] transition-colors text-sm">WhatsApp</a><% } %>
+        </div>
+      </div>
+      <p class="text-center text-xs text-gray-400 mt-10">Powered by TuFerIA</p>
+    </div>
+  </footer>
+
+  <script>
+  async function addToCart(productId, variantId, quantity) {
+    const q = quantity || 1; const v = variantId || null;
+    const r = await fetch('/api/cart/add', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ store_id: '<%= store.id %>', product_id: productId, variant_id: v, quantity: q }) });
+    const d = await r.json(); if (d.success) { location.reload(); } else { alert(d.error || 'Error'); }
+  }
+  async function addComboToCart(comboId) {
+    const r = await fetch('/api/cart/combo', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ store_id: '<%= store.id %>', combo_id: comboId }) });
+    const d = await r.json(); if (d.success) { location.reload(); } else { alert(d.error || 'Error'); }
+  }
+  </script>
+</body>
+</html>

@@ -1,0 +1,16 @@
+services:
+  tuferia:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: tuferia
+    ports:
+      - "8081:8081"
+    restart: unless-stopped
+    volumes:
+      - ./tuferia_data:/app/data
+      - ./tuferia_uploads:/app/public/uploads
+
+volumes:
+  tuferia_data:
+  tuferia_uploads:

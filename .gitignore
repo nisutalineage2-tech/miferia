@@ -1,0 +1,10 @@
+node_modules/
+tuferia_data/
+tuferia_uploads/
+.DS_Store
+*.log
+.env
+/tmp/
+ck_tuf.txt
+ck_tuf2.txt
+data/

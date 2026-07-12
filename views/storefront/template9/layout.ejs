@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= (title || store.name || '') %></title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    <% let _tc9 = {}; try { _tc9 = JSON.parse(store.theme_settings || '{}'); } catch(e) {} const _col9 = _tc9.colors || {}; %>
+    body { font-family: 'Nunito', sans-serif; background: <%= _col9.body_bg || '#fefce8' %>; color: <%= _col9.body_text || '#422006' %>; }
+    h1,h2,h3 { font-family: 'Quicksand', sans-serif; font-weight: 700; }
+    :root { --primary: <%= _col9.btn_primary_bg || store.primary_color || '#16a34a' %>; --accent: <%= _col9.btn_secondary_bg || store.accent_color || '#ea580c' %>; --footer-bg: <%= _col9.footer_bg || '#14532d' %>; --footer-text: <%= _col9.footer_text || '#86efac' %>; }
+    .product-card { background: #fff; border: 1px solid #fef08a; transition: all 0.3s ease; border-radius: 20px; overflow: hidden; }
+    .product-card:hover { transform: translateY(-4px) rotate(-1deg); box-shadow: 0 12px 40px rgba(22,163,74,0.15); border-color: var(--primary); }
+    .btn-primary { background: linear-gradient(135deg, #16a34a, #15803d); color: #fff; border-radius: 9999px; font-weight: 700; font-size: 0.85rem; padding: 0.6rem 1.5rem; }
+    .badge-pet { background: linear-gradient(135deg, #fef08a, #fde047); color: #422006; border-radius: 9999px; font-size: 0.65rem; font-weight: 700; text-transform: uppercase; }
+  </style>
+</head>
+<body>
+  <!-- Nav -->
+  <nav class="bg-white/90 backdrop-blur-sm sticky top-0 z-40 border-b border-amber-100">
+    <div class="max-w-7xl mx-auto px-4">
+      <div class="flex items-center justify-between h-16">
+        <a href="/<%= store.slug %>" class="flex items-center gap-2">
+          <% if (store.logo) { %><img src="<%= store.logo %>" alt="<%= store.name %>" class="h-9 w-auto"><% } else { %><span class="text-xl font-extrabold text-green-700"><%= store.name %></span><% } %>
+        </a>
+        <div class="hidden md:flex items-center gap-1">
+          <%- include('../../partials/_nav_links', { locals: { navLinkClass: 'px-3 py-1.5 text-sm font-semibold text-amber-800/70 hover:text-green-700 transition-colors' } }) %>
+        </div>
+        <a href="/<%= store.slug %>/carrito" class="relative p-2"><svg class="w-5 h-5 text-amber-800" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg><% if (cartCount > 0) { %><span class="absolute -top-1 -right-1 w-5 h-5 rounded-full text-[10px] font-bold text-white flex items-center justify-center" style="background: var(--primary)"><%= cartCount %></span><% } %></a>
+      
+            <%- include('../../partials/_mobile_menu', { locals: { iconColor: 'text-amber-700/70' } }) %>
+</div>
+    </div>
+  </nav>
+
+  <main>
+    <%- include('../../partials/_flash', { locals }); %>
+    <% if (page === 'home') { %>
+      <!-- HERO PETS -->
+      <div class="bg-gradient-to-br from-green-50 via-amber-50 to-green-50">
+        <div class="max-w-7xl mx-auto px-4 py-12 lg:py-16">
+          <div class="flex flex-col lg:flex-row items-center gap-8 lg:gap-12">
+            <div class="flex-1">
+              <span class="badge-pet inline-block px-3 py-1 mb-4">🐾 Bienvenidos</span>
+              <h1 class="text-4xl lg:text-5xl font-extrabold text-green-800 mb-4"><%= store.name %></h1>
+              <p class="text-amber-700/70 text-lg mb-6"><%= store.description %></p>
+              <a href="/<%= store.slug %>/tienda" class="btn-primary inline-flex items-center gap-2">Ver Productos <span>→</span></a>
+            </div>
+            <div class="flex-1">
+              <%- include('../../partials/_hero_carousel', { images: heroImages, fallback: store.banner, className: 'rounded-2xl shadow-lg', height: 'h-48 lg:h-64' }); %>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="max-w-7xl mx-auto px-4 py-8">
+        <!-- Categories -->
+        <% if (categories.length > 0) { %>
+          <section class="mb-10">
+            <h2 class="text-2xl font-extrabold text-green-800 mb-4">🐾 Categorías</h2>
+            <div class="flex flex-wrap gap-2">
+              <% categories.forEach(c => { %>
+                <a href="/<%= store.slug %>/categoria/<%= c.name.toLowerCase().replace(/ /g, '-') %>" class="px-4 py-2 rounded-full bg-amber-50 border border-amber-200 text-amber-800 text-sm font-semibold hover:bg-green-50 hover:border-green-300 hover:text-green-700 transition-all"><% const icons = {'Perros':'🐕','Gatos':'🐱','Aves':'🐦','Peces':'🐟','Roedores':'🐹','Alimentos':'🍖','Juguetes':'🧸','Accesorios':'🎀'}; %><%= icons[c.name] || '🐾' %> <%= c.name %></a>
+              <% }); %>
+            </div>
+          </section>
+        <% } %>
+
+        <!-- Featured -->
+        <% if (featured.length > 0) { %>
+          <section class="mb-10">
+            <h2 class="text-2xl font-extrabold text-green-800 mb-4">⭐ Destacados</h2>
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+              <% featured.forEach(p => { %><%- include('../../partials/_product_card', { product: p, store, locals }); %><% }); %>
+            </div>
+          </section>
+        <% } %>
+
+        <!-- Products -->
+        <section id="productos" class="mb-10">
+          <h2 class="text-2xl font-extrabold text-green-800 mb-4">🎁 Todos los Productos</h2>
+          <% if (products.length > 0) { %><div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4"><% products.forEach(p => { %><%- include('../../partials/_product_card', { product: p, store, locals }); %><% }); %></div><% } else { %><div class="text-center py-16 text-amber-300">Próximamente</div><% } %>
+        </section>
+
+        <!-- Combos -->
+        <% if (combos.length > 0) { %>
+          <section class="mb-10 p-6 rounded-2xl bg-gradient-to-br from-green-50 to-amber-50">
+            <h2 class="text-2xl font-extrabold text-green-800 mb-4">🎉 Combos</h2>
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+              <% combos.forEach(combo => { %>
+                <div class="p-5 rounded-xl bg-white border border-amber-100">
+                  <span class="text-2xl block mb-2">🎁</span>
+                  <h3 class="font-bold text-green-800"><%= combo.name %></h3>
+                  <p class="text-sm text-amber-700/60 mb-2"><%= combo.description %></p>
+                  <p class="text-xl font-extrabold text-green-600 mb-2">$<%= combo.price.toFixed(2) %></p>
+                  <button onclick="addComboToCart('<%= combo.id %>')" class="btn-primary text-xs w-full">Agregar</button>
+                </div>
+              <% }); %>
+            </div>
+          </section>
+        <% } %>
+      </div>
+
+    <% } else if (page === 'category') { %>
+      <div class="max-w-7xl mx-auto px-4 py-8">
+        <a href="/<%= store.slug %>" class="text-sm text-amber-600 hover:text-green-700">← Volver</a>
+        <h1 class="text-3xl font-extrabold text-green-800 mt-4 mb-6"><%= category.name %></h1>
+        <% if (products.length > 0) { %><div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4"><% products.forEach(p => { %><%- include('../../partials/_product_card', { product: p, store, locals }); %><% }); %></div><% } else { %><div class="text-center py-16 text-amber-300">Sin productos</div><% } %>
+      </div>
+    <% } else if (page === 'product') { %>
+      <%- include('../../partials/_product_detail', { store, product, variants, productImages, categories, related, cartCount, cartTotal, locals }); %>
+    <% } else if (page === 'cart') { %>
+      <%- include('../../partials/_cart', { store, categories, cartItems, cartCount, cartTotal, locals }); %>
+    <% } else if (page === 'checkout') { %>
+      <%- include('../../partials/_checkout', { store, categories, cartItems, cartCount, cartTotal, locals }); %>
+    <% } else if (['shop','subscriptions','about','contact','login','register','account'].includes(page)) { %>
+      <%- include('../../partials/_page_content', { page, store, categories, products, featured, combos, cartItems, cartCount, cartTotal, query: typeof query !== 'undefined' ? query : {}, priceRange: typeof priceRange !== 'undefined' ? priceRange : null, filterSettings: typeof filterSettings !== 'undefined' ? filterSettings : {}, filterData: typeof filterData !== 'undefined' ? filterData : {}, error: typeof error !== 'undefined' ? error : null, msg: typeof msg !== 'undefined' ? msg : null, customer: typeof customer !== 'undefined' ? customer : null, orders: typeof orders !== 'undefined' ? orders : null }); %>
+    <% } %>
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-green-900 text-green-200 mt-16">
+    <div class="max-w-7xl mx-auto px-4 py-12">
+      <div class="flex flex-col md:flex-row items-center justify-between gap-6">
+        <div><p class="text-white font-bold text-lg"><%= store.name %></p><p class="text-green-300 text-sm"><%= store.description %></p></div>
+        <div class="flex gap-4">
+          <% if (store.instagram) { %><a href="https://instagram.com/<%= store.instagram.replace('@','') %>" target="_blank" class="text-green-300 hover:text-white"><svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069z"/></svg></a><% } %>
+          <% if (store.whatsapp) { %><a href="https://wa.me/<%= store.whatsapp %>" target="_blank" class="text-green-300 hover:text-white"><svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg></a><% } %>
+        </div>
+      </div>
+      <div class="border-t border-green-800 mt-8 pt-8 text-center text-xs text-green-400">© 2026 <%= store.name %>. TuFerIA</div>
+    </div>
+  </footer>
+
+  <script>
+    async function addToCart(pId, vId, qty) { const r = await fetch('/api/cart/add', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({store_id:'<%= store.id %>',product_id:pId,variant_id:vId||null,quantity:qty||1})}); if((await r.json()).success) location.reload(); }
+    async function addComboToCart(cId) { const r = await fetch('/api/cart/add', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({store_id:'<%= store.id %>',combo_id:cId,quantity:1})}); if((await r.json()).success) location.reload(); }
+  </script>
+</body>
+</html>

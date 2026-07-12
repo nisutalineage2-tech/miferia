@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= (title || store.name || '') %></title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    <% let tc = {}; try { tc = JSON.parse(store.theme_settings || '{}'); } catch(e) {} const col = tc.colors || {}; const fonts = tc.fonts || {}; const hdr = tc.header || {}; %>
+    body { font-family: '<%= fonts.body || 'Inter' %>', sans-serif; background: <%= col.body_bg || '#0a0a0a' %>; color: <%= col.body_text || '#f5f5f5' %>; }
+    h1,h2,h3 { font-family: 'Cormorant Garamond', serif; font-weight: 600; letter-spacing: 0.02em; }
+    :root { --primary: <%= col.btn_primary_bg || '#d4af37' %>; --accent: <%= col.btn_secondary_bg || '#1a1a1a' %>; --body-bg: <%= col.body_bg || '#0a0a0a' %>; --body-text: <%= col.body_text || '#f5f5f5' %>; --btn-primary-bg: <%= col.btn_primary_bg || '#d4af37' %>; --btn-primary-text: <%= col.btn_primary_text || '#0a0a0a' %>; --footer-bg: <%= col.footer_bg || '#0a0a0a' %>; --footer-text: <%= col.footer_text || '#a3a3a3' %>; }
+    body { background-color: var(--body-bg); color: var(--body-text); }
+    .product-card { background: #141414; border: 1px solid #262626; border-radius: 8px; transition: all 0.3s ease; overflow: hidden; }
+    .product-card:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(212,175,55,0.08); border-color: #d4af37; }
+    .btn-primary { background: #d4af37; color: #0a0a0a; border-radius: 4px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.05em; font-size: 0.75rem; padding: 0.75rem 1.5rem; }
+    .btn-primary:hover { background: #e4c55a; }
+    .gold-accent { color: #d4af37; }
+    .section-title-serif { font-family: 'Cormorant Garamond', serif; font-weight: 700; letter-spacing: 0.03em; font-size: 1.75rem; }
+    .luxe-divider { width: 40px; height: 1px; background: #d4af37; margin: 1rem 0; }
+    .hero-overlay { background: linear-gradient(180deg, rgba(10,10,10,0.3) 0%, rgba(10,10,10,0.8) 100%); }
+    <% if (store.advanced_css) { %><%= store.advanced_css %><% } %>
+  </style>
+</head>
+<body>
+  <nav class="fixed top-0 left-0 right-0 z-50 bg-[#0a0a0a]/95 backdrop-blur-sm border-b border-[#1a1a1a]">
+    <div class="max-w-7xl mx-auto px-4 lg:px-8">
+      <div class="flex items-center justify-between h-20">
+        <a href="/<%= store.slug %>" class="flex items-center gap-3">
+          <% if (store.logo) { %><img src="<%= store.logo %>" alt="<%= store.name %>" class="h-10 w-auto"><% } else { %><span class="text-2xl font-serif tracking-widest text-white"><%= store.name %></span><% } %>
+        </a>
+        <div class="hidden md:flex items-center gap-8">
+          <%- include('../../partials/_nav_links', { locals: { navLinkClass: 'text-xs uppercase tracking-[0.15em] text-gray-400 hover:text-[#d4af37] transition-colors' } }) %>
+        </div>
+        <a href="/<%= store.slug %>/carrito" class="relative p-2 group">
+          <svg class="w-5 h-5 text-gray-400 group-hover:text-[#d4af37] transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15.75 10.5V6a3.75 3.75 0 10-7.5 0v4.5m11.356-1.993l1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 01-1.12-1.243l1.264-12A1.125 1.125 0 015.513 7.5h12.974c.576 0 1.059.435 1.119 1.007zM8.625 10.5a.375.375 0 11-.75 0 .375.375 0 01.75 0zm7.5 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z"/></svg>
+          <% if (cartCount > 0) { %><span class="absolute -top-1 -right-1 w-4 h-4 rounded-full text-[10px] font-bold text-[#0a0a0a] bg-[#d4af37] flex items-center justify-center"><%= cartCount %></span><% } %>
+        </a>
+      
+            <%- include('../../partials/_mobile_menu', { locals: { iconColor: 'text-gray-600' } }) %>
+</div>
+    </div>
+  </nav>
+
+  <main class="pt-20">
+    <%- include('../../partials/_flash', { locals }); %>
+    <% if (page === 'home') { %>
+      <section class="relative min-h-[70vh] flex items-center">
+        <div class="absolute inset-0"><%- include('../../partials/_hero_carousel', { images: heroImages, fallback: store.banner, className: 'w-full h-full', height: 'h-full' }); %></div>
+        <div class="hero-overlay absolute inset-0"></div>
+        <div class="relative max-w-7xl mx-auto px-4 lg:px-8 py-24">
+          <div class="max-w-2xl">
+            <span class="text-xs uppercase tracking-[0.2em] text-[#d4af37] mb-4 block">Premium Beauty</span>
+            <h1 class="text-6xl lg:text-7xl font-serif text-white mb-6 leading-tight"><%= store.name %></h1>
+            <div class="luxe-divider"></div>
+            <p class="text-lg text-gray-400 mb-8 max-w-lg"><%= store.description %></p>
+            <a href="/<%= store.slug %>/tienda" class="btn-primary inline-flex items-center gap-2">Descubrir <span>→</span></a>
+          </div>
+        </div>
+      </section>
+
+      <div class="max-w-7xl mx-auto px-4 lg:px-8 py-20">
+        <% if (store.about_text) { %>
+          <div class="max-w-2xl mx-auto text-center mb-20">
+            <div class="luxe-divider mx-auto"></div>
+            <p class="text-gray-400 leading-relaxed italic" style="font-family: 'Cormorant Garamond', serif; font-size: 1.2rem;"><%= store.about_text %></p>
+          </div>
+        <% } %>
+
+        <% if (categories.length > 0) { %>
+          <div class="flex flex-wrap justify-center gap-3 mb-16">
+            <a href="/<%= store.slug %>" class="px-5 py-2 text-xs uppercase tracking-wider border border-[#262626] text-gray-400 hover:border-[#d4af37] hover:text-[#d4af37] transition-colors">Todos</a>
+            <% categories.forEach(c => { %>
+              <a href="/<%= store.slug %>/categoria/<%= c.name.toLowerCase().replace(/ /g, '-') %>" class="px-5 py-2 text-xs uppercase tracking-wider border border-[#262626] text-gray-400 hover:border-[#d4af37] hover:text-[#d4af37] transition-colors"><%= c.name %></a>
+            <% }); %>
+          </div>
+        <% } %>
+
+        <% if (products.length > 0) { %>
+          <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            <% products.forEach(p => { %><%- include('../../partials/_product_card', { product: p, store, locals }); %><% }); %>
+          </div>
+        <% } else { %>
+          <div class="text-center py-16 text-gray-600 font-serif text-xl">Próximamente...</div>
+        <% } %>
+      </div>
+    <% } else if (page === 'category') { %>
+      <div class="max-w-7xl mx-auto px-4 lg:px-8 py-12">
+        <a href="/<%= store.slug %>" class="inline-flex items-center gap-2 text-xs uppercase tracking-wider text-gray-500 hover:text-[#d4af37] transition-colors mb-8"><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 12H5m7-7l-7 7 7 7"/></svg> Volver</a>
+        <h1 class="text-3xl font-serif text-white mb-8"><%= category.name %></h1>
+        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"><% products.forEach(p => { %><%- include('../../partials/_product_card', { product: p, store, locals }); %><% }); %></div>
+      </div>
+    <% } else if (page === 'product') { %>
+      <%- include('../../partials/_product_detail', { product, store, locals }); %>
+    <% } else if (page === 'cart') { %>
+      <%- include('../../partials/_cart', { store, locals }); %>
+    <% } else if (page === 'checkout') { %>
+      <%- include('../../partials/_checkout', { store, locals }); %>
+    <% } else { %>
+      <%- include('../../partials/_page_content', { store, locals }); %>
+    <% } %>
+  </main>
+
+  <footer class="border-t border-[#1a1a1a] py-16 mt-20">
+    <div class="max-w-7xl mx-auto px-4 lg:px-8">
+      <div class="flex flex-col md:flex-row items-center justify-between gap-8">
+        <div>
+          <h3 class="text-xl font-serif text-white tracking-wider"><%= store.name %></h3>
+          <% if (store.description) { %><p class="text-sm text-gray-500 mt-2 max-w-md"><%= store.description %></p><% } %>
+        </div>
+        <div class="flex items-center gap-6">
+          <% if (store.instagram) { %><a href="https://instagram.com/<%= store.instagram %>" target="_blank" class="text-gray-500 hover:text-[#d4af37] transition-colors text-sm uppercase tracking-wider">Instagram</a><% } %>
+          <% if (store.whatsapp) { %><a href="https://wa.me/<%= store.whatsapp %>" target="_blank" class="text-gray-500 hover:text-[#d4af37] transition-colors text-sm uppercase tracking-wider">WhatsApp</a><% } %>
+        </div>
+      </div>
+      <p class="text-center text-xs text-gray-600 mt-10 uppercase tracking-wider">Powered by TuFerIA</p>
+    </div>
+  </footer>
+
+  <script>
+  async function addToCart(productId, variantId, quantity) {
+    const q = quantity || 1; const v = variantId || null;
+    const res = await fetch('/api/cart/add', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ store_id: '<%= store.id %>', product_id: productId, variant_id: v, quantity: q }) });
+    const data = await res.json();
+    if (data.success) { location.reload(); } else { alert(data.error || 'Error'); }
+  }
+  async function addComboToCart(comboId) {
+    const res = await fetch('/api/cart/combo', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ store_id: '<%= store.id %>', combo_id: comboId }) });
+    const data = await res.json();
+    if (data.success) { location.reload(); } else { alert(data.error || 'Error'); }
+  }
+  </script>
+</body>
+</html>

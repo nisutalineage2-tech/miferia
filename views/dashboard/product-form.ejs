@@ -1,0 +1,722 @@
+<div class="max-w-4xl mx-auto">
+  <div class="flex items-center justify-between mb-6">
+    <div>
+      <a href="/dashboard/productos" class="text-sm text-indigo-400 hover:text-indigo-300 mb-1 inline-block">← Volver a productos</a>
+      <h1 class="text-2xl font-bold text-white"><%= product ? 'Editar Producto' : 'Nuevo Producto' %></h1>
+    </div>
+  </div>
+
+  <% if (typeof error !== 'undefined' && error) { %>
+    <div class="mb-6 p-4 bg-red-500/10 border border-red-500/20 rounded-xl text-red-400 text-sm"><%= error %></div>
+  <% } %>
+
+  <form method="POST" action="<%= product ? '/dashboard/productos/editar/' + product.id : '/dashboard/productos/nuevo' %>" class="space-y-5">
+
+    <!-- ========== NOMBRE Y DESCRIPCIÓN ========== -->
+    <div class="p-6 rounded-2xl bg-[#0f0f1a] border border-gray-800/50">
+      <h2 class="text-lg font-semibold text-white mb-4">Nombre y descripción</h2>
+      <div class="space-y-4">
+        <div>
+          <input type="text" name="name" required value="<%= product ? product.name : '' %>"
+            class="w-full px-4 py-3 bg-[#1a1a2e] border border-gray-700/50 rounded-xl text-white placeholder-gray-500 text-lg font-medium focus:outline-none focus:border-indigo-500/50 focus:ring-1 focus:ring-indigo-500/30 transition-colors"
+            placeholder="Nombre del producto">
+        </div>
+        <div>
+          <div class="flex items-center justify-between mb-2">
+            <label class="block text-sm font-medium text-gray-400">Descripción</label>
+            <button type="button" id="generateDescBtn"
+              class="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-indigo-400 bg-indigo-500/10 rounded-lg hover:bg-indigo-500/20 transition-colors">
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09zM18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.455 2.456L21.75 6l-1.036.259a3.375 3.375 0 00-2.455 2.456zM16.894 20.567L16.5 21.75l-.394-1.183a2.25 2.25 0 00-1.423-1.423L13.5 18.75l1.183-.394a2.25 2.25 0 001.423-1.423l.394-1.183.394 1.183a2.25 2.25 0 001.423 1.423l1.183.394-1.183.394a2.25 2.25 0 00-1.423 1.423z"/></svg>
+              Generar con IA
+            </button>
+          </div>
+          <textarea name="description" rows="3"
+            class="w-full px-4 py-3 bg-[#1a1a2e] border border-gray-700/50 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-indigo-500/50 focus:ring-1 focus:ring-indigo-500/30 transition-colors"
+            placeholder="Describí tu producto..."><%= product ? product.description : '' %></textarea>
+          <p class="text-xs text-gray-500 mt-1.5">Contanos sobre tu producto para ayudar a tus clientes a conocerte mejor</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========== FOTOS Y VIDEO ========== -->
+    <div class="p-6 rounded-2xl bg-[#0f0f1a] border border-gray-800/50">
+      <div class="flex items-center justify-between mb-3">
+        <h2 class="text-lg font-semibold text-white">Fotos y video</h2>
+        <span class="text-xs text-gray-500"><%= product && product.images ? JSON.parse(product.images).length + 1 : 0 %> archivos</span>
+      </div>
+      <p class="text-xs text-gray-500 mb-4">Tamaño mínimo recomendado: 1280px · Formatos: WEBP, PNG, JPEG, GIF</p>
+      
+      <!-- Drop zone -->
+      <div id="dropZone" class="relative border-2 border-dashed border-gray-700/50 rounded-xl p-8 text-center hover:border-indigo-500/30 transition-colors cursor-pointer mb-4"
+        ondragover="event.preventDefault(); this.classList.add('border-indigo-500/50', 'bg-indigo-500/5')"
+        ondragleave="this.classList.remove('border-indigo-500/50', 'bg-indigo-500/5')"
+        ondrop="event.preventDefault(); this.classList.remove('border-indigo-500/50', 'bg-indigo-500/5'); handleDrop(event)">
+        <input type="file" accept="image/*" multiple class="hidden" id="dropInput" onchange="handleFiles(this.files)">
+        <svg class="w-10 h-10 text-gray-600 mx-auto mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909M3.75 21h16.5A2.25 2.25 0 0022.5 18.75V5.25A2.25 2.25 0 0020.25 3H3.75A2.25 2.25 0 001.5 5.25v13.5A2.25 2.25 0 003.75 21z"/>
+        </svg>
+        <p class="text-sm text-gray-400">Arrastrá y soltá, o <span class="text-indigo-400 font-medium">hacé clic para subir</span> las fotos del producto</p>
+        <p class="text-xs text-gray-600 mt-1">Hasta 10 imágenes</p>
+        <input type="hidden" name="image" id="productImageUrl" value="<%= product ? (product.image || '') : '' %>">
+        <input type="hidden" name="images" id="productImagesInput" value="<%= product ? (product.images || '[]') : '[]' %>">
+      </div>
+
+      <!-- Image grid -->
+      <div id="imageGrid" class="grid grid-cols-4 sm:grid-cols-5 md:grid-cols-6 gap-3">
+        <% if (product && product.images) {
+          let imgs = [];
+          try { imgs = JSON.parse(product.images || '[]'); } catch(e) {}
+          // Ensure main image is first
+          if (product.image) {
+            imgs = [product.image, ...imgs.filter(i => i !== product.image)];
+          }
+          imgs.forEach((img, idx) => { %>
+            <div class="image-item relative aspect-square rounded-xl bg-[#1a1a2e] border border-gray-700/50 overflow-hidden group/image">
+              <img src="<%= img %>" class="w-full h-full object-cover">
+              <div class="absolute inset-0 bg-black/60 opacity-0 group-hover/image:opacity-100 transition-opacity flex items-center justify-center gap-2">
+                <button type="button" onclick="setMainImage('<%= img %>')" class="p-1.5 rounded-lg bg-white/10 hover:bg-white/20 text-white" title="Principal">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"/></svg>
+                </button>
+                <button type="button" onclick="removeImage('<%= img %>')" class="p-1.5 rounded-lg bg-white/10 hover:bg-red-500/50 text-white" title="Eliminar">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                </button>
+              </div>
+              <% if (img === product.image) { %>
+                <span class="absolute top-1 left-1 px-1.5 py-0.5 text-[9px] font-bold bg-indigo-600/90 text-white rounded">PRINCIPAL</span>
+              <% } %>
+            </div>
+          <% });
+        } %>
+      </div>
+    </div>
+
+    <!-- ========== PRECIOS ========== -->
+    <div class="p-6 rounded-2xl bg-[#0f0f1a] border border-gray-800/50">
+      <h2 class="text-lg font-semibold text-white mb-4">Precios</h2>
+      <div class="grid grid-cols-2 gap-4 mb-4">
+        <div>
+          <label class="block text-sm font-medium text-gray-300 mb-2">Precio de venta *</label>
+          <div class="relative">
+            <span class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500">$</span>
+            <input type="number" step="0.01" min="0" name="price" required id="salePrice"
+              value="<%= product ? product.price : '' %>"
+              class="w-full pl-8 pr-4 py-3 bg-[#1a1a2e] border border-gray-700/50 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-indigo-500/50 focus:ring-1 focus:ring-indigo-500/30 transition-colors"
+              placeholder="0.00" oninput="calcMargin()">
+          </div>
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-300 mb-2">Precio promocional</label>
+          <div class="relative">
+            <span class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500">$</span>
+            <input type="number" step="0.01" min="0" name="compare_price"
+              value="<%= product ? (product.compare_price || '') : '' %>"
+              class="w-full pl-8 pr-4 py-3 bg-[#1a1a2e] border border-gray-700/50 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-indigo-500/50 focus:ring-1 focus:ring-indigo-500/30 transition-colors"
+              placeholder="0.00">
+          </div>
+          <p class="text-xs text-gray-500 mt-1">Mostrar el precio anterior tachado en la tienda</p>
+        </div>
+      </div>
+      <div class="grid grid-cols-2 gap-4">
+        <div>
+          <label class="block text-sm font-medium text-gray-300 mb-2">Costo</label>
+          <div class="relative">
+            <span class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500">$</span>
+            <input type="number" step="0.01" min="0" name="cost" id="productCost"
+              value="<%= product ? (product.cost || '') : '' %>"
+              class="w-full pl-8 pr-4 py-3 bg-[#1a1a2e] border border-gray-700/50 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-indigo-500/50 focus:ring-1 focus:ring-indigo-500/30 transition-colors"
+              placeholder="0.00" oninput="calcMargin()">
+          </div>
+          <p class="text-xs text-gray-500 mt-1">Es de uso interno, tus clientes no lo verán</p>
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-300 mb-2">Margen de ganancia</label>
+          <div class="flex items-center gap-3 h-[50px]">
+            <div class="flex-1 h-full bg-[#1a1a2e] border border-gray-700/50 rounded-xl flex items-center px-4">
+              <span id="marginDisplay" class="text-white font-semibold text-lg">—</span>
+            </div>
+          </div>
+          <p class="text-xs text-gray-500 mt-1">Calculado automáticamente según precio y costo</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========== TIPO DE PRODUCTO ========== -->
+    <div class="p-6 rounded-2xl bg-[#0f0f1a] border border-gray-800/50">
+      <h2 class="text-lg font-semibold text-white mb-3">Tipo de producto</h2>
+      <div class="flex gap-3">
+        <label class="flex-1 flex items-center gap-3 p-4 rounded-xl bg-[#1a1a2e] border border-gray-700/30 hover:border-indigo-500/30 cursor-pointer transition-all <%= (!product || product.product_type === 'physical') ? 'border-indigo-500/50 bg-indigo-500/5' : '' %>">
+          <input type="radio" name="product_type" value="physical" <%= (!product || product.product_type === 'physical') ? 'checked' : '' %>
+            class="w-4 h-4 text-indigo-600 border-gray-600 bg-gray-700 focus:ring-indigo-500">
+          <div>
+            <span class="text-sm font-medium text-white">Físico</span>
+            <p class="text-xs text-gray-500">Producto que se envía o retira</p>
+          </div>
+        </label>
+        <label class="flex-1 flex items-center gap-3 p-4 rounded-xl bg-[#1a1a2e] border border-gray-700/30 hover:border-indigo-500/30 cursor-pointer transition-all <%= (product && product.product_type === 'digital') ? 'border-indigo-500/50 bg-indigo-500/5' : '' %>">
+          <input type="radio" name="product_type" value="digital" <%= (product && product.product_type === 'digital') ? 'checked' : '' %>
+            class="w-4 h-4 text-indigo-600 border-gray-600 bg-gray-700 focus:ring-indigo-500">
+          <div>
+            <span class="text-sm font-medium text-white">Digital / servicio</span>
+            <p class="text-xs text-gray-500">Servicio, suscripción o archivo digital</p>
+          </div>
+        </label>
+      </div>
+    </div>
+
+    <!-- ========== STOCK ========== -->
+    <div class="p-6 rounded-2xl bg-[#0f0f1a] border border-gray-800/50">
+      <h2 class="text-lg font-semibold text-white mb-3">Stock</h2>
+      <div class="space-y-3">
+        <div class="flex gap-3">
+          <label class="flex-1 flex items-center gap-3 p-3 rounded-xl bg-[#1a1a2e] border cursor-pointer transition-all <%= (!product || product.stock_type === 'limited') ? 'border-indigo-500/50 bg-indigo-500/5' : 'border-gray-700/30' %>"
+            onclick="document.getElementById('stockField').style.display='block'">
+            <input type="radio" name="stock_type" value="limited" <%= (!product || product.stock_type === 'limited') ? 'checked' : '' %>
+              onchange="document.getElementById('stockField').style.display='block'"
+              class="w-4 h-4 text-indigo-600 border-gray-600 bg-gray-700 focus:ring-indigo-500">
+            <span class="text-sm text-gray-300">Limitado</span>
+          </label>
+          <label class="flex-1 flex items-center gap-3 p-3 rounded-xl bg-[#1a1a2e] border cursor-pointer transition-all <%= (product && product.stock_type === 'unlimited') ? 'border-indigo-500/50 bg-indigo-500/5' : 'border-gray-700/30' %>"
+            onclick="document.getElementById('stockField').style.display='none'">
+            <input type="radio" name="stock_type" value="unlimited" <%= (product && product.stock_type === 'unlimited') ? 'checked' : '' %>
+              onchange="document.getElementById('stockField').style.display='none'"
+              class="w-4 h-4 text-indigo-600 border-gray-600 bg-gray-700 focus:ring-indigo-500">
+            <span class="text-sm text-gray-300">Infinito</span>
+          </label>
+        </div>
+        <div id="stockField" style="<%= (product && product.stock_type === 'unlimited') ? 'display:none' : '' %>">
+          <input type="number" min="0" name="stock" value="<%= product ? product.stock : 0 %>"
+            class="w-full max-w-xs px-4 py-3 bg-[#1a1a2e] border border-gray-700/50 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-indigo-500/50 focus:ring-1 focus:ring-indigo-500/30 transition-colors"
+            placeholder="Cantidad en stock">
+        </div>
+      </div>
+    </div>
+
+    <!-- ========== CÓDIGOS ========== -->
+    <div class="p-6 rounded-2xl bg-[#0f0f1a] border border-gray-800/50">
+      <h2 class="text-lg font-semibold text-white mb-3">Códigos</h2>
+      <div class="grid grid-cols-2 gap-4">
+        <div>
+          <label class="block text-sm font-medium text-gray-300 mb-2">SKU</label>
+          <input type="text" name="sku" value="<%= product ? (product.sku || '') : '' %>"
+            class="w-full px-4 py-3 bg-[#1a1a2e] border border-gray-700/50 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-indigo-500/50 focus:ring-1 focus:ring-indigo-500/30 transition-colors"
+            placeholder="PROD-001">
+          <p class="text-xs text-gray-500 mt-1">Código interno para seguimiento de productos</p>
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-300 mb-2">Código de barras</label>
+          <input type="text" name="barcode" value="<%= product ? (product.barcode || '') : '' %>"
+            class="w-full px-4 py-3 bg-[#1a1a2e] border border-gray-700/50 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-indigo-500/50 focus:ring-1 focus:ring-indigo-500/30 transition-colors"
+            placeholder="1234567890123">
+          <p class="text-xs text-gray-500 mt-1">13 dígitos para identificación universal</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========== PESO Y DIMENSIONES ========== -->
+    <div class="p-6 rounded-2xl bg-[#0f0f1a] border border-gray-800/50">
+      <h2 class="text-lg font-semibold text-white mb-3">Peso y dimensiones</h2>
+      <p class="text-xs text-gray-500 mb-4">Ingresá los datos para calcular el costo de envío de los productos</p>
+      <div class="grid grid-cols-4 gap-3">
+        <div>
+          <label class="block text-xs font-medium text-gray-400 mb-1">Peso (kg)</label>
+          <input type="number" step="0.01" min="0" name="weight" value="<%= product ? (product.weight || '') : '' %>"
+            class="w-full px-3 py-2.5 bg-[#1a1a2e] border border-gray-700/50 rounded-xl text-white placeholder-gray-500 text-sm focus:outline-none focus:border-indigo-500/50 transition-colors"
+            placeholder="0.00">
+        </div>
+        <div>
+          <label class="block text-xs font-medium text-gray-400 mb-1">Profundidad (cm)</label>
+          <input type="number" step="0.1" min="0" name="depth" value="<%= product ? (product.depth || '') : '' %>"
+            class="w-full px-3 py-2.5 bg-[#1a1a2e] border border-gray-700/50 rounded-xl text-white placeholder-gray-500 text-sm focus:outline-none focus:border-indigo-500/50 transition-colors"
+            placeholder="0">
+        </div>
+        <div>
+          <label class="block text-xs font-medium text-gray-400 mb-1">Ancho (cm)</label>
+          <input type="number" step="0.1" min="0" name="width" value="<%= product ? (product.width || '') : '' %>"
+            class="w-full px-3 py-2.5 bg-[#1a1a2e] border border-gray-700/50 rounded-xl text-white placeholder-gray-500 text-sm focus:outline-none focus:border-indigo-500/50 transition-colors"
+            placeholder="0">
+        </div>
+        <div>
+          <label class="block text-xs font-medium text-gray-400 mb-1">Alto (cm)</label>
+          <input type="number" step="0.1" min="0" name="height" value="<%= product ? (product.height || '') : '' %>"
+            class="w-full px-3 py-2.5 bg-[#1a1a2e] border border-gray-700/50 rounded-xl text-white placeholder-gray-500 text-sm focus:outline-none focus:border-indigo-500/50 transition-colors"
+            placeholder="0">
+        </div>
+      </div>
+    </div>
+
+    <!-- ========== INSTAGRAM Y GOOGLE SHOPPING ========== -->
+    <div class="p-6 rounded-2xl bg-[#0f0f1a] border border-gray-800/50">
+      <h2 class="text-lg font-semibold text-white mb-3">Instagram y Google Shopping</h2>
+      <p class="text-xs text-gray-500 mb-4">Destacá tus productos en las vidrieras virtuales de Instagram y Google gratuitamente.</p>
+      <div class="grid grid-cols-3 gap-4">
+        <div>
+          <label class="block text-sm font-medium text-gray-300 mb-2">MPN</label>
+          <input type="text" name="mpn" value="<%= product ? (product.mpn || '') : '' %>"
+            class="w-full px-4 py-3 bg-[#1a1a2e] border border-gray-700/50 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-indigo-500/50 focus:ring-1 focus:ring-indigo-500/30 transition-colors"
+            placeholder="MPN">
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-300 mb-2">Rango de edad</label>
+          <select name="age_range"
+            class="w-full px-4 py-3 bg-[#1a1a2e] border border-gray-700/50 rounded-xl text-white focus:outline-none focus:border-indigo-500/50 focus:ring-1 focus:ring-indigo-500/30 transition-colors">
+            <option value="">Seleccionar</option>
+            <% ['0-3 meses', '3-6 meses', '6-12 meses', '12-24 meses', '2-4 años', '5-7 años', '8-13 años', '14-17 años', '18-24 años', '25-34 años', '35-44 años', '45-54 años', '55-64 años', '65+ años'].forEach(r => { %>
+              <option value="<%= r %>" <%= product && product.age_range === r ? 'selected' : '' %>><%= r %></option>
+            <% }); %>
+          </select>
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-300 mb-2">Sexo</label>
+          <select name="gender"
+            class="w-full px-4 py-3 bg-[#1a1a2e] border border-gray-700/50 rounded-xl text-white focus:outline-none focus:border-indigo-500/50 focus:ring-1 focus:ring-indigo-500/30 transition-colors">
+            <option value="">Seleccionar</option>
+            <option value="male" <%= product && product.gender === 'male' ? 'selected' : '' %>>Masculino</option>
+            <option value="female" <%= product && product.gender === 'female' ? 'selected' : '' %>>Femenino</option>
+            <option value="unisex" <%= product && product.gender === 'unisex' ? 'selected' : '' %>>Unisex</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========== CATEGORÍAS ========== -->
+    <div class="p-6 rounded-2xl bg-[#0f0f1a] border border-gray-800/50">
+      <h2 class="text-lg font-semibold text-white mb-3">Categorías</h2>
+      <select name="category_id"
+        class="w-full max-w-md px-4 py-3 bg-[#1a1a2e] border border-gray-700/50 rounded-xl text-white focus:outline-none focus:border-indigo-500/50 focus:ring-1 focus:ring-indigo-500/30 transition-colors">
+        <option value="">Sin categoría</option>
+        <% categories.forEach(c => { %>
+          <option value="<%= c.id %>" <%= product && product.category_id === c.id ? 'selected' : '' %>>
+            <%= c.name %>
+          </option>
+        <% }); %>
+      </select>
+      <p class="text-xs text-gray-500 mt-1.5">Ayudá a tus clientes a encontrar más rápido tus productos</p>
+    </div>
+
+    <!-- ========== VARIANTES ========== -->
+    <div class="p-6 rounded-2xl bg-[#0f0f1a] border border-gray-800/50">
+      <div class="flex items-center justify-between mb-4">
+        <h2 class="text-lg font-semibold text-white">Variantes</h2>
+        <button type="button" id="addVariantBtn"
+          class="inline-flex items-center gap-1 px-3 py-1.5 text-xs font-medium text-indigo-400 bg-indigo-500/10 rounded-lg hover:bg-indigo-500/20 transition-colors">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/></svg>
+          Agregar variantes
+        </button>
+      </div>
+      <p class="text-xs text-gray-500 mb-4">Combiná diferentes propiedades del producto. Ej: color + tamaño.</p>
+      <div id="variantsContainer">
+        <% if (typeof variants !== 'undefined' && variants.length > 0) { %>
+          <% variants.forEach((v, i) => { %>
+            <div class="variant-item flex items-center gap-3 mb-3">
+              <input type="text" value="<%= v.name %>" placeholder="Nombre (Ej: Grande)"
+                class="flex-1 px-4 py-2.5 bg-[#1a1a2e] border border-gray-700/50 rounded-xl text-white placeholder-gray-500 text-sm focus:outline-none focus:border-indigo-500/50 transition-colors">
+              <input type="number" step="0.01" value="<%= v.price || '' %>" placeholder="Precio"
+                class="w-24 px-3 py-2.5 bg-[#1a1a2e] border border-gray-700/50 rounded-xl text-white placeholder-gray-500 text-sm focus:outline-none focus:border-indigo-500/50 transition-colors">
+              <input type="number" value="<%= v.stock || 0 %>" placeholder="Stock"
+                class="w-20 px-3 py-2.5 bg-[#1a1a2e] border border-gray-700/50 rounded-xl text-white placeholder-gray-500 text-sm focus:outline-none focus:border-indigo-500/50 transition-colors">
+              <input type="text" value="<%= v.sku || '' %>" placeholder="SKU"
+                class="w-24 px-3 py-2.5 bg-[#1a1a2e] border border-gray-700/50 rounded-xl text-white placeholder-gray-500 text-sm focus:outline-none focus:border-indigo-500/50 transition-colors">
+              <button type="button" class="remove-variant p-2 text-gray-500 hover:text-red-400 transition-colors">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+              </button>
+            </div>
+          <% }); %>
+        <% } %>
+      </div>
+      <input type="hidden" name="variants" id="variantsInput" value='<%= typeof variants !== 'undefined' ? JSON.stringify(variants) : '[]' %>'>
+    </div>
+
+    <!-- ========== TAGS, MARCA Y SEO ========== -->
+    <div class="p-6 rounded-2xl bg-[#0f0f1a] border border-gray-800/50">
+      <div class="flex items-center justify-between mb-4">
+        <h2 class="text-lg font-semibold text-white">Tags, Marca y SEO</h2>
+        <button type="button" onclick="document.getElementById('seoFields').classList.toggle('hidden')"
+          class="inline-flex items-center gap-1 px-3 py-1.5 text-xs font-medium text-gray-400 bg-gray-500/10 rounded-lg hover:bg-gray-500/20 transition-colors">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.066 2.573c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.573 1.066c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.066-2.573c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/></svg>
+          SEO
+        </button>
+      </div>
+
+      <div class="space-y-4">
+        <!-- Tags -->
+        <div>
+          <label class="block text-sm font-medium text-gray-300 mb-2">Tags</label>
+          <div class="flex flex-wrap gap-2 mb-2" id="tagsContainer">
+            <% if (product && product.tags) {
+              let tags = [];
+              try { tags = JSON.parse(product.tags || '[]'); } catch(e) {}
+              tags.forEach(t => { %>
+                <span class="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-medium bg-indigo-500/10 text-indigo-300 rounded-lg">
+                  <%= t %>
+                  <button type="button" onclick="this.parentElement.remove(); updateTagsInput()" class="hover:text-red-300">&times;</button>
+                </span>
+              <% });
+            } %>
+          </div>
+          <div class="flex gap-2">
+            <input type="text" id="tagInput" placeholder="Ej: oferta, nuevo, verano"
+              class="flex-1 px-4 py-2.5 bg-[#1a1a2e] border border-gray-700/50 rounded-xl text-white placeholder-gray-500 text-sm focus:outline-none focus:border-indigo-500/50 transition-colors"
+              onkeydown="if(event.key==='Enter'){event.preventDefault(); addTag()}">
+            <button type="button" onclick="addTag()"
+              class="px-4 py-2.5 text-sm font-medium text-indigo-400 bg-indigo-500/10 rounded-xl hover:bg-indigo-500/20 transition-colors">Agregar</button>
+          </div>
+          <input type="hidden" name="tags" id="tagsInput" value='<%= product && product.tags ? product.tags : '[]' %>'>
+        </div>
+
+        <!-- Brand -->
+        <div>
+          <label class="block text-sm font-medium text-gray-300 mb-2">Marca</label>
+          <input type="text" name="brand" value="<%= product ? (product.brand || '') : '' %>"
+            class="w-full max-w-md px-4 py-3 bg-[#1a1a2e] border border-gray-700/50 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-indigo-500/50 focus:ring-1 focus:ring-indigo-500/30 transition-colors"
+            placeholder="Nombre de la marca">
+        </div>
+
+        <!-- SEO (collapsible) -->
+        <div id="seoFields" class="hidden space-y-4 pl-4 border-l-2 border-indigo-500/20">
+          <p class="text-sm text-gray-400 font-medium">Campos SEO para motores de búsqueda</p>
+          <div>
+            <label class="block text-sm font-medium text-gray-300 mb-2">Meta título</label>
+            <input type="text" name="meta_title" value="<%= product ? (product.meta_title || '') : '' %>"
+              class="w-full px-4 py-3 bg-[#1a1a2e] border border-gray-700/50 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-indigo-500/50 focus:ring-1 focus:ring-indigo-500/30 transition-colors"
+              placeholder="<%= product ? product.name : 'Título para Google' %>">
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-300 mb-2">Meta descripción</label>
+            <textarea name="meta_description" rows="2"
+              class="w-full px-4 py-3 bg-[#1a1a2e] border border-gray-700/50 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-indigo-500/50 focus:ring-1 focus:ring-indigo-500/30 transition-colors"
+              placeholder="Descripción para resultados de búsqueda"><%= product ? (product.meta_description || '') : '' %></textarea>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========== VOLUME DISCOUNTS (colapsado) ========== -->
+    <details class="p-6 rounded-2xl bg-[#0f0f1a] border border-gray-800/50 group">
+      <summary class="flex items-center justify-between cursor-pointer text-white font-semibold list-none">
+        <span>Descuentos por Cantidad</span>
+        <svg class="w-4 h-4 text-gray-500 group-open:rotate-180 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+      </summary>
+      <div class="mt-4 space-y-3">
+        <p class="text-xs text-gray-500">Definí precios especiales por cantidad. Ej: 3+ unidades = $7.000 c/u.</p>
+        <div id="discountsContainer">
+          <% if (product && typeof volumeDiscounts !== 'undefined' && volumeDiscounts.length > 0) { %>
+            <% volumeDiscounts.forEach((d, i) => { %>
+              <div class="discount-item flex items-center gap-3 mb-3">
+                <div class="flex items-center gap-2 bg-[#1a1a2e] rounded-xl px-4 py-2.5 border border-gray-700/50">
+                  <span class="text-sm text-gray-400">Desde</span>
+                  <input type="number" min="2" value="<%= d.min_qty %>" class="discount-qty w-16 bg-transparent text-white text-sm text-center focus:outline-none" placeholder="3">
+                  <span class="text-sm text-gray-400">uds</span>
+                </div>
+                <div class="flex items-center gap-2 bg-[#1a1a2e] rounded-xl px-4 py-2.5 border border-gray-700/50">
+                  <span class="text-sm text-gray-400">$</span>
+                  <input type="number" step="0.01" value="<%= d.discount_value %>" class="discount-value w-24 bg-transparent text-white text-sm text-center focus:outline-none" placeholder="0.00">
+                  <span class="text-sm text-gray-400">c/u</span>
+                </div>
+                <button type="button" class="remove-discount p-2 text-gray-500 hover:text-red-400 transition-colors"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg></button>
+              </div>
+            <% }); %>
+          <% } %>
+        </div>
+        <button type="button" id="addDiscountBtn"
+          class="inline-flex items-center gap-1 px-3 py-1.5 text-xs font-medium text-green-400 bg-green-500/10 rounded-lg hover:bg-green-500/20 transition-colors">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/></svg>
+          Agregar Rango
+        </button>
+        <input type="hidden" name="volume_discounts" id="volumeDiscountsInput" value='<%= product && typeof volumeDiscounts !== 'undefined' ? JSON.stringify(volumeDiscounts) : '[]' %>'>
+      </div>
+    </details>
+
+    <!-- ========== OPCIONES FINALES ========== -->
+    <div class="p-6 rounded-2xl bg-[#0f0f1a] border border-gray-800/50 space-y-4">
+      <h2 class="text-lg font-semibold text-white">Opciones del producto</h2>
+
+      <!-- Estado (Mostrar en la tienda) -->
+      <div class="flex items-center justify-between p-4 rounded-xl bg-[#1a1a2e] border border-gray-700/30">
+        <div>
+          <span class="text-sm font-medium text-white">Mostrar en la tienda</span>
+          <p class="text-xs text-gray-500">El producto será visible para tus clientes</p>
+        </div>
+        <label class="relative inline-flex items-center cursor-pointer">
+          <input type="hidden" name="status" value="inactive">
+          <input type="checkbox" name="status" value="active" <%= (!product || product.status === 'active') ? 'checked' : '' %>
+            class="sr-only peer">
+          <div class="w-11 h-6 bg-gray-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-indigo-600"></div>
+        </label>
+      </div>
+
+      <!-- Destacar producto -->
+      <div class="flex items-center justify-between p-4 rounded-xl bg-[#1a1a2e] border border-gray-700/30">
+        <div>
+          <span class="text-sm font-medium text-white">Destacar producto</span>
+          <p class="text-xs text-gray-500">Aparecerá primero en la sección de destacados</p>
+        </div>
+        <label class="relative inline-flex items-center cursor-pointer">
+          <input type="checkbox" name="featured" <%= product && product.featured ? 'checked' : '' %>
+            class="sr-only peer">
+          <div class="w-11 h-6 bg-gray-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-amber-500"></div>
+        </label>
+      </div>
+
+      <!-- Envío gratis -->
+      <div class="flex items-center justify-between p-4 rounded-xl bg-[#1a1a2e] border border-gray-700/30">
+        <div>
+          <span class="text-sm font-medium text-white">Envío gratis</span>
+          <p class="text-xs text-gray-500">Este producto tiene envío gratis</p>
+        </div>
+        <label class="relative inline-flex items-center cursor-pointer">
+          <input type="checkbox" name="free_shipping" <%= product && product.free_shipping ? 'checked' : '' %>
+            class="sr-only peer">
+          <div class="w-11 h-6 bg-gray-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-green-600"></div>
+        </label>
+      </div>
+    </div>
+
+    <!-- ========== SUBMIT ========== -->
+    <div class="flex items-center gap-4 pt-2">
+      <button type="submit"
+        class="px-8 py-3.5 bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-semibold rounded-xl hover:from-indigo-500 hover:to-purple-500 transition-all shadow-lg shadow-indigo-600/25">
+        <%= product ? 'Guardar Cambios' : 'Crear Producto' %>
+      </button>
+      <a href="/dashboard/productos" class="px-6 py-3.5 text-gray-400 hover:text-white transition-colors">Cancelar</a>
+    </div>
+  </form>
+</div>
+
+<script>
+  // ====== MARGIN CALCULATOR ======
+  function calcMargin() {
+    const price = parseFloat(document.getElementById('salePrice').value) || 0;
+    const cost = parseFloat(document.getElementById('productCost').value) || 0;
+    const display = document.getElementById('marginDisplay');
+    if (price > 0 && cost > 0) {
+      const margin = ((price - cost) / price) * 100;
+      const profit = price - cost;
+      const color = margin >= 50 ? 'text-green-400' : margin >= 30 ? 'text-amber-400' : margin >= 10 ? 'text-orange-400' : 'text-red-400';
+      display.innerHTML = `<span class="${color}">${margin.toFixed(1)}%</span> <span class="text-gray-500 text-sm font-normal">($${profit.toFixed(2)})</span>`;
+    } else if (price > 0) {
+      display.innerHTML = `<span class="text-gray-400">100%</span> <span class="text-gray-500 text-sm font-normal">(sin costo)</span>`;
+    } else {
+      display.textContent = '—';
+    }
+  }
+  // Initial calc
+  setTimeout(calcMargin, 100);
+
+  // ====== DROP ZONE ======
+  document.getElementById('dropZone')?.addEventListener('click', () => document.getElementById('dropInput').click());
+
+  async function handleDrop(e) {
+    const files = e.dataTransfer ? e.dataTransfer.files : e.target.files;
+    handleFiles(files);
+  }
+
+  function handleFiles(files) {
+    Array.from(files).forEach(f => uploadImage(f));
+  }
+
+  let allImages = [];
+  <% if (product) {
+    let imgs = [];
+    try { imgs = JSON.parse(product.images || '[]'); } catch(e) {}
+    if (product.image) { imgs = [product.image, ...imgs.filter(i => i !== product.image)]; }
+    try { allImages = JSON.stringify(imgs); } catch(e) {}
+  } %>
+
+  async function uploadImage(file) {
+    if (allImages.length >= 10) return alert('Máximo 10 imágenes');
+    const formData = new FormData();
+    formData.append('file', file);
+    <% if (product) { %>formData.append('product_id', '<%= product.id %>');<% } %>
+    const res = await fetch('/api/upload/product', { method: 'POST', body: formData });
+    const data = await res.json();
+    if (data.url) {
+      allImages.push(data.url);
+      if (!document.getElementById('productImageUrl').value) {
+        document.getElementById('productImageUrl').value = data.url;
+      }
+      updateImageGrid();
+    }
+  }
+
+  function updateImageGrid() {
+    const grid = document.getElementById('imageGrid');
+    const mainUrl = document.getElementById('productImageUrl').value;
+    document.getElementById('productImagesInput').value = JSON.stringify(allImages);
+    grid.innerHTML = allImages.map(img => `
+      <div class="image-item relative aspect-square rounded-xl bg-[#1a1a2e] border border-gray-700/50 overflow-hidden group/image">
+        <img src="${img}" class="w-full h-full object-cover">
+        <div class="absolute inset-0 bg-black/60 opacity-0 group-hover/image:opacity-100 transition-opacity flex items-center justify-center gap-2">
+          <button type="button" onclick="setMainImage('${img}')" class="p-1.5 rounded-lg bg-white/10 hover:bg-white/20 text-white" title="Principal">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"/></svg>
+          </button>
+          <button type="button" onclick="removeImage('${img}')" class="p-1.5 rounded-lg bg-white/10 hover:bg-red-500/50 text-white" title="Eliminar">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+          </button>
+        </div>
+        ${img === mainUrl ? '<span class="absolute top-1 left-1 px-1.5 py-0.5 text-[9px] font-bold bg-indigo-600/90 text-white rounded">PRINCIPAL</span>' : ''}
+      </div>
+    `).join('');
+  }
+
+  function setMainImage(url) {
+    document.getElementById('productImageUrl').value = url;
+    updateImageGrid();
+    fetch('/api/product/main-image', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ product_id: '<%= product ? product.id : "" %>', url })
+    });
+  }
+
+  function removeImage(url) {
+    allImages = allImages.filter(i => i !== url);
+    const mainUrl = document.getElementById('productImageUrl').value;
+    if (mainUrl === url) {
+      document.getElementById('productImageUrl').value = allImages.length > 0 ? allImages[0] : '';
+    }
+    updateImageGrid();
+    fetch('/api/product/remove-image', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ product_id: '<%= product ? product.id : "" %>', url })
+    });
+  }
+
+  // ====== TAGS ======
+  function addTag() {
+    const input = document.getElementById('tagInput');
+    const val = input.value.trim();
+    if (!val) return;
+    const container = document.getElementById('tagsContainer');
+    const span = document.createElement('span');
+    span.className = 'inline-flex items-center gap-1 px-2.5 py-1 text-xs font-medium bg-indigo-500/10 text-indigo-300 rounded-lg';
+    span.innerHTML = `${val} <button type="button" onclick="this.parentElement.remove(); updateTagsInput()" class="hover:text-red-300">&times;</button>`;
+    container.appendChild(span);
+    input.value = '';
+    updateTagsInput();
+  }
+
+  function updateTagsInput() {
+    const tags = [];
+    document.querySelectorAll('#tagsContainer span').forEach(s => {
+      const text = s.textContent.replace('×', '').trim();
+      if (text) tags.push(text);
+    });
+    document.getElementById('tagsInput').value = JSON.stringify(tags);
+  }
+
+  // ====== VARIANTS ======
+  const variantsContainer = document.getElementById('variantsContainer');
+  const variantsInput = document.getElementById('variantsInput');
+
+  function updateVariantsInput() {
+    const items = variantsContainer.querySelectorAll('.variant-item');
+    const variants = [];
+    items.forEach(item => {
+      const inputs = item.querySelectorAll('input');
+      const name = inputs[0].value;
+      const price = inputs[1].value;
+      const stock = inputs[2].value;
+      const sku = inputs[3].value;
+      if (name) variants.push({ name, price: price || null, stock: parseInt(stock) || 0, sku: sku || '' });
+    });
+    variantsInput.value = JSON.stringify(variants);
+  }
+
+  document.getElementById('addVariantBtn').addEventListener('click', () => {
+    const div = document.createElement('div');
+    div.className = 'variant-item flex items-center gap-3 mb-3';
+    div.innerHTML = `
+      <input type="text" placeholder="Nombre (Ej: Grande)"
+        class="flex-1 px-4 py-2.5 bg-[#1a1a2e] border border-gray-700/50 rounded-xl text-white placeholder-gray-500 text-sm focus:outline-none focus:border-indigo-500/50 transition-colors">
+      <input type="number" step="0.01" placeholder="Precio"
+        class="w-24 px-3 py-2.5 bg-[#1a1a2e] border border-gray-700/50 rounded-xl text-white placeholder-gray-500 text-sm focus:outline-none focus:border-indigo-500/50 transition-colors">
+      <input type="number" placeholder="Stock"
+        class="w-20 px-3 py-2.5 bg-[#1a1a2e] border border-gray-700/50 rounded-xl text-white placeholder-gray-500 text-sm focus:outline-none focus:border-indigo-500/50 transition-colors">
+      <input type="text" placeholder="SKU"
+        class="w-24 px-3 py-2.5 bg-[#1a1a2e] border border-gray-700/50 rounded-xl text-white placeholder-gray-500 text-sm focus:outline-none focus:border-indigo-500/50 transition-colors">
+      <button type="button" class="remove-variant p-2 text-gray-500 hover:text-red-400 transition-colors">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+      </button>`;
+    variantsContainer.appendChild(div);
+    updateVariantsInput();
+  });
+
+  variantsContainer.addEventListener('click', (e) => {
+    if (e.target.closest('.remove-variant')) {
+      e.target.closest('.variant-item').remove();
+      updateVariantsInput();
+    }
+  });
+  variantsContainer.addEventListener('input', updateVariantsInput);
+
+  // ====== VOLUME DISCOUNTS ======
+  const discountsContainer = document.getElementById('discountsContainer');
+  const volumeDiscountsInput = document.getElementById('volumeDiscountsInput');
+
+  function updateDiscountsInput() {
+    const items = discountsContainer.querySelectorAll('.discount-item');
+    const discounts = [];
+    items.forEach(item => {
+      const qty = parseInt(item.querySelector('.discount-qty').value);
+      const val = parseFloat(item.querySelector('.discount-value').value);
+      if (qty && val) discounts.push({ min_qty: qty, discount_type: 'fixed', discount_value: val });
+    });
+    discounts.sort((a, b) => a.min_qty - b.min_qty);
+    volumeDiscountsInput.value = JSON.stringify(discounts);
+  }
+
+  document.getElementById('addDiscountBtn')?.addEventListener('click', () => {
+    const div = document.createElement('div');
+    div.className = 'discount-item flex items-center gap-3 mb-3';
+    div.innerHTML = `
+      <div class="flex items-center gap-2 bg-[#1a1a2e] rounded-xl px-4 py-2.5 border border-gray-700/50">
+        <span class="text-sm text-gray-400">Desde</span>
+        <input type="number" min="2" class="discount-qty w-16 bg-transparent text-white text-sm text-center focus:outline-none" placeholder="3" value="3">
+        <span class="text-sm text-gray-400">uds</span>
+      </div>
+      <div class="flex items-center gap-2 bg-[#1a1a2e] rounded-xl px-4 py-2.5 border border-gray-700/50">
+        <span class="text-sm text-gray-400">$</span>
+        <input type="number" step="0.01" class="discount-value w-24 bg-transparent text-white text-sm text-center focus:outline-none" placeholder="0.00">
+        <span class="text-sm text-gray-400">c/u</span>
+      </div>
+      <button type="button" class="remove-discount p-2 text-gray-500 hover:text-red-400 transition-colors"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg></button>`;
+    discountsContainer.appendChild(div);
+    updateDiscountsInput();
+  });
+
+  discountsContainer.addEventListener('click', (e) => {
+    if (e.target.closest('.remove-discount')) {
+      e.target.closest('.discount-item').remove();
+      updateDiscountsInput();
+    }
+  });
+  discountsContainer.addEventListener('input', updateDiscountsInput);
+
+  // ====== GENERATE DESCRIPTION WITH IA ======
+  document.getElementById('generateDescBtn')?.addEventListener('click', () => {
+    const name = document.querySelector('input[name="name"]').value.trim();
+    if (!name) {
+      alert('Primero escribí el nombre del producto');
+      return;
+    }
+    const btn = document.getElementById('generateDescBtn');
+    btn.disabled = true;
+    btn.innerHTML = '<svg class="w-3.5 h-3.5 animate-spin" viewBox="0 0 24 24" fill="none"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/></svg> Generando...';
+    
+    // Simple AI-like description generator
+    const descriptions = [
+      `${name}. Producto de alta calidad, diseñado para brindar la mejor experiencia. Ideal para uso diario, combina estilo y funcionalidad.`,
+      `${name} — Calidad premium que marca la diferencia. Perfecto para quienes buscan lo mejor sin complicaciones. Disponible en varias opciones.`,
+      `Descubrí ${name.toLowerCase()}, el producto que estabas buscando. Fabricado con materiales seleccionados, ofrece durabilidad y un acabado impecable.`,
+      `Innovación y diseño se unen en ${name.toLowerCase()}. Un producto versátil, pensado para adaptarse a tus necesidades. ¡Probá la diferencia!`,
+    ];
+    
+    setTimeout(() => {
+      const textarea = document.querySelector('textarea[name="description"]');
+      textarea.value = descriptions[Math.floor(Math.random() * descriptions.length)];
+      btn.disabled = false;
+      btn.innerHTML = '<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09zM18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.455 2.456L21.75 6l-1.036.259a3.375 3.375 0 00-2.455 2.456zM16.894 20.567L16.5 21.75l-.394-1.183a2.25 2.25 0 00-1.423-1.423L13.5 18.75l1.183-.394a2.25 2.25 0 001.423-1.423l.394-1.183.394 1.183a2.25 2.25 0 001.423 1.423l1.183.394-1.183.394a2.25 2.25 0 00-1.423 1.423z"/></svg> Generar con IA';
+    }, 800);
+  });
+</script>
