@@ -197,7 +197,26 @@ function initDb() {
     'CREATE TABLE IF NOT EXISTS store_newsletter_subscribers (id TEXT PRIMARY KEY, store_id TEXT NOT NULL, email TEXT NOT NULL, created_at DATETIME DEFAULT CURRENT_TIMESTAMP, FOREIGN KEY (store_id) REFERENCES stores(id) ON DELETE CASCADE, UNIQUE(store_id, email))',
     'ALTER TABLE stores ADD COLUMN filter_settings TEXT DEFAULT \'{}\'',
     'ALTER TABLE stores ADD COLUMN hero_images TEXT DEFAULT \'[]\'',
+    'ALTER TABLE stores ADD COLUMN smtp_host TEXT DEFAULT \'\'',
+    'ALTER TABLE stores ADD COLUMN smtp_port INTEGER DEFAULT 587',
+    'ALTER TABLE stores ADD COLUMN smtp_user TEXT DEFAULT \'\'',
+    'ALTER TABLE stores ADD COLUMN smtp_pass TEXT DEFAULT \'\'',
+    'ALTER TABLE stores ADD COLUMN smtp_from_email TEXT DEFAULT \'\'',
+    'ALTER TABLE stores ADD COLUMN smtp_from_name TEXT DEFAULT \'\'',
+    'ALTER TABLE stores ADD COLUMN whatsapp_notifications INTEGER DEFAULT 0',
+    'ALTER TABLE stores ADD COLUMN email_notifications INTEGER DEFAULT 0',
+    'ALTER TABLE stores ADD COLUMN custom_domain TEXT',
+    'ALTER TABLE stores ADD COLUMN cloudflare_record_id TEXT',
   ];
+
+  // System settings table for Cloudflare and other configs
+  _db.exec(`
+    CREATE TABLE IF NOT EXISTS system_settings (
+      key TEXT PRIMARY KEY,
+      value TEXT NOT NULL,
+      updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    )
+  `);
   for (const sql of migrations) {
     try { _db.exec(sql); } catch (e) { /* column already exists */ }
   }

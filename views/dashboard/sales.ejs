@@ -19,67 +19,54 @@
 
     <!-- Payment Methods -->
     <div class="p-6 rounded-2xl bg-[#0f0f1a] border border-gray-800/50">
-      <h2 class="text-lg font-semibold text-white mb-1">Medios de Pago y Descuentos</h2>
-      <p class="text-xs text-gray-500 mb-4">Seleccioná los medios de pago que aceptás y ofrecé descuentos para incentivar ciertos métodos.</p>
+      <h2 class="text-lg font-semibold text-white mb-1">Medios de Pago</h2>
+      <p class="text-xs text-gray-500 mb-4">Seleccioná los medios de pago que aceptás.</p>
       <%
         const allMethods = ['Efectivo', 'Transferencia Bancaria', 'Mercado Pago', 'Tarjeta de Crédito/Débito', 'Criptomonedas', 'Otro'];
         let storeMethods = [];
         try { storeMethods = JSON.parse(store.payment_methods || '[]'); } catch(e) {}
-        let storeDiscounts = {};
-        try { storeDiscounts = JSON.parse(store.payment_discounts || '{}'); } catch(e) {}
       %>
       <div class="space-y-2">
         <% allMethods.forEach(m => { %>
-          <div class="flex items-center gap-3 p-3 rounded-xl bg-[#1a1a2e] border border-gray-700/30 hover:border-indigo-500/30 transition-all">
-            <label class="flex items-center gap-3 cursor-pointer min-w-[200px]">
-              <input type="checkbox" name="payment_methods" value="<%= m %>"
-                <%= storeMethods.includes(m) ? 'checked' : '' %>
-                class="w-4 h-4 rounded border-gray-600 bg-gray-700 text-indigo-600 focus:ring-indigo-500">
-              <span class="text-sm text-gray-300"><%= m %></span>
-            </label>
-            <div class="flex items-center gap-2">
-              <span class="text-xs text-gray-500">Descuento:</span>
-              <input type="number" min="0" max="100" name="payment_discount_<%= m.replace(/[^a-zA-Z0-9]/g, '_') %>"
-                value="<%= storeDiscounts[m] || 0 %>"
-                class="w-16 px-2 py-1.5 bg-[#0f0f1a] border border-gray-700/50 rounded-lg text-white text-sm text-center focus:outline-none focus:border-indigo-500/50">
-              <span class="text-xs text-gray-500">%</span>
-            </div>
-          </div>
+          <label class="flex items-center gap-3 p-3 rounded-xl bg-[#1a1a2e] border border-gray-700/30 hover:border-indigo-500/30 transition-all cursor-pointer">
+            <input type="checkbox" name="payment_methods" value="<%= m %>"
+              <%= storeMethods.includes(m) ? 'checked' : '' %>
+              class="w-4 h-4 rounded border-gray-600 bg-gray-700 text-indigo-600 focus:ring-indigo-500">
+            <span class="text-sm text-gray-300"><%= m %></span>
+          </label>
         <% }); %>
       </div>
-      <p class="text-xs text-gray-500 mt-3">Ej: 10% descuento por pago en efectivo o transferencia. El descuento se aplica automáticamente en el checkout.</p>
     </div>
 
     <!-- Local Pickup -->
     <div class="p-6 rounded-2xl bg-[#0f0f1a] border border-gray-800/50">
       <h2 class="text-lg font-semibold text-white mb-1">Retiro en el Local</h2>
-      <p class="text-xs text-gray-500 mb-4">Ofrecé la opción de retirar los productos en tu local físico.</p>
-
-      <label class="flex items-center gap-3 cursor-pointer mb-4">
-        <input type="checkbox" name="local_pickup" <%= store.local_pickup ? 'checked' : '' %>
-          class="w-4 h-4 rounded border-gray-600 bg-gray-700 text-indigo-600 focus:ring-indigo-500"
-          onchange="document.getElementById('pickupFields').classList.toggle('hidden', !this.checked)">
-        <span class="text-sm font-medium text-gray-300">Habilitar retiro en el local</span>
-      </label>
-
-      <div id="pickupFields" class="<%= store.local_pickup ? '' : 'hidden' %> space-y-4 pl-7 border-l-2 border-indigo-500/20">
+      <p class="text-xs text-gray-500 mb-4">Los clientes retiran directamente en tu local.</p>
+      <input type="hidden" name="local_pickup" value="1">
+      <div class="space-y-4 pl-7 border-l-2 border-indigo-500/20">
         <div>
           <label class="block text-sm font-medium text-gray-300 mb-2">Dirección del local</label>
           <input type="text" name="local_pickup_address" value="<%= store.local_pickup_address || '' %>"
             class="w-full px-4 py-3 bg-[#1a1a2e] border border-gray-700/50 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-indigo-500/50 focus:ring-1 focus:ring-indigo-500/30 transition-colors"
             placeholder="Calle, número, ciudad, código postal">
         </div>
-        <div>
-          <label class="block text-sm font-medium text-gray-300 mb-2">Descuento por retiro</label>
-          <p class="text-xs text-gray-500 mb-2">Descuento adicional si el cliente elige retirar en el local.</p>
-          <div class="relative max-w-xs">
-            <span class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500">$</span>
-            <input type="number" step="0.01" min="0" name="pickup_discount"
-              value="<%= store.pickup_discount || 0 %>"
-              class="w-full pl-8 pr-4 py-3 bg-[#1a1a2e] border border-gray-700/50 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-indigo-500/50 focus:ring-1 focus:ring-indigo-500/30 transition-colors"
-              placeholder="0.00">
+      </div>
+    </div>
+
+    <!-- Notifications -->
+    <div class="p-6 rounded-2xl bg-[#0f0f1a] border border-gray-800/50">
+      <h2 class="text-lg font-semibold text-white mb-1">Notificaciones de Pedidos</h2>
+      <p class="text-xs text-gray-500 mb-4">Recibí notificaciones automáticas cuando se realice un pedido.</p>
+
+      <div class="p-4 rounded-xl bg-[#1a1a2e] border border-gray-700/30">
+        <label class="flex items-center gap-3 cursor-pointer">
+          <input type="checkbox" name="whatsapp_notifications" value="1" <%= store.whatsapp_notifications ? 'checked' : '' %>
+            class="w-4 h-4 rounded border-gray-600 bg-gray-700 text-green-500 focus:ring-green-500">
+          <div>
+            <span class="text-sm font-medium text-gray-300">Notificación por WhatsApp</span>
+            <p class="text-xs text-gray-500">Se generará un link de WhatsApp con los detalles del pedido. Número: <strong><%= store.whatsapp || 'No configurado' %></strong></p>
           </div>
-        </div>
+        </label>
       </div>
     </div>
 

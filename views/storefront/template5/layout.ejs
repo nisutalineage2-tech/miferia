@@ -1,297 +1,41 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title><%= (title || store.name || '') %></title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
-  <style>
-    <% let _col5 = {}; try { const _t5 = JSON.parse(store.theme_settings || '{}'); _col5 = _t5.colors || {}; } catch(e) {} %>
-    body { font-family: 'Inter', sans-serif; background: <%= _col5.body_bg || '#faf8f3' %>; color: <%= _col5.body_text || '#292524' %>; }
-    h1,h2,h3,.font-serif-alt { font-family: 'Playfair Display', Georgia, serif; }
-    :root { --primary: <%= _col5.btn_primary_bg || store.primary_color || '#d97706' %>; --accent: <%= _col5.btn_secondary_bg || store.accent_color || '#f59e0b' %>; --footer-bg: <%= _col5.footer_bg || '#292524' %>; --footer-text: <%= _col5.footer_text || '#a8a29e' %>; }
-    .product-card { background: #fff; border: 1px solid #e7e5e4; transition: all 0.2s ease; border-radius: 16px; overflow: hidden; }
-    .product-card:hover { border-color: #d97706; box-shadow: 0 8px 30px rgba(217,119,6,0.1); }
-    .btn-primary { background: linear-gradient(135deg, #d97706, #f59e0b); color: #fff; border-radius: 9999px; font-weight: 600; }
-    .section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.5rem; }
-    .section-header h2 { font-family: 'Playfair Display', serif; font-size: 1.75rem; font-weight: 600; color: #292524; }
-  </style>
-</head>
+<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title><%= (title||store.name||'') %></title><script src="https://cdn.tailwindcss.com"></script><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><% let _t={};try{_t=JSON.parse(store.theme_settings||'{}');}catch(e){}const _c=_t.colors||{};const _f=_t.fonts||{};const _gf={"Inter":"Inter:wght@300;400;500;600;700","Playfair Display":"Playfair+Display:ital,wght@0,400;0,600;0,700;1,400","Lora":"Lora:wght@400;500;600;700","Nunito":"Nunito:wght@300;400;600;700;800","Quicksand":"Quicksand:wght@300;400;500;600;700","Oswald":"Oswald:wght@300;400;500;600;700","Fredoka":"Fredoka:wght@300;400;500;600;700","Noto Serif":"Noto+Serif:wght@400;600;700","Poppins":"Poppins:wght@300;400;500;600;700;800"};const _fb=_f.body||'Inter';const _fh=_f.headings||'Lora';const _fl=[...new Set([_gf[_fb],_gf[_fh]].filter(Boolean))];%><link href="https://fonts.googleapis.com/css2?family=<%=_fl.join('&family=')%>&display=swap" rel="stylesheet"><style>body{font-family:'<%=_fb%>',sans-serif}h1,h2,h3{font-family:'<%=_fh%>',serif;font-weight:600}:root{--primary:<%=_c.btn_primary_bg||'#16a34a'%>;--bg:<%=_c.body_bg||'#f0fdf4'%>;--text:<%=_c.body_text||'#14532d'%>;--footer-bg:<%=_c.footer_bg||'#14532d'%>;--footer-text:<%=_c.footer_text||'#bbf7d0'%>;--title:<%=_c.title_text||_c.body_text||'#14532d'%>;--label-bg:<%=_c.label_bg||'#16a34a'%>}body{background:var(--bg);color:var(--text)}h1,h2,h3,h4,h5,h6{color:var(--title)!important}.product-badge{background:var(--label-bg);color:#fff}.section-title{font-family:'<%=_fh%>',serif;font-weight:600}.nav-link{color:#14532d;transition:color .2s}.nav-link:hover{color:var(--primary)}footer{background:var(--footer-bg)!important;color:var(--footer-text)!important}footer a,footer p,footer span{color:var(--footer-text)!important}<%if(store.advanced_css){%><%=store.advanced_css%><%}%></style></head><body>
 <body>
-  <!-- Top bar -->
-  <div class="bg-gradient-to-r from-amber-800 to-amber-700 text-white text-center text-xs py-2 font-medium">🌿 Productos frescos — Envío gratis en +$30,000</div>
+<nav class="sticky top-0 z-40" style="background:rgba(255,255,255,0.9);border-bottom:1px solid #bbf7d0;backdrop-filter:blur(12px)"><div class="max-w-7xl mx-auto px-4"><div class="flex items-center justify-between h-16"><a href="<%=storeBaseUrl || '/'%>" class="flex items-center gap-2 shrink-0"><%if(store.logo){%><img src="<%=store.logo%>" alt="<%=store.name%>" class="h-8 w-auto"><%}else{%><span class="text-xl font-bold" style="color:var(--primary)"><%=store.name%></span><%}%></a><div class="hidden md:flex items-center gap-6 nav-links"><%-include('../../partials/_nav_links',{locals:{navLinkClass:'nav-link text-sm font-medium'}})%></div><button type="button" onclick="toggleCartDrawer()" class="relative p-2"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg><%if(cartCount>0){%><span class="absolute -top-1 -right-1 w-5 h-5 rounded-full text-xs font-bold text-white flex items-center justify-center" style="background:var(--primary)"><%=cartCount%></span><%}%></button><%-include('../../partials/_mobile_menu',{locals:{}})%></div></div></nav>
+<%-include("../../partials/_banner_carousel",{heroImages:typeof heroImages!=='undefined'?heroImages:[],store})%>
+<main><%-include('../../partials/_flash',{locals})%>
+<%if(page==='home'){%>
+<div class="relative" style="background:linear-gradient(135deg,rgb(255,255,255),#f0fdf4,rgb(230,243,234))"><div class="max-w-7xl mx-auto px-4 py-12 lg:py-16"><div class="text-center max-w-3xl mx-auto"><span class="inline-block px-3 py-1 rounded-full bg-white/60 text-xs font-semibold mb-4">Bienvenido</span><h1 class="text-4xl lg:text-5xl mb-4" style="font-family:'Lora',serif"><%=store.name%></h1><p class="text-lg mb-6 opacity-80"><%=store.description%></p><div class="flex flex-wrap justify-center gap-3 mb-8"><a href="<%=storeBaseUrl%>/shop" class="btn-primary inline-block px-8 py-3 text-base">Ver Catálogo</a></div><%-include('../../partials/_hero_carousel',{images:typeof heroImages!=='undefined'?heroImages:[],fallback:store.banner,className:'rounded-2xl shadow-lg',height:'h-48 lg:h-64'})%></div></div></div>
+<%if(categories.length>0){%><div class="py-12 lg:py-16" style="background:rgb(217,255,238)"><div class="max-w-7xl mx-auto px-4"><h2 class="text-2xl font-bold text-center mb-8 section-title">Categorías</h2><div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4"><%categories.forEach(c=>{%><a href="<%=storeBaseUrl%>/categoria/<%=c.name.toLowerCase().replace(/ /g,'-')%>" class="rounded-xl p-6 text-center transition-all hover:-translate-y-1" style="background:#ffffff;border:1px solid #bbf7d0;box-shadow:0 4px 6px -1px rgb(0 0 0 / 0.1)"><%if(c.image){%><img src="<%=c.image%>" alt="<%=c.name%>" class="w-16 h-16 object-contain mx-auto mb-3"><%}else{%><div class="w-16 h-16 rounded-full mx-auto mb-3 flex items-center justify-center text-2xl font-bold" style="background:#16a34a22;color:var(--primary)"><%=c.name.charAt(0).toUpperCase()%></div><%}%><h3 class="font-semibold text-sm"><%=c.name%></h3></a><%})%></div></div></div><%}%>
 
-  <!-- Nav -->
-  <nav class="bg-white/95 backdrop-blur-sm sticky top-0 z-40 border-b border-amber-100">
-    <div class="max-w-7xl mx-auto px-4">
-      <div class="flex items-center justify-between h-16">
-        <a href="/<%= store.slug %>" class="flex items-center gap-2">
-          <% if (store.logo) { %><img src="<%= store.logo %>" alt="<%= store.name %>" class="h-8 w-auto"><% } else { %><span class="text-xl font-bold text-amber-800"><%= store.name %></span><% } %>
-        </a>
-        <div class="hidden md:flex items-center gap-6">
-          <%- include('../../partials/_nav_links', { locals: { navLinkClass: 'text-sm font-medium text-amber-700/70 hover:text-amber-900 transition-colors' } }) %>
-        </div>
-        <div class="flex items-center gap-3">
-          <a href="/<%= store.slug %>/carrito" class="relative p-2">
-            <svg class="w-6 h-6 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/>
-            </svg>
-            <% if (cartCount > 0) { %>
-              <span class="absolute -top-1 -right-1 w-5 h-5 rounded-full text-xs font-bold text-white flex items-center justify-center" style="background: var(--primary);"><%= cartCount %></span>
-            <% } %>
-          </a>
-        
-            <%- include('../../partials/_mobile_menu', { locals: { iconColor: 'text-amber-700/70' } }) %>
+<div class="py-12 lg:py-16" style="background:rgb(202,255,223)"><div class="max-w-7xl mx-auto px-4"><div class="flex items-center gap-3 mb-8"><div class="flex text-yellow-400"><%[1,2,3,4,5].forEach(i=>{%><svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg><%})%></div><span class="text-lg font-bold">4.8</span><span class="text-sm opacity-60">(128 reseñas en Google)</span></div><div class="grid grid-cols-1 md:grid-cols-3 gap-4"><%[1,2,3].forEach(i=>{%><div class="p-5 rounded-xl" style="background:#ffffff;border:1px solid #bbf7d0"><div class="flex items-center gap-3 mb-3"><div class="w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold text-white" style="background:#16a34a"><%=['JD','MG','CR'][i-1]%></div><div><p class="text-sm font-semibold"><%=['Juan Díaz','María García','Carlos Ruiz'][i-1]%></p><div class="flex text-yellow-400"><%[1,2,3,4,5].forEach(j=>{%><svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg><%})%></div></div></div><p class="text-sm opacity-80"><%=i===1?'"Excelente tienda, muy buena atención y productos de calidad. Recomendada!"':i===2?'"Compré varias veces y siempre todo perfecto. El envío muy rápido."':'"La mejor experiencia de compra online. Volveré a comprar sin dudas."'%></p></div><%})%></div></div></div>
+<div class="py-12 lg:py-16" style="background:#16a34a"><div class="max-w-3xl mx-auto px-4 text-center"><h2 class="text-2xl font-bold mb-3" style="color:#fff;font-family:'Lora',serif">No te pierdas nada</h2><p class="mb-6 opacity-90" style="color:#fff">Suscribite y recibí 10% OFF en tu primera compra + novedades exclusivas.</p><form class="flex flex-col sm:flex-row gap-3 max-w-md mx-auto" onsubmit="event.preventDefault();alert('Gracias por suscribirte!')"><input type="email" placeholder="tu@email.com" class="flex-1 px-4 py-3 rounded-lg border-0 text-sm" style="background:rgba(255,255,255,0.9);color:#111"><button type="submit" class="px-6 py-3 rounded-lg text-sm font-semibold whitespace-nowrap" style="background:#111;color:#fff">Quiero mi 10% OFF</button></form></div></div>
+<div class="max-w-7xl mx-auto px-4 py-8 lg:py-12">
+<%if(featured.length>0){%><h2 class="text-2xl font-bold mb-6 section-title">Destacados</h2>
+<div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 lg:gap-6 mb-12">
+<%featured.forEach(p=>{%><%-include('../../partials/_product_card',{product:p,store,locals})%><%})%></div><%}%>
+<h2 class="text-2xl font-bold mb-6 section-title">Todos los Productos</h2>
+<%if(products.length>0){%><div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 lg:gap-6">
+<%products.forEach(p=>{%><%-include('../../partials/_product_card',{product:p,store,locals})%><%})%></div>
+<%}else{%><div class="text-center py-16 opacity-50"><p>Proximamente estaremos agregando nuestros productos.</p></div><%}%>
+<%if(combos.length>0){%><h2 class="text-2xl font-bold mb-6 mt-12 section-title">Combos Especiales</h2>
+<div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+<%combos.forEach(combo=>{%><div class="p-6 rounded-2xl border-2 border-dashed" style="border-color:var(--primary)"><h3 class="text-lg font-bold"><%=combo.name%></h3><p class="text-sm opacity-70 mb-3"><%=combo.description%></p><p class="text-2xl font-bold" style="color:var(--primary)">$$<%=combo.price.toFixed(2)%></p>
+<button onclick="addComboToCart('<%=combo.id%>')" class="mt-3 w-full px-4 py-2.5 text-sm font-semibold text-white transition-all btn-primary">Agregar al Carrito</button></div><%})%></div><%}%>
 </div>
-      </div>
-    </div>
-    <!-- Sub-nav categories -->
-    <div class="border-t overflow-x-auto" style="border-color: var(--menu-border);">
-      <div class="max-w-7xl mx-auto px-4 flex gap-6 py-2">
-        <a href="/<%= store.slug %>" class="text-xs font-medium text-gray-500 hover:text-gray-900 whitespace-nowrap">TODOS</a>
-        <% categories.forEach(c => { %>
-          <a href="/<%= store.slug %>/categoria/<%= c.name.toLowerCase().replace(/ /g, '-') %>" class="text-xs font-medium text-gray-500 hover:text-gray-900 whitespace-nowrap uppercase tracking-wider"><%= c.name %></a>
-        <% }); %>
-      </div>
-    </div>
-  </nav>
-
-  <main>
-    <%- include('../../partials/_flash', { locals }); %>
-    <% if (page === 'home') { %>
-      <% const _tc5 = (() => { try { return JSON.parse(store.theme_settings || '{}'); } catch(e) { return {}; } })(); const hp = _tc5.homepage || {}; const sectionsOrder = hp.sections_order || ['hero', 'categories', 'featured', 'promo_banners', 'products', 'combos', 'testimonials', 'newsletter', 'contact']; %>
-      <% sectionsOrder.forEach(section => { %>
-
-        <% if (section === 'hero') { %>
-          <!-- HERO MARKETPLACE -->
-          <section class="max-w-7xl mx-auto px-4 py-8">
-            <div class="relative rounded-2xl overflow-hidden group" style="background: linear-gradient(135deg, var(--primary), var(--accent)); min-height: 300px;">
-              <div class="absolute inset-0">
-                <%- include('../../partials/_hero_carousel', { images: heroImages, fallback: store.banner, className: 'w-full h-full', height: 'h-full' }); %>
-                <div class="absolute inset-0" style="background: linear-gradient(135deg, rgba(217,119,6,0.7), rgba(245,158,11,0.5));"></div>
-              </div>
-              <div class="relative z-10 p-8 lg:p-12 lg:py-16">
-                <span class="inline-block px-3 py-1 rounded-full text-xs font-bold text-white bg-white/20 mb-4 uppercase tracking-wider">Bienvenido</span>
-                <h1 class="text-3xl lg:text-5xl font-extrabold text-white mb-3"><%= store.name %></h1>
-                <p class="text-white/80 max-w-xl mb-6"><%= store.description %></p>
-                <div class="flex gap-3">
-                  <a href="#ofertas" class="px-6 py-3 bg-white rounded-xl text-sm font-bold transition-all hover:shadow-lg" style="color: var(--primary);">Ver Ofertas</a>
-                  <a href="#productos" class="px-6 py-3 bg-white/10 rounded-xl text-sm font-bold text-white hover:bg-white/20 transition-all">Catálogo</a>
-                </div>
-              </div>
-            </div>
-          </section>
-        <% } %>
-
-        <% if (section === 'categories' && hp.categories !== false && categories.length > 0) { %>
-          <!-- CATEGORIES MARKET -->
-          <section class="max-w-7xl mx-auto px-4 py-8">
-            <div class="section-header"><h2>Categorías</h2><a href="#">Ver todas →</a></div>
-            <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3">
-              <% categories.forEach(c => { %>
-                <a href="/<%= store.slug %>/categoria/<%= c.name.toLowerCase().replace(/ /g, '-') %>"
-                  class="p-4 rounded-xl bg-white border text-center hover:border-gray-300 transition-all" style="border-color: #e5e7eb;">
-                  <div class="text-2xl mb-1"><% const icons = {'Remeras Deportivas':'👕','Buzos y Hoodies':'🧥','Pantalones y Joggers':'👖','Shorts y Bermudas':'🩳','Camperas':'🧥','Calzado Deportivo':'👟','Accesorios':'🧢','Fitness y Yoga':'🧘','Fútbol':'⚽','Natación':'🏊'}; %><%= icons[c.name] || '🛍️' %></div>
-                  <span class="text-xs font-medium text-gray-700"><%= c.name %></span>
-                </a>
-              <% }); %>
-            </div>
-          </section>
-        <% } %>
-
-        <% if (section === 'featured' && hp.featured_products !== false && featured.length > 0) { %>
-          <!-- FEATURED -->
-          <section class="max-w-7xl mx-auto px-4 py-8">
-            <div class="section-header"><h2>🌟 Destacados</h2><a href="#">Ver más</a></div>
-            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 lg:gap-5">
-              <% featured.forEach(p => { %>
-                <%- include('../../partials/_product_card', { product: p, store, locals }); %>
-              <% }); %>
-            </div>
-          </section>
-        <% } %>
-
-        <% if (section === 'promo_banners' && hp.promo_banners !== false) { %>
-          <!-- PROMO BANNERS -->
-          <section class="max-w-7xl mx-auto px-4 py-8">
-            <div class="grid md:grid-cols-2 gap-4">
-              <div class="p-8 rounded-2xl text-white" style="background: linear-gradient(135deg, #ef4444, #dc2626);">
-                <span class="text-4xl mb-4 block">🔥</span>
-                <h3 class="text-2xl font-extrabold mb-2">Hasta 40% OFF</h3>
-                <p class="text-white/80 text-sm mb-4">En productos seleccionados</p>
-                <a href="#ofertas" class="inline-block px-5 py-2 bg-white rounded-full text-sm font-bold" style="color: #dc2626;">Comprar</a>
-              </div>
-              <div class="p-8 rounded-2xl text-white" style="background: linear-gradient(135deg, #2563eb, #1d4ed8);">
-                <span class="text-4xl mb-4 block">🚚</span>
-                <h3 class="text-2xl font-extrabold mb-2">Envío Gratis</h3>
-                <p class="text-white/80 text-sm mb-4">Compras mayores a $50,000</p>
-                <a href="#productos" class="inline-block px-5 py-2 bg-white rounded-full text-sm font-bold" style="color: #2563eb;">Ver productos</a>
-              </div>
-            </div>
-          </section>
-        <% } %>
-
-        <% if (section === 'products' && hp.products !== false) { %>
-          <!-- ALL PRODUCTS -->
-          <section id="productos" class="max-w-7xl mx-auto px-4 py-8">
-            <div class="section-header"><h2>⚡ Todos los Productos</h2><a href="#">Ver catálogo completo →</a></div>
-            <% if (products.length > 0) { %>
-              <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 lg:gap-5">
-                <% products.forEach(p => { %>
-                  <%- include('../../partials/_product_card', { product: p, store, locals }); %>
-                <% }); %>
-              </div>
-            <% } else { %>
-              <div class="text-center py-16 text-gray-400">Próximamente</div>
-            <% } %>
-          </section>
-        <% } %>
-
-        <% if (section === 'combos' && hp.combos !== false && combos.length > 0) { %>
-          <!-- COMBOS -->
-          <section class="max-w-7xl mx-auto px-4 py-8">
-            <div class="section-header"><h2>🔥 Combos Imperdibles</h2></div>
-            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
-              <% combos.forEach(combo => { %>
-                <div class="p-6 rounded-2xl bg-white border">
-                  <span class="text-3xl block mb-3">📦</span>
-                  <h3 class="text-lg font-bold text-gray-900"><%= combo.name %></h3>
-                  <p class="text-sm text-gray-500 mb-2"><%= combo.description %></p>
-                  <p class="text-2xl font-extrabold mb-4 price-tag">$<%= combo.price.toFixed(2) %></p>
-                  <button onclick="addComboToCart('<%= combo.id %>')" class="btn-primary w-full py-2.5 rounded-xl text-sm font-bold">Agregar</button>
-                </div>
-              <% }); %>
-            </div>
-          </section>
-        <% } %>
-
-        <% if (section === 'testimonials' && hp.testimonials !== false) { %>
-          <!-- TESTIMONIALS -->
-          <section class="max-w-7xl mx-auto px-4 py-12">
-            <div class="text-center mb-10">
-              <h2 class="text-2xl font-bold text-gray-900">💬 Opiniones de clientes</h2>
-            </div>
-            <div class="grid md:grid-cols-3 gap-6">
-              <div class="p-6 rounded-2xl bg-white border">
-                <div class="text-yellow-400 mb-2">★★★★★</div>
-                <p class="text-sm text-gray-600 mb-3">"Excelente atención y productos de calidad. Llegó todo antes de lo esperado."</p>
-                <p class="text-sm font-semibold text-gray-900">— María G.</p>
-              </div>
-              <div class="p-6 rounded-2xl bg-white border">
-                <div class="text-yellow-400 mb-2">★★★★★</div>
-                <p class="text-sm text-gray-600 mb-3">"Muy buena relación precio-calidad. Sin dudas voy a recomendar."</p>
-                <p class="text-sm font-semibold text-gray-900">— Juan P.</p>
-              </div>
-              <div class="p-6 rounded-2xl bg-white border">
-                <div class="text-yellow-400 mb-2">★★★★★</div>
-                <p class="text-sm text-gray-600 mb-3">"El pack de running me salió espectacular. Ya hice 3 pedidos."</p>
-                <p class="text-sm font-semibold text-gray-900">— Lucía M.</p>
-              </div>
-            </div>
-          </section>
-        <% } %>
-
-        <% if (section === 'newsletter' && hp.newsletter !== false) { %>
-          <!-- NEWSLETTER -->
-          <section class="max-w-7xl mx-auto px-4 py-12">
-            <div class="rounded-2xl p-8 lg:p-12 text-center text-white" style="background: linear-gradient(135deg, var(--primary), var(--accent));">
-              <h2 class="text-2xl lg:text-3xl font-bold mb-2">Newsletter</h2>
-              <p class="text-white/80 mb-6">Recibí ofertas exclusivas y novedades</p>
-              <form class="max-w-md mx-auto flex gap-3" onsubmit="event.preventDefault(); alert('¡Gracias por suscribirte!');">
-                <input type="email" placeholder="tu@email.com" class="flex-1 px-4 py-3 rounded-xl text-gray-900 placeholder-gray-400 focus:outline-none">
-                <button type="submit" class="px-6 py-3 bg-white rounded-xl text-sm font-bold transition-all hover:shadow-lg" style="color: var(--primary);">Suscribir</button>
-              </form>
-            </div>
-          </section>
-        <% } %>
-
-        <% if (section === 'contact' && hp.contact !== false) { %>
-          <!-- CONTACT -->
-          <section class="max-w-2xl mx-auto px-4 py-12">
-            <h2 class="text-2xl font-bold text-gray-900 text-center mb-2">📩 Contacto</h2>
-            <p class="text-gray-500 text-center text-sm mb-8">Respondemos en menos de 24hs</p>
-            <form class="space-y-4" onsubmit="event.preventDefault(); alert('Mensaje enviado correctamente');">
-              <div class="grid grid-cols-2 gap-4">
-                <input type="text" placeholder="Nombre" class="w-full px-4 py-3 rounded-xl border bg-white focus:outline-none focus:border-gray-400">
-                <input type="email" placeholder="Email" class="w-full px-4 py-3 rounded-xl border bg-white focus:outline-none focus:border-gray-400">
-              </div>
-              <textarea rows="4" placeholder="Mensaje" class="w-full px-4 py-3 rounded-xl border bg-white focus:outline-none focus:border-gray-400"></textarea>
-              <button type="submit" class="btn-primary w-full py-3 rounded-xl text-sm font-bold">Enviar Mensaje</button>
-            </form>
-          </section>
-        <% } %>
-      <% }); %>
-    <% } else if (page === 'category') { %>
-      <div class="max-w-7xl mx-auto px-4 py-8">
-        <a href="/<%= store.slug %>" class="text-sm text-gray-500 hover:text-gray-700">← Volver</a>
-        <h1 class="text-3xl font-bold text-gray-900 mt-6 mb-8"><%= category.name %></h1>
-        <% if (products.length > 0) { %>
-          <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 lg:gap-5">
-            <% products.forEach(p => { %>
-              <%- include('../../partials/_product_card', { product: p, store, locals }); %>
-            <% }); %>
-          </div>
-        <% } else { %>
-          <div class="text-center py-16 text-gray-400">Sin productos</div>
-        <% } %>
-      </div>
-    <% } else if (page === 'product') { %>
-      <%- include('../../partials/_product_detail', { store, product, variants, productImages, categories, related, cartCount, cartTotal, locals }); %>
-    <% } else if (page === 'cart') { %>
-      <%- include('../../partials/_cart', { store, categories, cartItems, cartCount, cartTotal, locals }); %>
-    <% } else if (page === 'checkout') { %>
-      <%- include('../../partials/_checkout', { store, categories, cartItems, cartCount, cartTotal, locals }); %>
-    <% } else if (['shop','subscriptions','about','contact','login','register','account'].includes(page)) { %>
-      <%- include('../../partials/_page_content', { page, store, categories, products, featured, combos, cartItems, cartCount, cartTotal, query: typeof query !== 'undefined' ? query : {}, priceRange: typeof priceRange !== 'undefined' ? priceRange : null, filterSettings: typeof filterSettings !== 'undefined' ? filterSettings : {}, filterData: typeof filterData !== 'undefined' ? filterData : {}, error: typeof error !== 'undefined' ? error : null, msg: typeof msg !== 'undefined' ? msg : null, customer: typeof customer !== 'undefined' ? customer : null, orders: typeof orders !== 'undefined' ? orders : null }); %>
-    <% } %>
-  </main>
-
-  <!-- Footer -->
-  <footer class="mt-16 py-12" style="background: var(--footer-bg); color: var(--footer-text);">
-    <div class="max-w-7xl mx-auto px-4">
-      <div class="grid md:grid-cols-4 gap-8">
-        <div class="md:col-span-2">
-          <h3 class="text-white font-bold text-lg mb-3"><%= store.name %></h3>
-          <p class="text-sm"><%= store.description %></p>
-        </div>
-        <div>
-          <h4 class="text-white font-semibold mb-3">Categorías</h4>
-          <ul class="space-y-1.5">
-            <% categories.forEach(c => { %>
-              <li><a href="/<%= store.slug %>/categoria/<%= c.name.toLowerCase().replace(/ /g, '-') %>" class="text-sm hover:text-white"><%= c.name %></a></li>
-            <% }); %>
-          </ul>
-        </div>
-        <div>
-          <h4 class="text-white font-semibold mb-3">Redes</h4>
-          <div class="flex gap-2">
-            <% if (store.instagram) { %><a href="https://instagram.com/<%= store.instagram.replace('@', '') %>" target="_blank" class="p-2 bg-white/5 rounded-lg hover:bg-white/10"><svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg></a><% } %>
-            <% if (store.whatsapp) { %><a href="https://wa.me/<%= store.whatsapp %>" target="_blank" class="p-2 bg-white/5 rounded-lg hover:bg-white/10"><svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg></a><% } %>
-          </div>
-        </div>
-      </div>
-      <div class="border-t border-gray-700 mt-8 pt-8 text-center text-xs">© 2026 <%= store.name %>. Powered by TuFerIA</div>
-    </div>
-  </footer>
-
-  <script>
-    async function addToCart(productId, variantId = null, quantity = 1) {
-      const res = await fetch('/api/cart/add', {
-        method: 'POST', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ store_id: '<%= store.id %>', product_id: productId, variant_id: variantId, quantity })
-      });
-      if ((await res.json()).success) location.reload();
-    }
-    async function addComboToCart(comboId) {
-      const res = await fetch('/api/cart/add', {
-        method: 'POST', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ store_id: '<%= store.id %>', combo_id: comboId, quantity: 1 })
-      });
-      if ((await res.json()).success) location.reload();
-    }
-  </script>
-</body>
-</html>
+<%}else if(page==='category'){%><div class="max-w-7xl mx-auto px-4 py-8"><div class="mb-6"><a href="<%=storeBaseUrl || '/'%>" class="text-sm opacity-60 hover:opacity-100">← Todos los productos</a><h1 class="text-3xl font-bold mt-2 section-title"><%=category.name%></h1><%if(category.description){%><p class="opacity-70 mt-1"><%=category.description%></p><%}%></div>
+<%if(products.length>0){%><div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 lg:gap-6">
+<%products.forEach(p=>{%><%-include('../../partials/_product_card',{product:p,store,locals})%><%})%></div><%}else{%><div class="text-center py-16 opacity-60"><p>No hay productos en esta categoria todavia.</p></div><%}%></div>
+<%}else if(page==='product'){%><%-include('../../partials/_product_detail',{store,product,variants,productImages,categories,related,cartCount,cartTotal,locals})%>
+<%}else if(page==='cart'){%><%-include('../../partials/_cart',{store,categories,cartItems,cartCount,cartTotal,locals})%>
+<%}else if(page==='checkout'){%><%-include('../../partials/_checkout',{store,categories,cartItems,cartCount,cartTotal,locals})%>
+<%}else if(['shop','subscriptions','about','contact','login','register','account'].includes(page)){%><%-include('../../partials/_page_content',{page,store,categories,products,featured,combos,cartItems,cartCount,cartTotal,query:typeof query!=='undefined'?query:{},priceRange:typeof priceRange!=='undefined'?priceRange:null,filterSettings:typeof filterSettings!=='undefined'?filterSettings:{},filterData:typeof filterData!=='undefined'?filterData:{},error:typeof error!=='undefined'?error:null,msg:typeof msg!=='undefined'?msg:null,customer:typeof customer!=='undefined'?customer:null,orders:typeof orders!=='undefined'?orders:null})%>
+<%}%></main>
+<footer class="mt-16"><div class="max-w-7xl mx-auto px-4 py-12"><div class="grid grid-cols-1 md:grid-cols-4 gap-8"><div class="md:col-span-2"><p class="text-lg font-semibold mb-2"><%=store.name%></p><p class="text-sm opacity-70 mb-4"><%=store.description%></p><div class="flex gap-3"><%if(store.whatsapp){%><a href="https://wa.me/<%=store.whatsapp%>" target="_blank" class="opacity-70 hover:opacity-100 transition-opacity"><svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347"/></svg></a><%}%><%if(store.instagram){%><a href="https://instagram.com/<%=store.instagram.replace('@','')%>" target="_blank" class="opacity-70 hover:opacity-100 transition-opacity"><svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069z"/></svg></a><%}%></div></div><div><p class="text-xs font-semibold mb-3 uppercase tracking-widest opacity-60">Links</p><%-include('../../partials/_nav_links',{locals:{navLinkClass:'block text-sm opacity-70 hover:opacity-100 mb-2 transition-opacity'}})%></div></div><div class="border-t mt-8 pt-8 text-center text-sm opacity-50" style="border-color:currentColor">&copy; 2026 <%=store.name%>. Powered by TuFerIA.</div></div></footer>
+<style>.product-card{background:#ffffff;border:1px solid #bbf7d0;border-radius:1rem;box-shadow:0 4px 6px -1px rgb(0 0 0 / 0.1);transition:.3s;overflow:hidden}.product-card:hover{transform:translateY(-4px);border-color:var(--primary)}.btn-primary{background:var(--primary);color:#fff;border-radius:9999px;font-weight:600;padding:.625rem 1.25rem;transition:.2s}.btn-primary:hover{transform:scale(1.05);filter:brightness(1.1)}</style>
+<script>
+async function addToCart(pid,vid,qty){const r=await fetch('/api/cart/add',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({store_id:'<%=store.id%>',product_id:pid,variant_id:vid,quantity:qty||1})});const d=await r.json();if(d.success)location.reload()}
+async function addComboToCart(cid){const r=await fetch('/api/cart/add',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({store_id:'<%=store.id%>',combo_id:cid,quantity:1})});const d=await r.json();if(d.success)location.reload()}
+</script>
+<%-include('../../partials/_cart_drawer',{store,cartItems,cartCount,cartTotal,locals})%>
+<%-include('../../partials/_order_success',{order:typeof order!=='undefined'?order:null,whatsappLink:typeof whatsappLink!=='undefined'?whatsappLink:null})%>
+</body></html>

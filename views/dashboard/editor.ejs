@@ -1,421 +1,328 @@
-<div class="flex gap-3 p-3" style="height: calc(100vh - 73px);">
-  <!-- LEFT: Editor Form -->
-  <div class="w-2/5 overflow-y-auto p-4 rounded-2xl border border-gray-800/50" style="background: #0a0a12;">
-    <div class="flex items-center justify-between mb-4">
-      <h1 class="text-lg font-bold text-white">Personalizar Tienda</h1>
-      <span class="text-xs text-gray-600">Preview en vivo →</span>
-    </div>
-
-    <!-- Seccion selector -->
-    <div class="flex items-center gap-3 mb-4 border-b border-gray-800/50 pb-2">
-      <span class="text-xs text-gray-500 font-medium whitespace-nowrap">Templates / Estilo</span>
-      <div class="flex-1"></div>
-      <div class="relative">
-        <select id="seccion_select" onchange="switchSeccion(this.value)" class="appearance-none bg-[#1a1a2e] border border-gray-700/50 rounded-lg px-3 py-1.5 text-xs text-gray-300 cursor-pointer hover:border-gray-500 transition-colors pr-8">
-          <option value="tab-diseno">Diseño</option>
-          <option value="tab-anuncio">Barra Anuncio</option>
-          <option value="tab-hero">Hero</option>
-          <option value="tab-marca">Marca</option>
-          <option value="tab-info">Info</option>
-          <option value="tab-colores">Colores</option>
-          <option value="tab-tipografia">Tipografía</option>
-          <option value="tab-header">Header</option>
-          <option value="tab-secciones">Secciones</option>
-          <option value="tab-filtros">Filtros</option>
-          <option value="tab-redes">Social</option>
-        </select>
-        <svg class="absolute right-2 top-1/2 -translate-y-1/2 w-3 h-3 text-gray-500 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+<% const t = theme || {}; const c = t.colors || {}; const fonts = t.fonts || {}; const hdr = t.header || {}; const hp = t.homepage || {}; const sc = t.social || {}; const ft = t.footer || {}; const ibs = (t.product_detail && t.product_detail.info_blocks) || []; const ct2 = t.cart || {}; const sc2 = t.social || {}; const fl = t.filtros || {}; const subs = { plantilla:1, colores:1, anuncio:1, carrusel:1, logo:1, navegacion:1, tienda:1, secciones:1, filtros:1, whatsapp:1, instagram:1, facebook:1, css:1 }; const cur = subs[sub] ? sub : 'plantilla'; %>
+<div class="flex gap-4 p-4" style="height: calc(100vh - 73px);">
+  <!-- LEFT: Form -->
+  <form id="editorForm" method="POST" action="/dashboard/editor" class="w-[42%] flex flex-col rounded-2xl border border-gray-800/50 overflow-hidden" style="background: #0a0a12;">
+    <div class="flex items-center justify-between p-3 border-b border-gray-800/50 shrink-0" style="background: #0a0a12;">
+      <h1 class="text-sm font-bold text-white capitalize"><%= cur %></h1>
+      <div class="flex items-center gap-2">
+        <button type="submit" class="py-1.5 px-3 bg-gradient-to-r from-indigo-600 to-purple-600 text-white text-xs font-semibold rounded-lg hover:from-indigo-500 hover:to-purple-500 transition-all shadow-lg shadow-indigo-600/25 flex items-center gap-1.5">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+          Guardar
+        </button>
+        <button type="button" onclick="refreshPreview()" class="py-1.5 px-3 bg-white/5 border border-gray-700/50 text-gray-300 text-xs rounded-lg hover:bg-white/10 transition-all flex items-center gap-1.5">
+          <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+          Preview
+        </button>
       </div>
     </div>
+    <div class="flex-1 overflow-y-auto p-3 space-y-2">
 
-    <form method="POST" action="/dashboard/editor" id="editorForm" class="space-y-3">
-      <% const t = theme || {}; const c = t.colors || {}; const fonts = t.fonts || {}; const hdr = t.header || {}; const hp = t.homepage || {}; %>
-
-      <div id="tab-diseno" class="tab-panel">
-        <!-- ===== 1. DISEÑO ===== -->
-        <div class="p-4 rounded-xl bg-[#0f0f1a] border border-gray-800/50">
-          <h2 class="text-sm font-semibold text-white mb-3">1. Diseño</h2>
-          <p class="text-xs text-gray-500 mb-3">Elegí el diseño de tu tienda — cada rubro tiene 3 variantes</p>
-          <% const groups = [
-            { key: 'template1', label: 'Belleza', color: 'pink', variants: [
-              { v: 'template1', label: 'Clásico', desc: 'Romántico floral', layout: 'M9 4h6v5H9zM4 9h16v10H4z' },
-              { v: 'template1_v2', label: 'Elegante', desc: 'Gold premium', layout: 'M4 4h16v16H4z' },
-              { v: 'template1_v3', label: 'Soft', desc: 'Clean rosado', layout: 'M4 4h16v3H4zM4 9h16v2H4zM4 13h16v7H4z' }
-            ]},
-            { key: 'template2', label: 'Moda', color: 'gray', variants: [
-              { v: 'template2', label: 'Clean', desc: 'Fashion minimal', layout: 'M4 4h16v7H4zM4 13h7v7H4zM13 13h7v7h-7z' },
-              { v: 'template2_v2', label: 'Editorial', desc: 'Serif elegante', layout: 'M4 4h16v4H4zM4 10h16v10H4z' },
-              { v: 'template2_v3', label: 'Street', desc: 'Urbano bold', layout: 'M4 4h16v16H4z' }
-            ]},
-            { key: 'template3', label: 'Hogar', color: 'amber', variants: [
-              { v: 'template3', label: 'Deco', desc: 'Hogareño cálido', layout: 'M4 4h16v4H4zM4 10h16v10H4z' },
-              { v: 'template3_v2', label: 'Rústico', desc: 'Madera natural', layout: 'M9 4h6v5H9zM4 9h16v10H4z' },
-              { v: 'template3_v3', label: 'Nórdico', desc: 'Escandinavo clean', layout: 'M4 4h16v3H4zM4 9h16v2H4zM4 13h16v7H4z' }
-            ]},
-            { key: 'template4', label: 'Tecno', color: 'cyan', variants: [
-              { v: 'template4', label: 'Dark', desc: 'Cyber oscuro', layout: 'M4 4h16v16H4z' },
-              { v: 'template4_v2', label: 'Gamer', desc: 'Neon vibrante', layout: 'M4 4h16v3H4zM4 9h16v2H4zM4 13h7v7H4zM13 13h7v7h-7z' },
-              { v: 'template4_v3', label: 'Apple', desc: 'Clean minimal', layout: 'M9 4h6v5H9zM4 9h16v10H4z' }
-            ]},
-            { key: 'template5', label: 'Alimentos', color: 'orange', variants: [
-              { v: 'template5', label: 'Gourmet', desc: 'Clásico elegante', layout: 'M4 4h16v3H4zM4 9h16v2H4zM4 13h7v7H4zM13 13h7v7h-7z' },
-              { v: 'template5_v2', label: 'Orgánico', desc: 'Verde natural', layout: 'M4 4h16v6H4zM4 12h7v8H4zM13 12h7v8h-7z' },
-              { v: 'template5_v3', label: 'Fast', desc: 'Vibrante llamativo', layout: 'M4 4h16v4H4zM4 10h16v10H4z' }
-            ]},
-            { key: 'template6', label: 'Bebés', color: 'sky', variants: [
-              { v: 'template6', label: 'Pastel', desc: 'Infantil suave', layout: 'M4 4h16v6H4zM4 12h7v8H4zM13 12h7v8h-7z' },
-              { v: 'template6_v2', label: 'Modern', desc: 'Flat moderno', layout: 'M9 4h6v5H9zM4 9h16v10H4z' },
-              { v: 'template6_v3', label: 'Aventura', desc: 'Colorido divertido', layout: 'M4 4h16v3H4zM4 9h16v2H4zM4 13h16v7H4z' }
-            ]},
-            { key: 'template7', label: 'Deportes', color: 'orange', variants: [
-              { v: 'template7', label: 'Fitness', desc: 'Deportivo clean', layout: 'M4 4h16v3H4zM4 9h16v2H4zM4 13h16v7H4z' },
-              { v: 'template7_v2', label: 'Extreme', desc: 'X-Games neón', layout: 'M4 4h16v16H4z' },
-              { v: 'template7_v3', label: 'Retro', desc: 'Vintage setentas', layout: 'M9 4h6v5H9zM4 9h16v10H4z' }
-            ]},
-            { key: 'template8', label: 'Joyería', color: 'yellow', variants: [
-              { v: 'template8', label: 'Lujo', desc: 'Oscuro elegante', layout: 'M4 4h16v5H4zM4 11h7v9H4zM13 11h7v9h-7z' },
-              { v: 'template8_v2', label: 'Minimal', desc: 'Blanco sofisticado', layout: 'M4 4h16v16H4z' },
-              { v: 'template8_v3', label: 'Boho', desc: 'Artesanal earthy', layout: 'M4 4h16v6H4zM4 12h7v8H4zM13 12h7v8h-7z' }
-            ]},
-            { key: 'template9', label: 'Mascotas', color: 'green', variants: [
-              { v: 'template9', label: 'Pets', desc: 'Amigable verde', layout: 'M4 4h16v4H4zM4 10h16v10H4z' },
-              { v: 'template9_v2', label: 'Premium', desc: 'Oscuro elegante', layout: 'M9 4h6v5H9zM4 9h16v10H4z' },
-              { v: 'template9_v3', label: 'Wild', desc: 'Selva aventura', layout: 'M4 4h16v3H4zM4 9h16v2H4zM4 13h16v7H4z' }
-            ]},
-            { key: 'template10', label: 'Librería', color: 'stone', variants: [
-              { v: 'template10', label: 'Clásico', desc: 'Librería tradicional', layout: 'M4 4h16v6H4zM4 12h7v8H4zM13 12h7v8h-7z' },
-              { v: 'template10_v2', label: 'Moderno', desc: 'Académico oscuro', layout: 'M4 4h16v16H4z' },
-              { v: 'template10_v3', label: 'Kids', desc: 'Colorido infantil', layout: 'M4 4h16v3H4zM4 9h16v2H4zM4 13h16v7H4z' }
-            ]}
-          ]; const curTmpl = store.template || 'template1'; %>
-          <div class="space-y-4">
-            <% groups.forEach(g => { %>
-              <div class="p-3 rounded-xl bg-[#0f0f1a] border border-gray-800/50">
-                <h3 class="text-xs uppercase tracking-widest text-gray-500 mb-3"><%= g.label %></h3>
-                <div class="grid grid-cols-3 gap-3">
-                  <% g.variants.forEach(tm => { %>
-                    <label class="cursor-pointer relative rounded-lg bg-[#1a1a2e] border-2 overflow-hidden <%= curTmpl === tm.v ? 'border-indigo-500 ring-2 ring-indigo-500/30' : 'border-gray-700/50 hover:border-gray-500' %> transition-all" onclick="switchTemplate('<%= tm.v %>')">
-                      <input type="radio" name="template" value="<%= tm.v %>" class="sr-only" <%= curTmpl === tm.v ? 'checked' : '' %>>
-                      <div class="aspect-[4/3] p-1.5" style="background: <%= ['template4','template4_v2','template4_v3','template8_v2','template9_v2','template10_v2'].includes(tm.v) ? '#0a0a0f' : '#f8f8f8' %>;">
-                        <svg class="w-full h-full" viewBox="0 0 24 24" fill="none">
-                          <rect x="4" y="4" rx="1" fill="<%= ['template4','template4_v2'].includes(tm.v) ? '#1a1a2e' : '#ffffff' %>" stroke="<%= ['template4','template4_v2'].includes(tm.v) ? '#2a2a3e' : '#e5e7eb' %>" stroke-width="0.5" width="16" height="3"/>
-                          <rect x="4" y="8.5" rx="0.8" fill="#f3f4f6" stroke="#e5e7eb" stroke-width="0.3" width="16" height="6"/>
-                          <rect x="4" y="4" rx="1" fill="<%= g.color === 'fuchsia' ? '#a21caf' : g.color === 'amber' ? '#d97706' : g.color === 'rose' ? '#e11d48' : g.color === 'purple' ? '#7c3aed' : g.color === 'emerald' ? '#059669' : g.color === 'pink' ? '#db2777' : g.color === 'cyan' ? '#06b6d4' : g.color === 'sky' ? '#0ea5e9' : g.color === 'green' ? '#16a34a' : g.color === 'stone' ? '#78716c' : g.color === 'orange' ? '#ea580c' : g.color === 'yellow' ? '#ca8a04' : '#3b82f6' %>" width="16" height="0.5" opacity="0.6"/>
-                        </svg>
-                      </div>
-                      <div class="px-1.5 py-1 text-center" style="background: #0f0f1a;">
-                        <span class="text-[10px] font-semibold text-white block leading-tight"><%= tm.label %></span>
-                        <span class="text-[8px] text-gray-500 block"><%= tm.desc %></span>
-                      </div>
-                      <% if (curTmpl === tm.v) { %>
-                        <div class="absolute top-0.5 right-0.5 w-3.5 h-3.5 rounded-full bg-indigo-500 flex items-center justify-center">
-                          <svg class="w-2 h-2 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg>
-                        </div>
-                      <% } %>
-                    </label>
-                  <% }); %>
-                </div>
+      <!-- PLANTILLA -->
+      <% if (cur === 'plantilla') { %>
+        <p class="text-xs text-gray-500 mb-3">Elegí la plantilla para tu tienda</p>
+        <% const tmpls = [
+          { v:'template1', label:'Elegance', desc:'Clásico refinado' },
+          { v:'template2', label:'Minimal', desc:'Limpio y moderno' },
+          { v:'template3', label:'Vibrant', desc:'Colores vivos' },
+          { v:'template4', label:'Dark', desc:'Estilo oscuro' },
+          { v:'template5', label:'Nature', desc:'Verde orgánico' },
+          { v:'template6', label:'Soft', desc:'Pastel suave' },
+          { v:'template7', label:'Sport', desc:'Energía dinámica' },
+          { v:'template8', label:'Luxury', desc:'Oro y elegancia' },
+          { v:'template9', label:'Friendly', desc:'Amigable acogedor' },
+          { v:'template10', label:'Bold', desc:'Audaz moderno' },
+          { v:'template11', label:'Calm', desc:'Sereno relajante' },
+          { v:'template12', label:'Tech', desc:'Futurista digital' },
+          { v:'template13', label:'Warm', desc:'Cálido hogareño' },
+          { v:'template14', label:'Cool', desc:'Azul fresco' },
+          { v:'template15', label:'Urban', desc:'Urbano contemporáneo' },
+          { v:'template16', label:'Playful', desc:'Divertido creativo' },
+          { v:'template17', label:'Clean', desc:'Blanco impecable' },
+          { v:'template18', label:'Rustic', desc:'Rústico natural' },
+          { v:'template19', label:'Neon', desc:'Neón vibrante' },
+          { v:'template20', label:'Zen', desc:'Equilibrio armonía' },
+          { v:'template21', label:'Royal', desc:'Azul profundo' },
+          { v:'template22', label:'Sweet', desc:'Dulce rosado' },
+          { v:'template23', label:'Metal', desc:'Gris industrial' },
+          { v:'template24', label:'Ocean', desc:'Azul marino' },
+          { v:'template25', label:'Sunset', desc:'Naranja atardecer' },
+          { v:'template26', label:'Forest', desc:'Verde bosque' },
+          { v:'template27', label:'Gold', desc:'Dorado elegante' },
+          { v:'template28', label:'Silver', desc:'Plateado moderno' },
+          { v:'template29', label:'Coral', desc:'Coral tropical' },
+          { v:'template30', label:'Lavender', desc:'Lavanda suave' },
+          { v:'template31', label:'Beauty', desc:'Inspirado en BeautyWeb' }
+        ]; const curTmpl = store.template || 'template1'; %>
+        <div class="grid grid-cols-3 gap-2">
+          <% tmpls.forEach(tm => { %>
+            <label class="cursor-pointer relative rounded-lg bg-[#1a1a2e] border-2 overflow-hidden <%= curTmpl === tm.v ? 'border-indigo-500 ring-2 ring-indigo-500/30' : 'border-gray-700/50 hover:border-gray-500' %> transition-all" onclick="switchTemplate('<%= tm.v %>')">
+              <input type="radio" name="template" value="<%= tm.v %>" class="sr-only" <%= curTmpl === tm.v ? 'checked' : '' %>>
+              <div class="aspect-[4/3] bg-[#0f0f1a] overflow-hidden">
+                <img src="/uploads/templates/<%= tm.v %>.jpg" alt="<%= tm.label %>" class="w-full h-full object-cover" loading="lazy" onerror="this.style.display='none';this.nextSibling.style.display='flex'"><div class="hidden w-full h-full items-center justify-center text-gray-600 text-xs" style="display:none;background:#1a1a2e;">Sin preview</div>
               </div>
-            <% }); %>
+              <div class="px-1.5 py-1 text-center" style="background: #0f0f1a;">
+                <span class="text-[10px] font-semibold text-white block leading-tight"><%= tm.label %></span>
+                <span class="text-[8px] text-gray-500 block"><%= tm.desc %></span>
+              </div>
+              <% if (curTmpl === tm.v) { %>
+                <div class="absolute top-0.5 right-0.5 w-3.5 h-3.5 rounded-full bg-indigo-500 flex items-center justify-center">
+                  <svg class="w-2 h-2 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg>
+                </div>
+              <% } %>
+            </label>
+          <% }); %>
+        </div>
+      <% } %>
+
+      <!-- COLORES -->
+      <% if (cur === 'colores') { %>
+        <div class="p-3 rounded-xl bg-[#0f0f1a] border border-gray-800/50">
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="text-[10px] text-gray-500 block mb-1">Color Primario</label>
+              <input type="color" name="color_btn_primary_bg" value="<%= c.btn_primary_bg || store.primary_color || '#4f46e5' %>" class="w-full h-10 rounded-lg border border-gray-700/50 cursor-pointer bg-[#1a1a2e]" onchange="scheduleSave()">
+              <input type="hidden" name="primary_color" value="<%= store.primary_color || '#4f46e5' %>">
+            </div>
+            <div>
+              <label class="text-[10px] text-gray-500 block mb-1">Color Acento</label>
+              <input type="color" name="color_btn_secondary_bg" value="<%= c.btn_secondary_bg || store.accent_color || '#e5e7eb' %>" class="w-full h-10 rounded-lg border border-gray-700/50 cursor-pointer bg-[#1a1a2e]" onchange="scheduleSave()">
+              <input type="hidden" name="accent_color" value="<%= store.accent_color || '#e5e7eb' %>">
+            </div>
+            <div>
+              <label class="text-[10px] text-gray-500 block mb-1">Fondo de página</label>
+              <input type="color" name="color_body_bg" value="<%= c.body_bg || '#f9fafb' %>" class="w-full h-10 rounded-lg border border-gray-700/50 cursor-pointer bg-[#1a1a2e]" onchange="scheduleSave()">
+            </div>
+            <div>
+              <label class="text-[10px] text-gray-500 block mb-1">Texto</label>
+              <input type="color" name="color_body_text" value="<%= c.body_text || '#374151' %>" class="w-full h-10 rounded-lg border border-gray-700/50 cursor-pointer bg-[#1a1a2e]" onchange="scheduleSave()">
+            </div>
+            <div>
+              <label class="text-[10px] text-gray-500 block mb-1">Títulos</label>
+              <input type="color" name="color_title_text" value="<%= c.title_text || c.body_text || '#111827' %>" class="w-full h-10 rounded-lg border border-gray-700/50 cursor-pointer bg-[#1a1a2e]" onchange="scheduleSave()">
+            </div>
+            <div>
+              <label class="text-[10px] text-gray-500 block mb-1">Fondo del footer</label>
+              <input type="color" name="color_footer_bg" value="<%= c.footer_bg || '#111827' %>" class="w-full h-10 rounded-lg border border-gray-700/50 cursor-pointer bg-[#1a1a2e]" onchange="scheduleSave()">
+            </div>
+            <div>
+              <label class="text-[10px] text-gray-500 block mb-1">Texto del footer</label>
+              <input type="color" name="color_footer_text" value="<%= c.footer_text || '#9ca3af' %>" class="w-full h-10 rounded-lg border border-gray-700/50 cursor-pointer bg-[#1a1a2e]" onchange="scheduleSave()">
+            </div>
+            <div>
+              <label class="text-[10px] text-gray-500 block mb-1">Botón primario (texto)</label>
+              <input type="color" name="color_btn_primary_text" value="<%= c.btn_primary_text || '#ffffff' %>" class="w-full h-10 rounded-lg border border-gray-700/50 cursor-pointer bg-[#1a1a2e]" onchange="scheduleSave()">
+            </div>
           </div>
         </div>
-      </div>
+      <% } %>
 
-      <div id="tab-anuncio" class="tab-panel hidden">
-        <!-- ===== 2. BARRA DE ANUNCIO ===== -->
-        <div class="p-4 rounded-xl bg-[#0f0f1a] border border-gray-800/50">
-          <div class="flex items-center justify-between mb-2">
-            <h2 class="text-sm font-semibold text-white">2. Barra de Anuncio</h2>
+      <!-- ANUNCIO -->
+      <% if (cur === 'anuncio') { %>
+        <div class="p-3 rounded-xl bg-[#0f0f1a] border border-gray-800/50">
+          <div class="flex items-center gap-2 mb-2">
             <label class="flex items-center gap-2 cursor-pointer">
-              <input type="checkbox" name="header_announcement_show" <%= hdr.announcement_show ? 'checked' : '' %> class="w-3.5 h-3.5 rounded border-gray-700 bg-[#1a1a2e] text-indigo-500" onchange="updatePreview()">
-              <span class="text-xs text-gray-400">Mostrar</span>
+              <input type="checkbox" name="header_announcement_show" <%= hdr.announcement_show ? 'checked' : '' %> class="w-3.5 h-3.5 rounded border-gray-700 bg-[#1a1a2e] text-indigo-500" onchange="scheduleSave()">
+              <span class="text-[10px] text-gray-400">Mostrar barra de anuncio</span>
             </label>
           </div>
-          <p class="text-[10px] text-gray-500 mb-2">Barra superior promocional — ideal para envíos gratis u ofertas</p>
-          <input type="text" name="header_announcement_text" value="<%= hdr.announcement_text || '' %>" placeholder="Ej: Envío gratis en compras mayores a $50" class="w-full px-3 py-1.5 bg-[#1a1a2e] border border-gray-700/50 rounded-lg text-white text-xs" oninput="debouncedPreview()">
+          <input type="text" name="header_announcement_text" value="<%= hdr.announcement_text || '' %>" placeholder="Texto del anuncio" class="w-full px-2 py-1 bg-[#1a1a2e] border border-gray-700/50 rounded-lg text-white text-[11px]" oninput="scheduleSave()">
         </div>
-      </div>
+      <% } %>
 
-      <div id="tab-hero" class="tab-panel hidden">
-        <!-- ===== 3. HERO CARRUSEL ===== -->
-        <div class="p-4 rounded-xl bg-[#0f0f1a] border border-gray-800/50">
+      <!-- CARRUSEL -->
+      <% if (cur === 'carrusel') { %>
+        <div class="p-3 rounded-xl bg-[#0f0f1a] border border-gray-800/50">
           <div class="flex items-center justify-between mb-2">
-            <h2 class="text-sm font-semibold text-white">3. Hero Carrusel</h2>
+            <h3 class="text-xs font-semibold text-white">Hero Carrusel</h3>
             <label class="flex items-center gap-2 cursor-pointer">
               <input type="hidden" name="homepage_hero" value="off">
-              <input type="checkbox" name="homepage_hero" <%= hp.hero !== false ? 'checked' : '' %> class="w-3.5 h-3.5 rounded border-gray-700 bg-[#1a1a2e] text-indigo-500" onchange="updatePreview()">
-              <span class="text-xs text-gray-400">Mostrar</span>
+              <input type="checkbox" name="homepage_hero" <%= hp.hero !== false ? 'checked' : '' %> class="w-3.5 h-3.5 rounded border-gray-700 bg-[#1a1a2e] text-indigo-500" onchange="scheduleSave()">
+              <span class="text-[10px] text-gray-400">Mostrar</span>
             </label>
           </div>
-          <p class="text-[10px] text-gray-500 mb-2">Imágenes principales del inicio — se muestran como carrusel con auto-play</p>
           <% const heroImgs = typeof store.hero_images !== 'undefined' && store.hero_images ? (() => { try { return JSON.parse(typeof store.hero_images === 'string' ? store.hero_images : '[]'); } catch(e) { return []; } })() : []; %>
-          <div class="grid grid-cols-5 gap-2">
+          <div class="grid grid-cols-5 gap-1.5">
             <% for (let i = 0; i < 5; i++) { %>
               <div>
                 <div id="heroPreview<%= i %>" class="w-full aspect-[16/9] rounded-lg bg-[#0f0f1a] border-2 border-dashed border-gray-700/50 flex items-center justify-center overflow-hidden cursor-pointer hover:border-indigo-500/30 transition-colors" onclick="document.getElementById('heroInput<%= i %>').click()">
-                  <% const hi = heroImgs[i]; if (hi) { %>
-                    <img src="<%= hi %>" class="w-full h-full object-cover">
-                  <% } else { %>
-                    <svg class="w-4 h-4 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/></svg>
-                  <% } %>
+                  <% const hi = heroImgs[i]; if (hi) { %><img src="<%= hi %>" class="w-full h-full object-cover"><% } else { %><svg class="w-4 h-4 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/></svg><% } %>
                 </div>
                 <input type="file" class="hidden" id="heroInput<%= i %>" accept="image/*">
                 <input type="hidden" name="hero_image_<%= i %>" id="heroUrl<%= i %>" value="<%= hi || '' %>">
-                <p class="text-[9px] text-gray-600 text-center mt-0.5"><%= i + 1 %></p>
               </div>
             <% } %>
           </div>
         </div>
-      </div>
+      <% } %>
 
-      <div id="tab-marca" class="tab-panel hidden">
-        <!-- ===== 4. MARCA ===== -->
-        <div class="p-4 rounded-xl bg-[#0f0f1a] border border-gray-800/50">
-          <h2 class="text-sm font-semibold text-white mb-3">4. Marca</h2>
-          <div class="grid grid-cols-3 gap-5">
-            <div>
-              <div id="brandLogoPreview" class="w-full h-14 rounded-lg bg-[#1a1a2e] border-2 border-dashed border-gray-700/50 flex items-center justify-center overflow-hidden cursor-pointer hover:border-indigo-500/30" onclick="document.getElementById('brandLogoInput').click()">
-                <% if (t.brand && t.brand.logo) { %><img src="<%= t.brand.logo %>" class="w-full h-full object-contain"><% } else if (store.logo) { %><img src="<%= store.logo %>" class="w-full h-full object-contain"><% } else { %><svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg><% } %>
-              </div>
-              <input type="file" class="hidden" id="brandLogoInput"><input type="hidden" name="brand_logo" id="brandLogoUrl" value="<%= (t.brand && t.brand.logo) || store.logo || '' %>">
-              <p class="text-[10px] text-gray-600 mt-1">Logo</p>
-            </div>
-            <div>
-              <div id="faviconPreview" class="w-full h-14 rounded-lg bg-[#1a1a2e] border-2 border-dashed border-gray-700/50 flex items-center justify-center overflow-hidden cursor-pointer hover:border-indigo-500/30" onclick="document.getElementById('faviconInput').click()">
-                <% if (t.brand && t.brand.favicon) { %><img src="<%= t.brand.favicon %>" class="w-full h-full object-contain"><% } else { %><svg class="w-4 h-4 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01\"/></svg><% } %>
-              </div>
-              <input type="file" class="hidden" id="faviconInput"><input type="hidden" name="brand_favicon" id="faviconUrl" value="<%= (t.brand && t.brand.favicon) || '' %>">
-              <p class="text-[10px] text-gray-600 mt-1">Favicon</p>
-            </div>
-            <div>
-              <div id="bannerPreview" class="w-full h-14 rounded-lg bg-[#1a1a2e] border-2 border-dashed border-gray-700/50 flex items-center justify-center overflow-hidden cursor-pointer hover:border-indigo-500/30" onclick="document.getElementById('bannerInput').click()">
-                <% if (store.banner) { %><img src="<%= store.banner %>" class="w-full h-full object-cover"><% } else { %><svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg><% } %>
-              </div>
-              <input type="file" class="hidden" id="bannerInput"><input type="hidden" name="banner" id="bannerUrl" value="<%= store.banner || '' %>">
-              <p class="text-[10px] text-gray-600 mt-1">Banner</p>
-            </div>
+      <!-- LOGO -->
+      <% if (cur === 'logo') { %>
+        <div class="flex items-center gap-3 px-3 py-2.5 bg-[#0f0f1a] border border-gray-800/50 rounded-xl">
+          <span class="text-xs text-gray-300 font-medium w-16 shrink-0">Logo</span>
+          <div id="brandLogoPreview" class="w-10 h-10 rounded-lg bg-[#1a1a2e] border-2 border-dashed border-gray-700/50 flex items-center justify-center overflow-hidden cursor-pointer hover:border-indigo-500/30 shrink-0" onclick="document.getElementById('brandLogoInput').click()">
+            <% if (t.brand && t.brand.logo) { %><img src="<%= t.brand.logo %>" class="w-full h-full object-contain"><% } else if (store.logo) { %><img src="<%= store.logo %>" class="w-full h-full object-contain"><% } else { %><svg class="w-4 h-4 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg><% } %>
           </div>
+          <input type="file" class="hidden" id="brandLogoInput">
+          <input type="hidden" name="brand_logo" id="brandLogoUrl" value="<%= (t.brand && t.brand.logo) || store.logo || '' %>">
         </div>
-      </div>
+        <div class="flex items-center gap-3 px-3 py-2.5 bg-[#0f0f1a] border border-gray-800/50 rounded-xl">
+          <span class="text-xs text-gray-300 font-medium w-16 shrink-0">Favicon</span>
+          <div id="faviconPreview" class="w-10 h-10 rounded-lg bg-[#1a1a2e] border-2 border-dashed border-gray-700/50 flex items-center justify-center overflow-hidden cursor-pointer hover:border-indigo-500/30 shrink-0" onclick="document.getElementById('faviconInput').click()">
+            <% if (t.brand && t.brand.favicon) { %><img src="<%= t.brand.favicon %>" class="w-full h-full object-contain"><% } else { %><svg class="w-4 h-4 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg><% } %>
+          </div>
+          <input type="file" class="hidden" id="faviconInput">
+          <input type="hidden" name="brand_favicon" id="faviconUrl" value="<%= (t.brand && t.brand.favicon) || '' %>">
+        </div>
+        <div class="flex items-center gap-3 px-3 py-2.5 bg-[#0f0f1a] border border-gray-800/50 rounded-xl">
+          <span class="text-xs text-gray-300 font-medium w-16 shrink-0">Banner</span>
+          <div id="bannerPreview" class="w-20 h-10 rounded-lg bg-[#1a1a2e] border-2 border-dashed border-gray-700/50 flex items-center justify-center overflow-hidden cursor-pointer hover:border-indigo-500/30 shrink-0" onclick="document.getElementById('bannerInput').click()">
+            <% if (store.banner) { %><img src="<%= store.banner %>" class="w-full h-full object-cover"><% } else { %><svg class="w-4 h-4 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg><% } %>
+          </div>
+          <input type="file" class="hidden" id="bannerInput">
+          <input type="hidden" name="banner" id="bannerUrl" value="<%= store.banner || '' %>">
+        </div>
+      <% } %>
 
-      <div id="tab-info" class="tab-panel hidden">
-        <!-- ===== 5. INFORMACIÓN ===== -->
-        <div class="p-4 rounded-xl bg-[#0f0f1a] border border-gray-800/50">
-          <h2 class="text-sm font-semibold text-white mb-2">5. Información</h2>
+      <!-- NAVEGACIÓN -->
+      <% if (cur === 'navegacion') { %>
+        <div class="p-3 rounded-xl bg-[#0f0f1a] border border-gray-800/50">
           <div class="space-y-2">
-            <input type="text" name="name" value="<%= store.name %>" placeholder="Nombre de la tienda" class="w-full px-3 py-1.5 bg-[#1a1a2e] border border-gray-700/50 rounded-lg text-white text-xs" oninput="debouncedPreview()">
-            <input type="text" name="description" value="<%= store.description || '' %>" placeholder="Descripción breve" class="w-full px-3 py-1.5 bg-[#1a1a2e] border border-gray-700/50 rounded-lg text-white text-xs" oninput="debouncedPreview()">
-            <textarea name="about_text" rows="2" placeholder="Texto \"Sobre nosotros\"" class="w-full px-3 py-1.5 bg-[#1a1a2e] border border-gray-700/50 rounded-lg text-white text-xs" oninput="debouncedPreview()"><%= store.about_text || '' %></textarea>
-          </div>
-        </div>
-      </div>
-
-      <div id="tab-header" class="tab-panel hidden">
-        <!-- ===== 6. HEADER ===== -->
-        <div class="p-4 rounded-xl bg-[#0f0f1a] border border-gray-800/50">
-          <h2 class="text-sm font-semibold text-white mb-3">6. Header (Barra de Navegación)</h2>
-          <div class="space-y-2">
-            <div class="flex items-center gap-4">
-              <label class="flex items-center gap-2 cursor-pointer flex-1">
-                <input type="checkbox" name="header_sticky" <%= hdr.sticky ? 'checked' : '' %> class="w-3.5 h-3.5 rounded border-gray-700 bg-[#1a1a2e] text-indigo-500" onchange="updatePreview()">
-                <span class="text-xs text-gray-300">Sticky (fijo)</span>
-              </label>
-              <label class="flex items-center gap-2 cursor-pointer flex-1">
-                <input type="checkbox" name="header_mega_menu" <%= hdr.mega_menu ? 'checked' : '' %> class="w-3.5 h-3.5 rounded border-gray-700 bg-[#1a1a2e] text-indigo-500" onchange="updatePreview()">
-                <span class="text-xs text-gray-300">Mega menú</span>
-              </label>
+            <div class="flex items-center justify-between">
+              <span class="text-xs text-gray-300">Header sticky</span>
+              <label><input type="hidden" name="header_sticky" value="off"><input type="checkbox" name="header_sticky" <%= hdr.sticky ? 'checked' : '' %> class="w-3.5 h-3.5 rounded border-gray-700 bg-[#1a1a2e] text-indigo-500" onchange="scheduleSave()"></label>
             </div>
-            <div class="flex items-center gap-3">
-              <div class="flex-1">
-                <label class="text-[10px] text-gray-400 block mb-1">Fondo</label>
-                <input type="color" name="header_bg_color" value="<%= hdr.bg_color || '#ffffff' %>" class="w-full h-7 rounded-lg border border-gray-700/50 cursor-pointer bg-[#1a1a2e]" onchange="updatePreview()">
-              </div>
-              <div class="flex-1">
-                <label class="text-[10px] text-gray-400 block mb-1">Posición logo</label>
-                <select name="header_logo_position" class="w-full px-2 py-1.5 bg-[#1a1a2e] border border-gray-700/50 rounded-lg text-white text-xs" onchange="updatePreview()">
-                  <option value="left" <%= (hdr.logo_position || 'left') === 'left' ? 'selected' : '' %>>Izquierda</option>
-                  <option value="center" <%= hdr.logo_position === 'center' ? 'selected' : '' %>>Centro</option>
-                </select>
-              </div>
-              <div class="flex-1">
-                <label class="text-[10px] text-gray-400 block mb-1">Tamaño logo</label>
-                <input type="number" name="header_logo_size" value="<%= hdr.logo_size || 120 %>" min="60" max="200" class="w-full px-2 py-1.5 bg-[#1a1a2e] border border-gray-700/50 rounded-lg text-white text-xs" oninput="debouncedPreview()">
-              </div>
+            <div class="flex items-center justify-between">
+              <span class="text-xs text-gray-300">Búsqueda en móvil</span>
+              <label><input type="hidden" name="header_search_mobile" value="off"><input type="checkbox" name="header_search_mobile" <%= hdr.search_mobile ? 'checked' : '' %> class="w-3.5 h-3.5 rounded border-gray-700 bg-[#1a1a2e] text-indigo-500" onchange="scheduleSave()"></label>
             </div>
           </div>
         </div>
-      </div>
+      <% } %>
 
-      <div id="tab-colores" class="tab-panel hidden">
-        <!-- ===== 7. COLORES ===== -->
-        <div class="p-4 rounded-xl bg-[#0f0f1a] border border-gray-800/50">
-          <h2 class="text-sm font-semibold text-white mb-3">7. Colores</h2>
-          <div class="flex gap-3 mb-3">
-            <div class="flex-1">
-              <label class="text-[10px] text-gray-400 block mb-1">Primario</label>
-              <input type="color" name="color_btn_primary_bg" id="primaryColor" value="<%= c.btn_primary_bg || store.primary_color || '#4f46e5' %>" class="w-full h-8 rounded-lg border border-gray-700/50 cursor-pointer bg-[#1a1a2e]" onchange="updatePreview()">
-              <input type="hidden" name="primary_color" value="<%= store.primary_color || '#4f46e5' %>">
-            </div>
-            <div class="flex-1">
-              <label class="text-[10px] text-gray-400 block mb-1">Acento</label>
-              <input type="color" name="color_btn_secondary_bg" id="accentColor" value="<%= c.btn_secondary_bg || store.accent_color || '#e5e7eb' %>" class="w-full h-8 rounded-lg border border-gray-700/50 cursor-pointer bg-[#1a1a2e]" onchange="updatePreview()">
-              <input type="hidden" name="accent_color" value="<%= store.accent_color || '#e5e7eb' %>">
-            </div>
-          </div>
-          <div class="flex flex-wrap gap-1.5">
-            <% ['classic','warm','ocean','dark','nature'].forEach(pid => { const ps = {classic:['#4f46e5','#e5e7eb'],warm:['#ea580c','#fed7aa'],ocean:['#0284c7','#bae6fd'],dark:['#6366f1','#374151'],nature:['#16a34a','#bbf7d0']}; %>
-              <button type="button" onclick="applyQuickPreset('<%= pid %>','<%= ps[pid][0] %>','<%= ps[pid][1] %>')" class="w-6 h-6 rounded-full border-2 border-gray-700/50 hover:border-white transition-all" style="background: linear-gradient(135deg, <%= ps[pid][0] %>, <%= ps[pid][1] %>);" title="<%= pid %>"></button>
-            <% }); %>
-          </div>
-          <input type="hidden" name="color_preset" id="colorPreset" value="<%= c.preset || '' %>">
+      <!-- TIENDA -->
+      <% if (cur === 'tienda') { %>
+        <div class="flex items-center gap-3 px-3 py-2.5 bg-[#0f0f1a] border border-gray-800/50 rounded-xl">
+          <span class="text-xs text-gray-300 font-medium w-16 shrink-0">Nombre</span>
+          <input type="text" name="name" value="<%= store.name %>" placeholder="Nombre de la tienda" class="flex-1 px-2 py-1 bg-[#1a1a2e] border border-gray-700/50 rounded-lg text-white text-xs" oninput="scheduleSave()">
         </div>
-      </div>
-
-      <div id="tab-tipografia" class="tab-panel hidden">
-        <!-- ===== 8. TIPOGRAFÍA ===== -->
-        <div class="p-4 rounded-xl bg-[#0f0f1a] border border-gray-800/50">
-          <h2 class="text-sm font-semibold text-white mb-2">8. Tipografía</h2>
-          <select name="font_body" id="mainFont" onchange="syncFonts(this.value); updatePreview()" class="w-full px-3 py-2 bg-[#1a1a2e] border border-gray-700/50 rounded-lg text-white text-xs">
-            <% ['Inter','System UI','Arial','Helvetica','Georgia','Montserrat','Poppins','Open Sans','Roboto','Playfair Display'].forEach(fo => { %>
-              <option value="<%= fo %>" <%= (fonts.body || 'Inter') === fo ? 'selected' : '' %>><%= fo %></option>
-            <% }); %>
-          </select>
-          <input type="hidden" name="font_headings" id="font_headings" value="<%= fonts.headings || 'Inter' %>">
-          <input type="hidden" name="font_menus" id="font_menus" value="<%= fonts.menus || 'Inter' %>">
-          <input type="hidden" name="font_product_titles" id="font_product_titles" value="<%= fonts.product_titles || 'Inter' %>">
-          <input type="hidden" name="font_buttons" id="font_buttons" value="<%= fonts.buttons || 'Inter' %>">
+        <div class="flex items-center gap-3 px-3 py-2.5 bg-[#0f0f1a] border border-gray-800/50 rounded-xl">
+          <span class="text-xs text-gray-300 font-medium w-16 shrink-0">Descripción</span>
+          <input type="text" name="description" value="<%= store.description || '' %>" placeholder="Descripción breve" class="flex-1 px-2 py-1 bg-[#1a1a2e] border border-gray-700/50 rounded-lg text-white text-xs" oninput="scheduleSave()">
         </div>
-      </div>
+        <div class="flex items-start gap-3 px-3 py-2.5 bg-[#0f0f1a] border border-gray-800/50 rounded-xl">
+          <span class="text-xs text-gray-300 font-medium w-16 shrink-0 mt-1">Sobre Nosotros</span>
+          <textarea name="about_text" rows="2" placeholder="Texto sobre la tienda" class="flex-1 px-2 py-1 bg-[#1a1a2e] border border-gray-700/50 rounded-lg text-white text-xs" oninput="scheduleSave()"><%= store.about_text || '' %></textarea>
+        </div>
+      <% } %>
 
-      <div id="tab-secciones" class="tab-panel hidden">
-        <!-- ===== 9. SECCIONES ===== -->
-        <div class="p-4 rounded-xl bg-[#0f0f1a] border border-gray-800/50">
-          <h2 class="text-sm font-semibold text-white mb-2">9. Secciones del Inicio</h2>
-          <div class="space-y-1">
+      <!-- SECCIONES -->
+      <% if (cur === 'secciones') { %>
+        <div class="p-3 rounded-xl bg-[#0f0f1a] border border-gray-800/50">
+          <div class="grid grid-cols-2 gap-x-4 gap-y-1">
             <% ['featured_products','main_categories','promo_banners','institutional_msg','instagram_posts','newsletter','video','shipping_info'].forEach(s => { %>
               <label class="flex items-center gap-2 cursor-pointer py-1">
                 <input type="hidden" name="homepage_<%= s %>" value="off">
-                <input type="checkbox" name="homepage_<%= s %>" <%= hp[s] !== false ? 'checked' : '' %> class="w-3.5 h-3.5 rounded border-gray-700 bg-[#1a1a2e] text-indigo-500" onchange="updatePreview()">
-                <span class="text-xs text-gray-300"><%= {featured_products:'Destacados',main_categories:'Categorías',promo_banners:'Promos',institutional_msg:'Mensaje',instagram_posts:'Instagram',newsletter:'Newsletter',video:'Video',shipping_info:'Envíos'}[s] %></span>
+                <input type="checkbox" name="homepage_<%= s %>" <%= hp[s] !== false ? 'checked' : '' %> class="w-3.5 h-3.5 rounded border-gray-700 bg-[#1a1a2e] text-indigo-500" onchange="scheduleSave()">
+                <span class="text-xs text-gray-300 capitalize"><%= s.replace(/_/g, ' ') %></span>
               </label>
             <% }); %>
           </div>
         </div>
-      </div>
-
-      <div id="tab-filtros" class="tab-panel hidden">
-        <!-- ===== 10. FILTROS ===== -->
-        <% const fl = t.filtros || {}; %>
-        <div class="p-4 rounded-xl bg-[#0f0f1a] border border-gray-800/50">
-          <h2 class="text-sm font-semibold text-white mb-3">10. Filtros de Tienda</h2>
-          <p class="text-xs text-gray-500 mb-3">Elegí qué filtros mostrar en la página Tienda — los valores se leen automáticamente de tus productos</p>
-          <div class="grid grid-cols-2 gap-x-4 gap-y-1">
-            <% const filterDefs = [
-              { key: 'categories', label: 'Categorías', icon: '📁', desc: 'Filtrar por categoría' },
-              { key: 'price_range', label: 'Precio', icon: '💰', desc: 'Filtrar por rango de precio' },
-              { key: 'search', label: 'Búsqueda', icon: '🔍', desc: 'Buscar por nombre/texto' },
-              { key: 'sort', label: 'Ordenar', icon: '↕️', desc: 'Ordenar por precio, nombre, fecha' },
-              { key: 'brands', label: 'Marcas', icon: '🏷️', desc: 'Filtrar por marca (de productos)' },
-              { key: 'colors_sizes', label: 'Colores / Talles', icon: '🎨', desc: 'Filtrar por variantes (color/talle)' },
-              { key: 'gender', label: 'Género', icon: '👤', desc: 'Filtrar por género (de productos)' },
-              { key: 'free_shipping', label: 'Envío gratis', icon: '🚚', desc: 'Filtrar solo envío gratis' },
-            ]; %>
-            <% filterDefs.forEach(fd => { %>
-              <label class="flex items-center gap-2 cursor-pointer py-1.5">
-                <input type="checkbox" name="filter_<%= fd.key %>" <%= fl[fd.key] !== false ? 'checked' : '' %> class="w-3.5 h-3.5 rounded border-gray-700 bg-[#1a1a2e] text-indigo-500" onchange="updatePreview()">
-                <span class="text-xs text-gray-300"><%= fd.icon %> <%= fd.label %></span>
-              </label>
-            <% }); %>
-          </div>
-        </div>
-      </div>
-
-      <div id="tab-redes" class="tab-panel hidden">
-        <!-- ===== 11. REDES SOCIALES ===== -->
-        <div class="p-4 rounded-xl bg-[#0f0f1a] border border-gray-800/50">
-          <h2 class="text-sm font-semibold text-white mb-2">11. Redes Sociales (Footer)</h2>
-          <% const sc = t.social || {}; %>
-          <div class="space-y-2">
-            <input type="text" name="social_whatsapp" value="<%= sc.whatsapp || store.whatsapp || '' %>" placeholder="WhatsApp (ej: 5491123456789)" class="w-full px-3 py-1.5 bg-[#1a1a2e] border border-gray-700/50 rounded-lg text-white text-xs">
-            <input type="text" name="social_instagram" value="<%= sc.instagram || store.instagram || '' %>" placeholder="Instagram (@tutienda)" class="w-full px-3 py-1.5 bg-[#1a1a2e] border border-gray-700/50 rounded-lg text-white text-xs">
-            <input type="text" name="social_facebook" value="<%= sc.facebook || store.facebook || '' %>" placeholder="Facebook" class="w-full px-3 py-1.5 bg-[#1a1a2e] border border-gray-700/50 rounded-lg text-white text-xs">
-          </div>
-        </div>
-      </div>
-
-      <!-- ===== PRESERVED FIELDS ===== -->
-      <% const ft = t.footer || {}; const pl2 = t.product_listing || {}; const ct2 = t.cart || {}; const sc2 = t.social || {}; const sbg2 = t.site_bg || {}; const _pd = t.product_detail || {}; const ibs = _pd.info_blocks || []; %>
-      <input type="hidden" name="header_search_mobile" value="<%= hdr.search_mobile ? 'on' : 'off' %>">
-      <input type="hidden" name="header_tab_menu_mobile" value="<%= hdr.tab_menu_mobile ? 'on' : 'off' %>">
-      <input type="hidden" name="header_column_width" value="<%= hdr.column_width || 'full' %>">
-      <input type="hidden" name="header_announcement_link" value="<%= hdr.announcement_link || '' %>">
-      <input type="hidden" name="header_announcement_bg" value="<%= hdr.announcement_bg || '#4f46e5' %>">
-      <input type="hidden" name="site_bg_image" value="<%= sbg2.image || '' %>">
-      <input type="hidden" name="site_bg_repeat" value="<%= sbg2.repeat || 'no-repeat' %>">
-      <input type="hidden" name="site_bg_size" value="<%= sbg2.size || 'cover' %>">
-      <input type="hidden" name="listing_infinite_scroll" value="<%= pl2.infinite_scroll ? 'on' : 'off' %>">
-      <input type="hidden" name="listing_color_variants" value="<%= pl2.color_variants ? 'on' : 'off' %>">
-      <input type="hidden" name="listing_hover_image" value="<%= pl2.hover_image ? 'on' : 'off' %>">
-      <input type="hidden" name="listing_quick_buy" value="<%= pl2.quick_buy ? 'on' : 'off' %>">
-      <input type="hidden" name="listing_show_installments" value="<%= pl2.show_installments ? 'on' : 'off' %>">
-      <input type="hidden" name="listing_image_carousel" value="<%= pl2.image_carousel ? 'on' : 'off' %>">
-      <input type="hidden" name="detail_color_swatches" value="<%= _pd.color_swatches ? 'on' : 'off' %>">
-      <input type="hidden" name="detail_show_stock" value="<%= _pd.show_stock ? 'on' : 'off' %>">
-      <input type="hidden" name="detail_low_stock_warning" value="<%= _pd.low_stock_warning ? 'on' : 'off' %>">
-      <input type="hidden" name="detail_low_stock_threshold" value="<%= _pd.low_stock_threshold || 5 %>">
-      <input type="hidden" name="detail_low_stock_1_msg" value="<%= _pd.low_stock_1_msg || '¡Última unidad!' %>">
-      <input type="hidden" name="detail_size_guide_link" value="<%= _pd.size_guide_link || '' %>">
-      <input type="hidden" name="detail_complementary_title" value="<%= _pd.complementary_title || '' %>">
-      <input type="hidden" name="detail_related_title" value="<%= _pd.related_title || '' %>">
-      <input type="hidden" name="detail_facebook_comments" value="<%= _pd.facebook_comments ? 'on' : 'off' %>">
-      <input type="hidden" name="detail_facebook_page_id" value="<%= _pd.facebook_page_id || '' %>">
-      <% for (let i = 1; i <= 3; i++) { const ib = ibs[i-1] || {}; %>
-        <input type="hidden" name="detail_info_<%= i %>_show" value="<%= ib.title ? 'on' : 'off' %>">
-        <input type="hidden" name="detail_info_<%= i %>_icon" value="<%= ib.icon || '' %>">
-        <input type="hidden" name="detail_info_<%= i %>_title" value="<%= ib.title || '' %>">
-        <input type="hidden" name="detail_info_<%= i %>_description" value="<%= ib.description || '' %>">
       <% } %>
-      <input type="hidden" name="cart_show_view_more" value="<%= ct2.show_view_more ? 'on' : 'off' %>">
-      <input type="hidden" name="cart_quick_cart" value="<%= ct2.quick_cart ? 'on' : 'off' %>">
-      <input type="hidden" name="cart_recommendations" value="<%= ct2.recommendations ? 'on' : 'off' %>">
-      <input type="hidden" name="cart_quick_cart_action" value="<%= ct2.quick_cart_action || 'drawer' %>">
-      <input type="hidden" name="cart_coupons" value="<%= ct2.coupons ? 'on' : 'off' %>">
-      <input type="hidden" name="cart_shipping_calculator" value="<%= ct2.shipping_calculator ? 'on' : 'off' %>">
-      <input type="hidden" name="cart_min_amount" value="<%= ct2.min_amount || 0 %>">
-      <input type="hidden" name="footer_show_contact" value="<%= ft.show_contact ? 'on' : 'off' %>">
-      <input type="hidden" name="footer_show_social" value="<%= ft.show_social !== false ? 'on' : 'off' %>">
-      <input type="hidden" name="footer_show_payment" value="<%= ft.show_payment ? 'on' : 'off' %>">
-      <input type="hidden" name="social_twitter" value="<%= sc2.twitter || '' %>">
-      <input type="hidden" name="social_youtube" value="<%= sc2.youtube || '' %>">
-      <input type="hidden" name="homepage_carousel" value="<%= hp.carousel ? 'on' : 'off' %>">
-      <input type="hidden" name="homepage_category_banners" value="<%= hp.category_banners ? 'on' : 'off' %>">
-      <input type="hidden" name="homepage_horizontal_banner" value="<%= hp.horizontal_banner ? 'on' : 'off' %>">
-      <input type="hidden" name="homepage_modules" value="<%= hp.modules ? 'on' : 'off' %>">
-      <input type="hidden" name="advanced_css" value="<%= (store.advanced_css || '') %>">
 
-      <!-- SAVE -->
-      <button type="submit" class="w-full py-2.5 px-4 bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-semibold rounded-lg hover:from-indigo-500 hover:to-purple-500 transition-all text-sm shadow-lg shadow-indigo-600/25">
-        Guardar cambios
-      </button>
-    </form>
-  </div>
+      <!-- FILTROS -->
+      <% if (cur === 'filtros') { %>
+        <div class="p-3 rounded-xl bg-[#0f0f1a] border border-gray-800/50">
+          <% const filterDefs = [{key:'categories',label:'Categorías'},{key:'price_range',label:'Rango de precio'},{key:'search',label:'Búsqueda'},{key:'sort',label:'Ordenar'},{key:'brands',label:'Marcas'},{key:'colors_sizes',label:'Colores / Talles'},{key:'gender',label:'Género'},{key:'free_shipping',label:'Envío gratis'}]; %>
+          <div class="grid grid-cols-2 gap-x-4 gap-y-1">
+            <% filterDefs.forEach(fd => { %>
+              <label class="flex items-center gap-2 cursor-pointer py-1">
+                <input type="checkbox" name="filter_<%= fd.key %>" <%= fl[fd.key] !== false ? 'checked' : '' %> class="w-3.5 h-3.5 rounded border-gray-700 bg-[#1a1a2e] text-indigo-500" onchange="scheduleSave()">
+                <span class="text-xs text-gray-300"><%= fd.label %></span>
+              </label>
+            <% }); %>
+          </div>
+        </div>
+      <% } %>
+
+      <!-- WHATSAPP -->
+      <% if (cur === 'whatsapp') { %>
+        <div class="flex items-center gap-3 px-3 py-2.5 bg-[#0f0f1a] border border-gray-800/50 rounded-xl">
+          <span class="text-xs text-gray-300 font-medium w-16 shrink-0">WhatsApp</span>
+          <input type="text" name="social_whatsapp" value="<%= sc.whatsapp || store.whatsapp || '' %>" placeholder="5491123456789" class="flex-1 px-2 py-1 bg-[#1a1a2e] border border-gray-700/50 rounded-lg text-white text-xs" oninput="scheduleSave()">
+        </div>
+      <% } %>
+
+      <!-- INSTAGRAM -->
+      <% if (cur === 'instagram') { %>
+        <div class="flex items-center gap-3 px-3 py-2.5 bg-[#0f0f1a] border border-gray-800/50 rounded-xl">
+          <span class="text-xs text-gray-300 font-medium w-16 shrink-0">Instagram</span>
+          <input type="text" name="social_instagram" value="<%= sc.instagram || store.instagram || '' %>" placeholder="@tutienda" class="flex-1 px-2 py-1 bg-[#1a1a2e] border border-gray-700/50 rounded-lg text-white text-xs" oninput="scheduleSave()">
+        </div>
+      <% } %>
+
+      <!-- FACEBOOK -->
+      <% if (cur === 'facebook') { %>
+        <div class="flex items-center gap-3 px-3 py-2.5 bg-[#0f0f1a] border border-gray-800/50 rounded-xl">
+          <span class="text-xs text-gray-300 font-medium w-16 shrink-0">Facebook</span>
+          <input type="text" name="social_facebook" value="<%= sc.facebook || store.facebook || '' %>" placeholder="URL de Facebook" class="flex-1 px-2 py-1 bg-[#1a1a2e] border border-gray-700/50 rounded-lg text-white text-xs" oninput="scheduleSave()">
+        </div>
+      <% } %>
+
+      <!-- CSS -->
+      <% if (cur === 'css') { %>
+        <div class="p-3 rounded-xl bg-[#0f0f1a] border border-gray-800/50">
+          <div class="flex items-center gap-3 mb-3">
+            <span class="text-xs text-gray-300 font-medium w-20 shrink-0">Tipografía</span>
+            <select name="font_body" onchange="scheduleSave()" class="flex-1 px-2 py-1 bg-[#1a1a2e] border border-gray-700/50 rounded-lg text-white text-xs">
+              <% ['Inter','System UI','Arial','Helvetica','Georgia','Montserrat','Poppins','Open Sans','Roboto','Playfair Display'].forEach(fo => { %>
+                <option value="<%= fo %>" <%= (fonts.body || 'Inter') === fo ? 'selected' : '' %>><%= fo %></option>
+              <% }); %>
+            </select>
+          </div>
+          <div class="flex items-center gap-3 mb-3">
+            <span class="text-xs text-gray-300 font-medium w-20 shrink-0">Títulos</span>
+            <select name="font_headings" onchange="scheduleSave()" class="flex-1 px-2 py-1 bg-[#1a1a2e] border border-gray-700/50 rounded-lg text-white text-xs">
+              <% ['Inter','Playfair Display','Lora','Nunito','Oswald','Quicksand','Fredoka','Montserrat','Poppins'].forEach(fo => { %>
+                <option value="<%= fo %>" <%= (fonts.headings || 'Inter') === fo ? 'selected' : '' %>><%= fo %></option>
+              <% }); %>
+            </select>
+          </div>
+          <div>
+            <span class="text-xs text-gray-300 mb-2 block">CSS Avanzado</span>
+            <textarea name="advanced_css" rows="8" placeholder="/* Tu CSS personalizado aquí */" class="w-full px-3 py-2 bg-[#1a1a2e] border border-gray-700/50 rounded-lg text-white text-xs font-mono" oninput="scheduleSave()"><%= store.advanced_css || '' %></textarea>
+          </div>
+        </div>
+      <% } %>
+
+      <!-- Hidden fields needed for full save -->
+      <% ['cart_show_view_more','cart_quick_cart','cart_recommendations','cart_coupons','cart_shipping_calculator','footer_show_contact','footer_show_social','footer_show_payment','homepage_carousel','homepage_category_banners','homepage_horizontal_banner','homepage_modules','homepage_sale_products'].forEach(k => { %>
+        <input type="hidden" name="<%= k %>" value="<%= (t.cart && t.cart[k.replace('cart_','')] !== false) || (!k.startsWith('cart') && !k.startsWith('footer') && !k.startsWith('homepage')) ? 'on' : 'off' %>">
+      <% }); %>
+      <input type="hidden" name="cart_min_amount" value="<%= ct2.min_amount || 0 %>">
+      <input type="hidden" name="cart_quick_cart_action" value="<%= ct2.quick_cart_action || 'drawer' %>">
+      <input type="hidden" name="color_preset" value="<%= c.preset || '' %>">
+
+    </div>
+  </form>
 
   <!-- RIGHT: Preview -->
-  <div class="w-3/5 flex flex-col rounded-2xl overflow-hidden border border-gray-800/50" style="background: #0f0f1a;">
-    <div class="flex items-center justify-between px-4 py-2 border-b border-gray-800/50" style="background: #0a0a12;">
+  <div class="flex-1 flex flex-col rounded-2xl overflow-hidden border border-gray-800/50" style="background: #0a0a12;">
+    <div class="flex items-center justify-between px-5 py-3 border-b border-gray-800/50" style="background: #0a0a12;">
       <div class="flex items-center gap-2">
         <svg class="w-3 h-3 text-green-400" fill="currentColor" viewBox="0 0 8 8"><circle cx="4" cy="4" r="4"/></svg>
         <span class="text-xs text-gray-500">Preview</span>
       </div>
-      <button onclick="updatePreview()" class="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-gray-300 bg-white/5 border border-gray-700/50 rounded-lg hover:bg-white/10 transition-colors">
-        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15\"/></svg>
-        Actualizar
-      </button>
+      <div class="flex items-center gap-2">
+        <a href="https://<%= store.custom_domain %>/" target="_blank" class="text-xs text-indigo-400 hover:text-indigo-300">Ver tienda ↗</a>
+      </div>
     </div>
-    <div class="flex-1 relative">
-      <iframe id="previewFrame" src="/dashboard/preview" class="w-full h-full border-0" style="background: #fff;"></iframe>
-      <div id="previewLoading" class="absolute inset-0 flex items-center justify-center bg-[#0f0f1a]/80 hidden">
-        <div class="w-8 h-8 border-2 border-indigo-500 border-t-transparent rounded-full animate-spin"></div>
+    <div class="flex-1 relative bg-[#0f0f1a]">
+      <div class="absolute inset-4 rounded-xl overflow-hidden shadow-2xl shadow-black/40">
+        <iframe id="previewFrame" src="/dashboard/preview" class="w-full h-full border-0" style="background: #fff;"></iframe>
+        <div id="previewLoading" class="absolute inset-0 flex items-center justify-center bg-[#0f0f1a]/80 hidden" style="z-index: 10;">
+          <div class="w-8 h-8 border-2 border-indigo-500 border-t-transparent rounded-full animate-spin"></div>
+        </div>
       </div>
     </div>
   </div>
@@ -425,63 +332,26 @@
 let previewTimer;
 let pendingTemplate = null;
 
-function switchSeccion(tabId) {
-  document.querySelectorAll('.tab-panel').forEach(el => el.classList.add('hidden'));
-  document.getElementById(tabId).classList.remove('hidden');
-}
-
 function switchTemplate(val) {
   pendingTemplate = val;
-  const radio = document.querySelector('input[name="template"][value="' + val + '"]');
-  if (radio) radio.checked = true;
   document.querySelectorAll('[onclick^="switchTemplate"]').forEach(el => {
     el.classList.remove('border-indigo-500', 'ring-2', 'ring-indigo-500/30');
     el.classList.add('border-gray-700/50');
   });
   const el = document.querySelector('input[name="template"][value="' + val + '"]');
   if (el) {
+    el.checked = true;
     const label = el.closest('label');
     if (label) { label.classList.remove('border-gray-700/50'); label.classList.add('border-indigo-500', 'ring-2', 'ring-indigo-500/30'); }
   }
-  // Save only the template change without overwriting other settings
   clearTimeout(previewTimer);
   previewTimer = setTimeout(async () => {
     await fetch('/dashboard/editor', { method: 'POST', body: new URLSearchParams({ template: val }), headers: { 'Content-Type': 'application/x-www-form-urlencoded' } });
-    updatePreviewContent();
+    refreshPreview();
   }, 300);
 }
 
-function toggleAdvanced() {
-  const s = document.getElementById('advancedSection');
-  s.classList.toggle('hidden');
-  document.getElementById('advancedToggleText').textContent = s.classList.contains('hidden') ? 'Mostrar opciones avanzadas' : 'Ocultar opciones avanzadas';
-}
-
-function applyQuickPreset(id, primary, accent) {
-  document.getElementById('colorPreset').value = id;
-  document.getElementById('primaryColor').value = primary;
-  document.getElementById('accentColor').value = accent;
-  const pc = document.querySelector('input[name="primary_color"]');
-  if (pc) pc.value = primary;
-  const ac = document.querySelector('input[name="accent_color"]');
-  if (ac) ac.value = accent;
-  document.querySelectorAll('button[onclick^="applyQuickPreset"]').forEach(b => {
-    b.classList.remove('border-white');
-    b.classList.add('border-gray-700/50');
-  });
-  const btn = event?.target?.closest?.('button') || event?.target;
-  if (btn) { btn.classList.remove('border-gray-700/50'); btn.classList.add('border-white'); }
-  updatePreview();
-}
-
-function syncFonts(val) {
-  ['font_headings','font_menus','font_product_titles','font_buttons'].forEach(id => {
-    const el = document.getElementById(id);
-    if (el) el.value = val;
-  });
-}
-
-async function updatePreviewContent() {
+async function refreshPreview() {
   const loading = document.getElementById('previewLoading');
   const frame = document.getElementById('previewFrame');
   loading.classList.remove('hidden');
@@ -492,91 +362,54 @@ async function updatePreviewContent() {
   frame.onload = () => loading.classList.add('hidden');
 }
 
-function updatePreview() {
+function scheduleSave() {
   clearTimeout(previewTimer);
   previewTimer = setTimeout(async () => {
-    const loading = document.getElementById('previewLoading');
-    const frame = document.getElementById('previewFrame');
-    loading.classList.remove('hidden');
     const form = document.getElementById('editorForm');
-    const data = new URLSearchParams(new FormData(form));
-    try {
-      await fetch('/dashboard/editor', { method: 'POST', body: data, headers: { 'Content-Type': 'application/x-www-form-urlencoded' } });
-    } catch(e) {}
-    let url = '/dashboard/preview';
-    if (pendingTemplate) url += '?template=' + pendingTemplate;
-    url += (url.includes('?') ? '&' : '?') + '_=' + Date.now();
-    frame.src = url;
-    frame.onload = () => loading.classList.add('hidden');
-  }, 500);
+    if (!form) return;
+    const fd = new FormData(form);
+    ['color_btn_primary_bg','color_btn_secondary_bg','color_body_bg','color_body_text','color_title_text','primary_color','accent_color'].forEach(name => {
+      const el = document.querySelector(`[name="${name}"]`);
+      if (el) fd.set(name, el.value);
+    });
+    await fetch('/dashboard/editor', { method: 'POST', body: new URLSearchParams(fd), headers: { 'Content-Type': 'application/x-www-form-urlencoded' } });
+    refreshPreview();
+  }, 800);
 }
 
-function debouncedPreview() {
-  clearTimeout(previewTimer);
-  previewTimer = setTimeout(updatePreview, 1000);
-}
-
-document.querySelector('button[type="submit"]')?.addEventListener('click', (e) => {
-  e.preventDefault();
-  updatePreview();
-});
-
-document.getElementById('primaryColor').addEventListener('input', function() {
-  const hidden = document.querySelector('input[name="primary_color"]');
-  if (hidden) hidden.value = this.value;
-});
-document.getElementById('accentColor').addEventListener('input', function() {
-  const hidden = document.querySelector('input[name="accent_color"]');
-  if (hidden) hidden.value = this.value;
-});
-
-document.querySelectorAll('input[type="color"], input[type="checkbox"], select').forEach(el => {
-  el.addEventListener('change', updatePreview);
-});
-document.querySelectorAll('input[type="text"]').forEach(el => {
-  el.addEventListener('input', debouncedPreview);
-});
-
-async function uploadThemeImage(file, inputId, previewId) {
-  const fd = new FormData(); fd.append('file', file); fd.append('store_id', '<%= store.id %>');
-  const r = await fetch('/api/upload/logo', { method: 'POST', body: fd });
-  const d = await r.json();
-  if (d.url) { document.getElementById(inputId).value = d.url; document.getElementById(previewId).innerHTML = `<img src="${d.url}" class="w-full h-full object-contain">`; updatePreview(); }
-}
-
+// ---- Logo upload ----
 ['brandLogo','favicon'].forEach(t => {
   const input = document.getElementById(t + 'Input');
-  if (input) input.addEventListener('change', function(e) { if (this.files?.[0]) uploadThemeImage(this.files[0], t === 'brandLogo' ? 'brandLogoUrl' : 'faviconUrl', t === 'brandLogo' ? 'brandLogoPreview' : 'faviconPreview'); });
+  if (input) input.addEventListener('change', function(e) {
+    if (this.files?.[0]) {
+      const fd = new FormData(); fd.append('file', this.files[0]); fd.append('store_id', '<%= store.id %>');
+      fetch('/api/upload/logo', { method: 'POST', body: fd }).then(r => r.json()).then(d => {
+        if (d.url) {
+          document.getElementById(t === 'brandLogo' ? 'brandLogoUrl' : 'faviconUrl').value = d.url;
+          document.getElementById(t === 'brandLogo' ? 'brandLogoPreview' : 'faviconPreview').innerHTML = `<img src="${d.url}" class="w-full h-full object-contain">`;
+          scheduleSave();
+        }
+      });
+    }
+  });
 });
-
 document.getElementById('bannerInput')?.addEventListener('change', function(e) {
   if (this.files?.[0]) {
     const fd = new FormData(); fd.append('file', this.files[0]); fd.append('store_id', '<%= store.id %>');
     fetch('/api/upload/logo', { method: 'POST', body: fd }).then(r => r.json()).then(d => {
-      if (d.url) { document.getElementById('bannerUrl').value = d.url; document.getElementById('bannerPreview').innerHTML = `<img src="${d.url}" class="w-full h-full object-cover">`; updatePreview(); }
+      if (d.url) { document.getElementById('bannerUrl').value = d.url; document.getElementById('bannerPreview').innerHTML = `<img src="${d.url}" class="w-full h-full object-cover">`; scheduleSave(); }
     });
   }
 });
-
-async function uploadHeroImage(file, index) {
-  const fd = new FormData(); fd.append('file', file); fd.append('store_id', '<%= store.id %>');
-  try {
-    const r = await fetch('/api/upload/logo', { method: 'POST', body: fd });
-    const d = await r.json();
-    if (d.url) {
-      document.getElementById('heroUrl' + index).value = d.url;
-      document.getElementById('heroPreview' + index).innerHTML = `<img src="${d.url}" class="w-full h-full object-cover">`;
-      updatePreviewContent();
-    }
-  } catch(e) {}
-}
-
 for (let i = 0; i < 5; i++) {
   const input = document.getElementById('heroInput' + i);
-  if (input) {
-    input.addEventListener('change', function(e) {
-      if (this.files?.[0]) uploadHeroImage(this.files[0], i);
-    });
-  }
+  if (input) input.addEventListener('change', function(e) {
+    if (this.files?.[0]) {
+      const fd = new FormData(); fd.append('file', this.files[0]); fd.append('store_id', '<%= store.id %>');
+      fetch('/api/upload/logo', { method: 'POST', body: fd }).then(r => r.json()).then(d => {
+        if (d.url) { document.getElementById('heroUrl' + i).value = d.url; document.getElementById('heroPreview' + i).innerHTML = `<img src="${d.url}" class="w-full h-full object-cover">`; refreshPreview(); }
+      });
+    }
+  });
 }
 </script>

@@ -30,14 +30,14 @@
         </div>
         <div>
           <label class="block text-sm text-gray-400">URL</label>
-          <a href="/<%= store.slug %>" target="_blank" class="text-indigo-400 hover:text-indigo-300 font-medium">
-            tuferia.com/<%= store.slug %> ↗
+          <a href="https://<%= store.custom_domain %>/" target="_blank" class="text-indigo-400 hover:text-indigo-300 font-medium">
+            <%= store.custom_domain %> ↗
           </a>
         </div>
         <div>
           <label class="block text-sm text-gray-400">Diseño</label>
           <p class="text-white font-medium">
-            <%= ({'template1':'Belleza Clásico','template1_v2':'Belleza Gold','template1_v3':'Belleza Soft','template2':'Moda Clean','template2_v2':'Moda Editorial','template2_v3':'Moda Street','template3':'Hogar Deco','template3_v2':'Hogar Rústico','template3_v3':'Hogar Nórdico','template4':'Tecno Dark','template4_v2':'Tecno Gamer','template4_v3':'Tecno Apple','template5':'Alimentos Gourmet','template5_v2':'Alimentos Orgánico','template5_v3':'Alimentos Fast','template6':'Bebés Pastel','template6_v2':'Bebés Modern','template6_v3':'Bebés Aventura','template7':'Deportes Fitness','template7_v2':'Deportes Extreme','template7_v3':'Deportes Retro','template8':'Joyería Lujo','template8_v2':'Joyería Minimal','template8_v3':'Joyería Boho','template9':'Mascotas Pets','template9_v2':'Mascotas Premium','template9_v3':'Mascotas Wild','template10':'Librería Clásico','template10_v2':'Librería Moderno','template10_v3':'Librería Kids'})[store.template] || 'Personalizado' %>
+            <%= ({'template1':'Belleza Clásico','template1_v2':'Belleza Gold','template1_v3':'Belleza Soft','template2':'Moda Clean','template2_v2':'Moda Editorial','template2_v3':'Moda Street','template3':'Hogar Deco','template3_v2':'Hogar Rústico','template3_v3':'Hogar Nórdico','template4':'Tecno Dark','template4_v2':'Tecno Gamer','template4_v3':'Tecno Apple','template5':'Alimentos Gourmet','template5_v2':'Alimentos Orgánico','template5_v3':'Alimentos Fast','template6':'Bebés Pastel','template6_v2':'Bebés Modern','template6_v3':'Bebés Aventura','template7':'Deportes Fitness','template7_v2':'Deportes Extreme','template7_v3':'Deportes Retro','template8':'Joyería Lujo','template8_v2':'Joyería Minimal','template8_v3':'Joyería Boho','template9':'Mascotas Pets','template9_v2':'Mascotas Premium','template9_v3':'Mascotas Wild','template10':'Librería Clásico','template10_v2':'Librería Moderno','template10_v3':'Librería Kids','template31':'Beauty Web'})[store.template] || 'Personalizado' %>
           </p>
         </div>
         <div>
@@ -60,7 +60,7 @@
         <a href="/dashboard/productos/nuevo" class="p-4 rounded-xl bg-white/5 border border-gray-700/30 hover:bg-purple-500/10 hover:border-purple-500/30 transition-all text-center">
           <span class="text-sm text-gray-300">Agregar Producto</span>
         </a>
-        <a href="/<%= store.slug %>" target="_blank" class="p-4 rounded-xl bg-white/5 border border-gray-700/30 hover:bg-green-500/10 hover:border-green-500/30 transition-all text-center">
+        <a href="https://<%= store.custom_domain %>/" target="_blank" class="p-4 rounded-xl bg-white/5 border border-gray-700/30 hover:bg-green-500/10 hover:border-green-500/30 transition-all text-center">
           <span class="text-sm text-gray-300">Ver Tienda</span>
         </a>
         <a href="/auth/logout" class="p-4 rounded-xl bg-white/5 border border-gray-700/30 hover:bg-red-500/10 hover:border-red-500/30 transition-all text-center">

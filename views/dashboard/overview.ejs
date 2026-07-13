@@ -4,7 +4,7 @@
     <h1 class="text-2xl lg:text-3xl font-bold text-white">¡Bienvenido, <%= user.name %>!</h1>
     <p class="text-gray-400 mt-1">Panel de control de <strong class="text-white"><%= store.name %></strong></p>
   </div>
-  <a href="/<%= store.slug %>" target="_blank"
+  <a href="https://<%= store.custom_domain %>/" target="_blank"
     class="hidden sm:inline-flex items-center gap-2 px-4 py-2.5 text-sm font-medium text-white bg-gradient-to-r from-indigo-600 to-purple-600 rounded-xl hover:from-indigo-500 hover:to-purple-500 transition-all shadow-lg shadow-indigo-600/25">
     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/>
@@ -16,8 +16,8 @@
 <!-- Store URL card -->
 <div class="mb-8 p-4 bg-indigo-500/5 border border-indigo-500/20 rounded-xl">
   <p class="text-sm text-gray-400 mb-1">🌐 URL de tu tienda:</p>
-  <a href="/<%= store.slug %>" target="_blank" class="text-indigo-400 hover:text-indigo-300 font-medium text-lg">
-    tuferia.com/<%= store.slug %> ↗
+  <a href="https://<%= store.custom_domain %>/" target="_blank" class="text-indigo-400 hover:text-indigo-300 font-medium text-lg">
+    <%= store.custom_domain %> ↗
   </a>
 </div>
 
@@ -56,7 +56,7 @@
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
       </svg>
     </div>
-    <p class="text-3xl font-bold text-white"><%= ({'template1':'Belleza Clásico','template1_v2':'Belleza Gold','template1_v3':'Belleza Soft','template2':'Moda Clean','template2_v2':'Moda Editorial','template2_v3':'Moda Street','template3':'Hogar Deco','template3_v2':'Hogar Rústico','template3_v3':'Hogar Nórdico','template4':'Tecno Dark','template4_v2':'Tecno Gamer','template4_v3':'Tecno Apple','template5':'Alimentos Gourmet','template5_v2':'Alimentos Orgánico','template5_v3':'Alimentos Fast','template6':'Bebés Pastel','template6_v2':'Bebés Modern','template6_v3':'Bebés Aventura','template7':'Deportes Fitness','template7_v2':'Deportes Extreme','template7_v3':'Deportes Retro','template8':'Joyería Lujo','template8_v2':'Joyería Minimal','template8_v3':'Joyería Boho','template9':'Mascotas Pets','template9_v2':'Mascotas Premium','template9_v3':'Mascotas Wild','template10':'Librería Clásico','template10_v2':'Librería Moderno','template10_v3':'Librería Kids'})[store.template] || 'Personalizado' %>
+    <p class="text-3xl font-bold text-white"><%= ({'template1':'Belleza Clásico','template1_v2':'Belleza Gold','template1_v3':'Belleza Soft','template2':'Moda Clean','template2_v2':'Moda Editorial','template2_v3':'Moda Street','template3':'Hogar Deco','template3_v2':'Hogar Rústico','template3_v3':'Hogar Nórdico','template4':'Tecno Dark','template4_v2':'Tecno Gamer','template4_v3':'Tecno Apple','template5':'Alimentos Gourmet','template5_v2':'Alimentos Orgánico','template5_v3':'Alimentos Fast','template6':'Bebés Pastel','template6_v2':'Bebés Modern','template6_v3':'Bebés Aventura','template7':'Deportes Fitness','template7_v2':'Deportes Extreme','template7_v3':'Deportes Retro','template8':'Joyería Lujo','template8_v2':'Joyería Minimal','template8_v3':'Joyería Boho','template9':'Mascotas Pets','template9_v2':'Mascotas Premium','template9_v3':'Mascotas Wild','template10':'Librería Clásico','template10_v2':'Librería Moderno','template10_v3':'Librería Kids','template31':'Beauty Web'})[store.template] || 'Personalizado' %>
     <p class="text-sm text-gray-500">Diseño Activo</p>
   </div>
 </div>
@@ -84,7 +84,7 @@
         </svg>
         <span class="text-sm text-gray-300">Personalizar</span>
       </a>
-      <a href="/<%= store.slug %>" target="_blank" class="p-4 rounded-xl bg-white/5 border border-gray-700/30 hover:bg-green-500/10 hover:border-green-500/30 transition-all text-center">
+      <a href="https://<%= store.custom_domain %>/" target="_blank" class="p-4 rounded-xl bg-white/5 border border-gray-700/30 hover:bg-green-500/10 hover:border-green-500/30 transition-all text-center">
         <svg class="w-6 h-6 text-green-400 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/>
         </svg>

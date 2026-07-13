@@ -1,0 +1,146 @@
+<div class="max-w-2xl mx-auto">
+  <div class="mb-8">
+    <h1 class="text-2xl font-bold text-white mb-2">Configuración Cloudflare</h1>
+    <p class="text-gray-400">Credenciales y tunnel para subdominios de clientes.</p>
+  </div>
+
+  <form id="cfForm" class="space-y-6">
+    <!-- Cloudflare API Token -->
+    <div class="bg-gray-900/50 border border-gray-800/50 rounded-2xl p-6">
+      <label class="block text-sm font-medium text-gray-300 mb-2">API Token</label>
+      <input type="password" id="cf_api_token" name="CF_API_TOKEN"
+        value="<%= settings.CF_API_TOKEN || '' %>"
+        placeholder="cfut_..."
+        class="w-full bg-gray-800 border border-gray-700 rounded-xl px-4 py-2.5 text-white text-sm focus:outline-none focus:border-indigo-500 transition-colors">
+      <p class="text-gray-600 text-xs mt-1">Permisos: Zone DNS Edit + Account Cloudflare Tunnel Edit</p>
+    </div>
+
+    <!-- Zone ID -->
+    <div class="bg-gray-900/50 border border-gray-800/50 rounded-2xl p-6">
+      <label class="block text-sm font-medium text-gray-300 mb-2">Zone ID</label>
+      <input type="text" id="cf_zone_id" name="CF_ZONE_ID"
+        value="<%= settings.CF_ZONE_ID || '' %>"
+        placeholder="eb30011cd20fce9cf7bd4aeb3454cf34"
+        class="w-full bg-gray-800 border border-gray-700 rounded-xl px-4 py-2.5 text-white text-sm focus:outline-none focus:border-indigo-500 transition-colors">
+      <p class="text-gray-600 text-xs mt-1">Dashboard Cloudflare → tu dominio → zona derecha</p>
+    </div>
+
+    <!-- Account ID -->
+    <div class="bg-gray-900/50 border border-gray-800/50 rounded-2xl p-6">
+      <label class="block text-sm font-medium text-gray-300 mb-2">Account ID</label>
+      <input type="text" id="cf_account_id" name="CF_ACCOUNT_ID"
+        value="<%= settings.CF_ACCOUNT_ID || '' %>"
+        placeholder="a69d87494f1e95fad685ff3ca2efbae5"
+        class="w-full bg-gray-800 border border-gray-700 rounded-xl px-4 py-2.5 text-white text-sm focus:outline-none focus:border-indigo-500 transition-colors">
+    </div>
+
+    <!-- Tunnel ID -->
+    <div class="bg-gray-900/50 border border-gray-800/50 rounded-2xl p-6">
+      <label class="block text-sm font-medium text-gray-300 mb-2">Tunnel ID</label>
+      <input type="text" id="tunnel_id" name="TUNNEL_ID"
+        value="<%= settings.TUNNEL_ID || '' %>"
+        placeholder="b3c171eb-cb6d-4897-beac-58057a314951"
+        class="w-full bg-gray-800 border border-gray-700 rounded-xl px-4 py-2.5 text-white text-sm focus:outline-none focus:border-indigo-500 transition-colors">
+    </div>
+
+    <!-- Tunnel Target -->
+    <div class="bg-gray-900/50 border border-gray-800/50 rounded-2xl p-6">
+      <label class="block text-sm font-medium text-gray-300 mb-2">Tunnel Target (IP:Puerto)</label>
+      <input type="text" id="tunnel_target" name="TUNNEL_TARGET"
+        value="<%= settings.TUNNEL_TARGET || '' %>"
+        placeholder="http://192.168.100.131:8081"
+        class="w-full bg-gray-800 border border-gray-700 rounded-xl px-4 py-2.5 text-white text-sm focus:outline-none focus:border-indigo-500 transition-colors">
+    </div>
+
+    <!-- Base Domain -->
+    <div class="bg-gray-900/50 border border-gray-800/50 rounded-2xl p-6">
+      <label class="block text-sm font-medium text-gray-300 mb-2">Dominio base</label>
+      <input type="text" id="base_domain" name="BASE_DOMAIN"
+        value="<%= settings.BASE_DOMAIN || '' %>"
+        placeholder="hausetienda.com.ar"
+        class="w-full bg-gray-800 border border-gray-700 rounded-xl px-4 py-2.5 text-white text-sm focus:outline-none focus:border-indigo-500 transition-colors">
+    </div>
+
+    <div class="flex items-center gap-3">
+      <button type="submit" class="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-2.5 rounded-xl text-sm font-medium transition-colors">
+        Guardar configuración
+      </button>
+      <button type="button" onclick="testConnection()" class="bg-gray-800 hover:bg-gray-700 text-gray-300 border border-gray-700 px-6 py-2.5 rounded-xl text-sm font-medium transition-colors">
+        Probar conexión
+      </button>
+      <span id="formMsg" class="text-sm hidden"></span>
+    </div>
+  </form>
+
+  <!-- Tunnel Status -->
+  <div id="tunnelInfo" class="mt-8 bg-gray-900/30 border border-gray-800/30 rounded-2xl p-6">
+    <h4 class="text-white font-medium text-sm mb-3">Estado del Tunnel</h4>
+    <div id="tunnelStatus" class="text-gray-400 text-sm">Cargando...</div>
+  </div>
+</div>
+
+<script>
+  document.getElementById('cfForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const form = e.target;
+    const data = Object.fromEntries(new FormData(form));
+    const msg = document.getElementById('formMsg');
+
+    try {
+      const res = await fetch('/api/cloudflare/settings', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      });
+      const result = await res.json();
+      msg.textContent = result.success ? 'Configuración guardada' : result.error;
+      msg.className = `text-sm ${result.success ? 'text-green-400' : 'text-red-400'}`;
+      msg.classList.remove('hidden');
+      setTimeout(() => msg.classList.add('hidden'), 3000);
+    } catch (err) {
+      msg.textContent = 'Error de conexión';
+      msg.className = 'text-sm text-red-400';
+      msg.classList.remove('hidden');
+    }
+  });
+
+  async function testConnection() {
+    const msg = document.getElementById('formMsg');
+    try {
+      const res = await fetch('/api/cloudflare/test');
+      const data = await res.json();
+      msg.textContent = data.success
+        ? `Conectado. Tunnel: ${data.tunnelStatus}, ${data.ingressCount} reglas de ingress`
+        : `Error: ${data.error}`;
+      msg.className = `text-sm ${data.success ? 'text-green-400' : 'text-red-400'}`;
+      msg.classList.remove('hidden');
+      setTimeout(() => msg.classList.add('hidden'), 5000);
+    } catch (err) {
+      msg.textContent = 'Error de conexión';
+      msg.className = 'text-sm text-red-400';
+      msg.classList.remove('hidden');
+    }
+  }
+
+  async function loadTunnelInfo() {
+    try {
+      const res = await fetch('/api/cloudflare/test');
+      const data = await res.json();
+      const el = document.getElementById('tunnelStatus');
+      if (data.success) {
+        el.innerHTML = `
+          <div class="space-y-1">
+            <p><span class="text-gray-500">Estado:</span> <span class="text-green-400">${data.tunnelStatus}</span></p>
+            <p><span class="text-gray-500">Reglas ingress:</span> <span class="text-white">${data.ingressCount}</span></p>
+            <p><span class="text-gray-500">Tunnel ID:</span> <span class="text-white font-mono text-xs">${data.tunnelId || 'N/A'}</span></p>
+          </div>`;
+      } else {
+        el.innerHTML = `<p class="text-red-400">${data.error}</p>`;
+      }
+    } catch (e) {
+      document.getElementById('tunnelStatus').innerHTML = '<p class="text-gray-500">No se pudo conectar</p>';
+    }
+  }
+
+  loadTunnelInfo();
+</script>

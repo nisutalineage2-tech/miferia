@@ -4,6 +4,7 @@ const { v4: uuidv4 } = require('uuid');
 const slugify = require('slugify');
 const db = require('../config/db');
 const { requireAuth } = require('../middleware/auth');
+const cloudflare = require('../utils/cloudflare');
 
 // Dashboard - require auth for all routes
 router.use(requireAuth);
@@ -52,7 +53,7 @@ router.get('/setup', (req, res) => {
 });
 
 // Setup store action
-router.post('/setup', (req, res) => {
+router.post('/setup', async (req, res) => {
   const { name, slug, template } = req.body;
   if (!name || !slug) {
     const user = db.prepare('SELECT id, email, name FROM users WHERE id = ?').get(req.session.userId);
@@ -70,6 +71,24 @@ router.post('/setup', (req, res) => {
   const tmpl = template || 'template1';
   db.prepare('INSERT INTO stores (id, user_id, name, slug, template) VALUES (?, ?, ?, ?, ?)').run(id, req.session.userId, name, cleanSlug, tmpl);
   req.session.storeId = id;
+
+  // Auto-create Cloudflare subdomain (DNS CNAME + Tunnel ingress)
+  if (cloudflare.isConfigured() && /^[a-z0-9]([a-z0-9-]{0,61}[a-z0-9])?$/.test(cleanSlug)) {
+    try {
+      const existingRecord = await cloudflare.getRecordByName(cleanSlug);
+      if (!existingRecord) {
+        const result = await cloudflare.createSubdomain(cleanSlug);
+        db.prepare('UPDATE stores SET custom_domain = ?, cloudflare_record_id = ? WHERE id = ?')
+          .run(cleanSlug, result.dns.id, id);
+        console.log(`✅ Subdominio creado: ${cleanSlug}.${cloudflare.BASE_DOMAIN()} (DNS + Tunnel)`);
+      } else {
+        console.log(`⚠️ Subdominio ${cleanSlug} ya existe en Cloudflare, no se creó.`);
+      }
+    } catch (err) {
+      console.error(`❌ Error creando subdominio ${cleanSlug}:`, err.message);
+    }
+  }
+
   res.redirect('/dashboard');
 });
 
@@ -313,15 +332,21 @@ router.post('/combos/eliminar/:id', ensureStore, (req, res) => {
 
 // ============ THEME EDITOR ============
 router.get('/editor', ensureStore, (req, res) => {
+  res.redirect('/dashboard/editor/plantilla');
+});
+
+router.get('/editor/:sub', ensureStore, (req, res) => {
   const store = db.prepare('SELECT * FROM stores WHERE id = ?').get(req.session.storeId);
   let theme = {};
   try { theme = JSON.parse(store.theme_settings || '{}'); } catch(e) {}
   try { theme.filtros = JSON.parse(store.filter_settings || '{}'); } catch(e) {}
-  // Parse hero_images for the template
   let heroImages = [];
   try { heroImages = JSON.parse(store.hero_images || '[]'); } catch(e) {}
   
-  res.render('dashboard/editor', { title: 'Editor de Tienda', store, theme, heroImages, section: 'editor' });
+  const validSubs = ['plantilla','colores','anuncio','carrusel','logo','navegacion','tienda','secciones','filtros','whatsapp','instagram','facebook','css'];
+  const sub = validSubs.includes(req.params.sub) ? req.params.sub : 'plantilla';
+  
+  res.render('dashboard/editor', { title: 'Editor de Tienda', store, theme, heroImages, section: 'editor', sub });
 });
 
 router.post('/editor', ensureStore, (req, res) => {
@@ -559,7 +584,8 @@ router.get('/configuracion/ventas', ensureStore, (req, res) => {
 
 // Sales settings
 router.post('/configuracion/ventas', ensureStore, (req, res) => {
-  const { min_purchase, payment_methods, local_pickup, local_pickup_address, pickup_discount } = req.body;
+  const { min_purchase, payment_methods, local_pickup, local_pickup_address, pickup_discount,
+    whatsapp_notifications, email_notifications, smtp_host, smtp_port, smtp_user, smtp_pass, smtp_from_email, smtp_from_name } = req.body;
   const methods = payment_methods ? (Array.isArray(payment_methods) ? payment_methods : [payment_methods]) : [];
   
   // Build payment discounts map
@@ -572,7 +598,8 @@ router.post('/configuracion/ventas', ensureStore, (req, res) => {
   });
 
   db.prepare(`
-    UPDATE stores SET min_purchase=?, payment_methods=?, payment_discounts=?, local_pickup=?, local_pickup_address=?, pickup_discount=?
+    UPDATE stores SET min_purchase=?, payment_methods=?, payment_discounts=?, local_pickup=?, local_pickup_address=?, pickup_discount=?,
+      whatsapp_notifications=?, email_notifications=?, smtp_host=?, smtp_port=?, smtp_user=?, smtp_pass=?, smtp_from_email=?, smtp_from_name=?
     WHERE id=?
   `).run(
     parseFloat(min_purchase || 0),
@@ -581,6 +608,14 @@ router.post('/configuracion/ventas', ensureStore, (req, res) => {
     local_pickup === 'on' ? 1 : 0,
     local_pickup_address || null,
     parseFloat(pickup_discount || 0),
+    whatsapp_notifications === '1' ? 1 : 0,
+    email_notifications === '1' ? 1 : 0,
+    smtp_host || '',
+    parseInt(smtp_port || 587),
+    smtp_user || '',
+    smtp_pass || '',
+    smtp_from_email || '',
+    smtp_from_name || '',
     req.session.storeId
   );
   res.redirect('/dashboard/configuracion/ventas');

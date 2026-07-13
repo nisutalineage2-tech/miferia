@@ -8,6 +8,9 @@ const dashboardRoutes = require('./routes/dashboard');
 const storefrontRoutes = require('./routes/storefront');
 const apiRoutes = require('./routes/api');
 const customerRoutes = require('./routes/customer');
+const dnsRoutes = require('./routes/dns');
+const cloudflareApiRoutes = require('./routes/cloudflare-api');
+const subdomainMiddleware = require('./middleware/subdomain');
 
 const app = express();
 const PORT = 8081;
@@ -58,9 +61,29 @@ app.use((req, res, next) => {
 // Routes
 app.use('/auth', authRoutes);
 app.use('/dashboard', dashboardRoutes);
-app.use('/', storefrontRoutes);
+app.use('/api/dns', dnsRoutes);
+app.use('/api/cloudflare', cloudflareApiRoutes);
 app.use('/api', apiRoutes);
 app.use('/customer', customerRoutes);
+
+// Subdomain detection (before storefront)
+app.use(subdomainMiddleware);
+
+// Subdomain URL rewriting: when accessed via subdomain, rewrite paths to /{slug}/...
+app.use((req, res, next) => {
+  if (res.locals.subdomainStore && !req.path.startsWith('/api') && !req.path.startsWith('/auth') && !req.path.startsWith('/dashboard') && !req.path.startsWith('/css') && !req.path.startsWith('/js') && !req.path.startsWith('/uploads')) {
+    const slug = res.locals.subdomainStore.slug;
+    if (req.path === '/' || req.path === '') {
+      req.url = `/${slug}`;
+    } else if (!req.path.startsWith(`/${slug}`)) {
+      req.url = `/${slug}${req.path}`;
+    }
+  }
+  next();
+});
+
+// Storefront routes (after subdomain URL rewriting)
+app.use('/', storefrontRoutes);
 
 // Home page (no dashboard layout)
 app.get('/', (req, res) => {

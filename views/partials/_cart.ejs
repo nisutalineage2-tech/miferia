@@ -86,13 +86,13 @@
       </div>
     </div>
 
-    <a href="/<%= store.slug %>/checkout"
+    <a href="<%=storeBaseUrl%>/checkout"
       class="mt-6 block w-full text-center px-8 py-4 text-base font-bold text-white rounded-xl transition-all hover:opacity-90 <%= minPurchase > 0 && cartTotal < minPurchase ? 'opacity-50 cursor-not-allowed pointer-events-none' : 'hover:opacity-90' %>"
       style="background: linear-gradient(135deg, var(--primary, #4f46e5), var(--accent, #7c3aed));">
       <%= minPurchase > 0 && cartTotal < minPurchase ? 'Compra mínima: $' + minPurchase.toFixed(2) : 'Finalizar Compra' %>
     </a>
 
-    <a href="/<%= store.slug %>" class="mt-4 block text-center text-sm text-gray-500 hover:text-gray-700">← Seguir comprando</a>
+    <a href="<%=storeBaseUrl%>" class="mt-4 block text-center text-sm text-gray-500 hover:text-gray-700">← Seguir comprando</a>
 
   <% } else { %>
     <div class="text-center py-20">
@@ -101,7 +101,7 @@
       </svg>
       <h2 class="text-2xl font-bold text-gray-900 mb-2">Tu carrito está vacío</h2>
       <p class="text-gray-500 mb-8">Agregá productos para empezar a comprar</p>
-      <a href="/<%= store.slug %>"
+      <a href="<%=storeBaseUrl%>"
         class="inline-flex items-center gap-2 px-8 py-3.5 text-sm font-bold text-white rounded-xl transition-all hover:opacity-90"
         style="background: linear-gradient(135deg, var(--primary, #4f46e5), var(--accent, #7c3aed));">
         Ver Productos

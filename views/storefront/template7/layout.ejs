@@ -1,168 +1,41 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title><%= (title || store.name || '') %></title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Oswald:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <style>
-    <% let _tc7 = {}; try { _tc7 = JSON.parse(store.theme_settings || '{}'); } catch(e) {} const _col7 = _tc7.colors || {}; %>
-    body { font-family: 'Inter', sans-serif; background: <%= _col7.body_bg || '#f8fafc' %>; color: <%= _col7.body_text || '#1e293b' %>; }
-    h1,h2,h3,.heading { font-family: 'Oswald', sans-serif; text-transform: uppercase; letter-spacing: 0.02em; }
-    :root { --primary: <%= _col7.btn_primary_bg || store.primary_color || '#ea580c' %>; --accent: <%= _col7.btn_secondary_bg || store.accent_color || '#0284c7' %>; --footer-bg: <%= _col7.footer_bg || '#111827' %>; --footer-text: <%= _col7.footer_text || '#9ca3af' %>; }
-    .product-card { background: #fff; border: 1px solid #e2e8f0; transition: all 0.2s ease; border-radius: 12px; overflow: hidden; }
-    .product-card:hover { transform: translateY(-4px); box-shadow: 0 12px 40px rgba(234,88,12,0.12); border-color: var(--primary); }
-    .btn-primary { background: linear-gradient(135deg, #ea580c, #dc2626); color: #fff; border-radius: 8px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; font-size: 0.8rem; }
-    .badge-sport { background: linear-gradient(135deg, #f97316, #dc2626); color: #fff; }
-    .section-title { font-family: 'Oswald', sans-serif; font-size: 1.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.03em; }
-  </style>
-</head>
-<body class="min-h-screen">
-  <!-- Announcement -->
-  <div class="bg-gradient-to-r from-orange-600 to-red-600 text-white text-center text-xs py-2 font-semibold uppercase tracking-wider">⚡ Envío gratis en pedidos +$50,000 — 3 cuotas sin interés</div>
-
-  <!-- Nav -->
-  <nav class="bg-white shadow-sm sticky top-0 z-40 border-b border-gray-100">
-    <div class="max-w-7xl mx-auto px-4">
-      <div class="flex items-center justify-between h-16">
-        <a href="/<%= store.slug %>" class="flex items-center gap-2">
-          <% if (store.logo) { %><img src="<%= store.logo %>" alt="<%= store.name %>" class="h-9 w-auto"><% } else { %><span class="text-xl font-bold text-gray-900 heading"><%= store.name %></span><% } %>
-        </a>
-        <div class="hidden md:flex items-center gap-1">
-          <%- include('../../partials/_nav_links', { locals: { navLinkClass: 'px-3 py-1.5 text-xs font-semibold tracking-wider uppercase text-gray-600 hover:text-orange-600 transition-colors' } }) %>
-        </div>
-        <a href="/<%= store.slug %>/carrito" class="relative p-2"><svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg><% if (cartCount > 0) { %><span class="absolute -top-1 -right-1 w-5 h-5 rounded-full text-[10px] font-bold text-white flex items-center justify-center" style="background: var(--primary)"><%= cartCount %></span><% } %></a>
-      
-            <%- include('../../partials/_mobile_menu', { locals: { iconColor: 'text-gray-600' } }) %>
+<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title><%= (title||store.name||'') %></title><script src="https://cdn.tailwindcss.com"></script><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><% let _t={};try{_t=JSON.parse(store.theme_settings||'{}');}catch(e){}const _c=_t.colors||{};const _f=_t.fonts||{};const _gf={"Inter":"Inter:wght@300;400;500;600;700","Playfair Display":"Playfair+Display:ital,wght@0,400;0,600;0,700;1,400","Lora":"Lora:wght@400;500;600;700","Nunito":"Nunito:wght@300;400;600;700;800","Quicksand":"Quicksand:wght@300;400;500;600;700","Oswald":"Oswald:wght@300;400;500;600;700","Fredoka":"Fredoka:wght@300;400;500;600;700","Noto Serif":"Noto+Serif:wght@400;600;700","Poppins":"Poppins:wght@300;400;500;600;700;800"};const _fb=_f.body||'Inter';const _fh=_f.headings||'Oswald';const _fl=[...new Set([_gf[_fb],_gf[_fh]].filter(Boolean))];%><link href="https://fonts.googleapis.com/css2?family=<%=_fl.join('&family=')%>&display=swap" rel="stylesheet"><style>body{font-family:'<%=_fb%>',sans-serif}h1,h2,h3{font-family:'<%=_fh%>',serif;font-weight:600}:root{--primary:<%=_c.btn_primary_bg||'#ea580c'%>;--bg:<%=_c.body_bg||'#fff7ed'%>;--text:<%=_c.body_text||'#7c2d12'%>;--footer-bg:<%=_c.footer_bg||'#7c2d12'%>;--footer-text:<%=_c.footer_text||'#fed7aa'%>;--title:<%=_c.title_text||_c.body_text||'#7c2d12'%>;--label-bg:<%=_c.label_bg||'#ea580c'%>}body{background:var(--bg);color:var(--text)}h1,h2,h3,h4,h5,h6{color:var(--title)!important}.product-badge{background:var(--label-bg);color:#fff}.section-title{font-family:'<%=_fh%>',serif;font-weight:600}.nav-link{color:#7c2d12;transition:color .2s}.nav-link:hover{color:var(--primary)}footer{background:var(--footer-bg)!important;color:var(--footer-text)!important}footer a,footer p,footer span{color:var(--footer-text)!important}<%if(store.advanced_css){%><%=store.advanced_css%><%}%></style></head><body>
+<body>
+<nav class="sticky top-0 z-40" style="background:rgba(255,255,255,0.95);border-bottom:1px solid #fed7aa;backdrop-filter:blur(12px)"><div class="max-w-7xl mx-auto px-4"><div class="flex items-center justify-between h-16"><a href="<%=storeBaseUrl || '/'%>" class="flex items-center gap-2 shrink-0"><%if(store.logo){%><img src="<%=store.logo%>" alt="<%=store.name%>" class="h-8 w-auto"><%}else{%><span class="text-xl font-bold" style="color:var(--primary)"><%=store.name%></span><%}%></a><div class="hidden md:flex items-center gap-6 nav-links"><%-include('../../partials/_nav_links',{locals:{navLinkClass:'nav-link text-sm font-medium'}})%></div><button type="button" onclick="toggleCartDrawer()" class="relative p-2"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg><%if(cartCount>0){%><span class="absolute -top-1 -right-1 w-5 h-5 rounded-full text-xs font-bold text-white flex items-center justify-center" style="background:var(--primary)"><%=cartCount%></span><%}%></button><%-include('../../partials/_mobile_menu',{locals:{}})%></div></div></nav>
+<%-include("../../partials/_banner_carousel",{heroImages:typeof heroImages!=='undefined'?heroImages:[],store})%>
+<main><%-include('../../partials/_flash',{locals})%>
+<%if(page==='home'){%>
+<div class="relative" style="background:linear-gradient(135deg,rgb(255,255,252),#fff7ed,rgb(245,237,227))"><div class="max-w-7xl mx-auto px-4 py-16 lg:py-20"><div class="flex flex-col lg:flex-row items-center gap-10"><div class="flex-1 text-left"><span class="inline-block px-3 py-1 rounded-full bg-white/60 text-xs font-semibold mb-4">Bienvenido</span><h1 class="text-4xl lg:text-5xl mb-4" style="font-family:'Oswald',serif"><%=store.name%></h1><p class="text-lg mb-6 opacity-80"><%=store.description%></p><div class="flex flex-wrap gap-3"><a href="<%=storeBaseUrl%>/shop" class="btn-primary inline-block px-8 py-3 text-base">Ver Catálogo</a><a href="<%=storeBaseUrl%>/tienda" class="inline-block px-8 py-3 rounded-lg text-sm font-semibold border-2 transition-all hover:bg-white/10" style="border-color:var(--primary);color:var(--primary)">Explorar</a></div></div><div class="flex-1 w-full"><%-include('../../partials/_hero_carousel',{images:typeof heroImages!=='undefined'?heroImages:[],fallback:store.banner,className:'rounded-2xl shadow-xl',height:'h-56 lg:h-72'})%></div></div></div></div>
+<div class="py-12 lg:py-16" style="background:rgb(255,235,190)"><div class="max-w-7xl mx-auto px-4"><div class="grid grid-cols-2 md:grid-cols-4 gap-8 text-center"><div><span class="text-3xl font-bold" style="color:#ea580c;font-family:'Oswald',serif">10K+</span><p class="text-sm mt-1 opacity-70">Clientes felices</p></div><div><span class="text-3xl font-bold" style="color:#ea580c;font-family:'Oswald',serif">500+</span><p class="text-sm mt-1 opacity-70">Productos</p></div><div><span class="text-3xl font-bold" style="color:#ea580c;font-family:'Oswald',serif">99%</span><p class="text-sm mt-1 opacity-70">Satisfacción</p></div><div><span class="text-3xl font-bold" style="color:#ea580c;font-family:'Oswald',serif">24/7</span><p class="text-sm mt-1 opacity-70">Soporte</p></div></div></div></div>
+<div class="py-8 border-y" style="background:rgba(255,255,255,0.95);border-color:#fed7aa"><div class="max-w-7xl mx-auto px-4"><p class="text-center text-xs font-semibold uppercase tracking-widest mb-4 opacity-50">Marcas que confían en nosotros</p><div class="flex flex-wrap items-center justify-center gap-8 lg:gap-16 opacity-40"><%[1,2,3,4,5].forEach(i=>{%><span class="text-lg font-black" style="font-family:'Oswald',serif">MARCA</span><%})%></div></div></div>
+<div class="py-16" style="background:linear-gradient(135deg,#ea580c,rgb(194,48,0))"><div class="max-w-4xl mx-auto px-4 text-center"><h2 class="text-3xl lg:text-4xl font-bold mb-4" style="color:#fff;font-family:'Oswald',serif">Oferta Especial</h2><p class="text-lg mb-8 opacity-90" style="color:#fff">Descuentos exclusivos por tiempo limitado. No te lo pierdas!</p><a href="<%=storeBaseUrl%>/shop" class="inline-block px-8 py-3 rounded-lg font-semibold text-sm transition-all hover:scale-105" style="background:#fff;color:#ea580c">Ver Ofertas</a></div></div>
+<div class="py-12 lg:py-16" style="background:#ea580c"><div class="max-w-3xl mx-auto px-4 text-center"><h2 class="text-2xl font-bold mb-3" style="color:#fff;font-family:'Oswald',serif">No te pierdas nada</h2><p class="mb-6 opacity-90" style="color:#fff">Suscribite y recibí 10% OFF en tu primera compra + novedades exclusivas.</p><form class="flex flex-col sm:flex-row gap-3 max-w-md mx-auto" onsubmit="event.preventDefault();alert('Gracias por suscribirte!')"><input type="email" placeholder="tu@email.com" class="flex-1 px-4 py-3 rounded-lg border-0 text-sm" style="background:rgba(255,255,255,0.9);color:#111"><button type="submit" class="px-6 py-3 rounded-lg text-sm font-semibold whitespace-nowrap" style="background:#111;color:#fff">Quiero mi 10% OFF</button></form></div></div>
+<div class="max-w-7xl mx-auto px-4 py-8 lg:py-12">
+<%if(featured.length>0){%><h2 class="text-2xl font-bold mb-6 section-title">Destacados</h2>
+<div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-4 lg:gap-6 mb-12">
+<%featured.forEach(p=>{%><%-include('../../partials/_product_card',{product:p,store,locals})%><%})%></div><%}%>
+<h2 class="text-2xl font-bold mb-6 section-title">Todos los Productos</h2>
+<%if(products.length>0){%><div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-4 lg:gap-6">
+<%products.forEach(p=>{%><%-include('../../partials/_product_card',{product:p,store,locals})%><%})%></div>
+<%}else{%><div class="text-center py-16 opacity-50"><p>Proximamente estaremos agregando nuestros productos.</p></div><%}%>
+<%if(combos.length>0){%><h2 class="text-2xl font-bold mb-6 mt-12 section-title">Combos Especiales</h2>
+<div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+<%combos.forEach(combo=>{%><div class="p-6 rounded-2xl border-2 border-dashed" style="border-color:var(--primary)"><h3 class="text-lg font-bold"><%=combo.name%></h3><p class="text-sm opacity-70 mb-3"><%=combo.description%></p><p class="text-2xl font-bold" style="color:var(--primary)">$$<%=combo.price.toFixed(2)%></p>
+<button onclick="addComboToCart('<%=combo.id%>')" class="mt-3 w-full px-4 py-2.5 text-sm font-semibold text-white transition-all btn-primary">Agregar al Carrito</button></div><%})%></div><%}%>
 </div>
-    </div>
-  </nav>
-
-  <main>
-    <%- include('../../partials/_flash', { locals }); %>
-    <% if (page === 'home') { %>
-      <!-- HERO SPORTS -->
-      <div class="relative overflow-hidden group" style="background: linear-gradient(135deg, #1e293b, #0f172a);">
-        <% if (heroImages && heroImages.length > 0) { %>
-          <div class="absolute inset-0">
-            <%- include('../../partials/_hero_carousel', { images: heroImages, fallback: store.banner, className: 'w-full h-full', height: 'h-full' }); %>
-            <div class="absolute inset-0" style="background: linear-gradient(135deg, rgba(30,41,59,0.85), rgba(15,23,42,0.7));"></div>
-          </div>
-        <% } else if (store.banner) { %>
-          <div class="absolute inset-0">
-            <img src="<%= store.banner %>" class="w-full h-full object-cover" alt="">
-            <div class="absolute inset-0" style="background: linear-gradient(135deg, rgba(30,41,59,0.85), rgba(15,23,42,0.7));"></div>
-          </div>
-        <% } %>
-        <div class="relative max-w-7xl mx-auto px-4 py-16 lg:py-24">
-          <div class="max-w-2xl">
-            <span class="inline-block px-3 py-1 rounded-full text-xs font-bold uppercase tracking-widest text-white mb-4" style="background: linear-gradient(135deg, #ea580c, #dc2626);">⚡ Nuevos Ingresos</span>
-            <h1 class="text-5xl lg:text-7xl font-black text-white heading leading-tight mb-4"><%= store.name %></h1>
-            <p class="text-lg text-gray-300 mb-8"><%= store.description %></p>
-            <a href="/<%= store.slug %>/tienda" class="btn-primary inline-flex items-center gap-2 px-8 py-4 text-sm">Ver Colección <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg></a>
-          </div>
-        </div>
-      </div>
-
-      <div class="max-w-7xl mx-auto px-4 py-12">
-        <!-- Categories -->
-        <% if (categories.length > 0) { %>
-          <section class="mb-12">
-            <h2 class="section-title text-gray-900 mb-6">Categorías</h2>
-            <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-3">
-              <% categories.forEach(c => { %>
-                <a href="/<%= store.slug %>/categoria/<%= c.name.toLowerCase().replace(/ /g, '-') %>" class="p-4 rounded-xl bg-white border border-gray-100 text-center hover:border-orange-300 hover:shadow-md transition-all group">
-                  <div class="text-2xl mb-1"><% const icons = {'Running':'🏃','Fútbol':'⚽','Natación':'🏊','Ciclismo':'🚴','Fitness':'💪','Yoga':'🧘','Tenis':'🎾','Boxeo':'🥊'}; %><%= icons[c.name] || '🏅' %></div>
-                  <span class="text-xs font-semibold text-gray-700 group-hover:text-orange-600"><%= c.name %></span>
-                </a>
-              <% }); %>
-            </div>
-          </section>
-        <% } %>
-
-        <!-- Featured -->
-        <% if (featured.length > 0) { %>
-          <section class="mb-12">
-            <h2 class="section-title text-gray-900 mb-6">🔥 Destacados</h2>
-            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 lg:gap-5">
-              <% featured.forEach(p => { %><%- include('../../partials/_product_card', { product: p, store, locals }); %><% }); %>
-            </div>
-          </section>
-        <% } %>
-
-        <!-- Products -->
-        <section id="productos" class="mb-12">
-          <h2 class="section-title text-gray-900 mb-6">⚡ Todos los Productos</h2>
-          <% if (products.length > 0) { %>
-            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 lg:gap-5">
-              <% products.forEach(p => { %><%- include('../../partials/_product_card', { product: p, store, locals }); %><% }); %>
-            </div>
-          <% } else { %><div class="text-center py-16 text-gray-300">Próximamente</div><% } %>
-        </section>
-
-        <!-- Combos -->
-        <% if (combos.length > 0) { %>
-          <section class="mb-12 p-8 rounded-2xl" style="background: linear-gradient(135deg, #fef2f2, #fff7ed);">
-            <h2 class="section-title text-gray-900 mb-6">🏆 Combos Especiales</h2>
-            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
-              <% combos.forEach(combo => { %>
-                <div class="p-6 rounded-xl bg-white border border-orange-100 shadow-sm">
-                  <span class="text-3xl block mb-3">🏅</span>
-                  <h3 class="text-lg font-bold text-gray-900"><%= combo.name %></h3>
-                  <p class="text-sm text-gray-500 mb-3"><%= combo.description %></p>
-                  <p class="text-2xl font-black text-orange-600 mb-3">$<%= combo.price.toFixed(2) %></p>
-                  <button onclick="addComboToCart('<%= combo.id %>')" class="btn-primary w-full py-2.5 text-xs">Agregar</button>
-                </div>
-              <% }); %>
-            </div>
-          </section>
-        <% } %>
-      </div>
-
-    <% } else if (page === 'category') { %>
-      <div class="max-w-7xl mx-auto px-4 py-8">
-        <a href="/<%= store.slug %>" class="text-sm text-gray-500 hover:text-orange-600">← Volver</a>
-        <h1 class="text-4xl font-black text-gray-900 heading mt-6 mb-8"><%= category.name %></h1>
-        <% if (products.length > 0) { %><div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 lg:gap-5"><% products.forEach(p => { %><%- include('../../partials/_product_card', { product: p, store, locals }); %><% }); %></div><% } else { %><div class="text-center py-16 text-gray-400">Sin productos</div><% } %>
-      </div>
-    <% } else if (page === 'product') { %>
-      <%- include('../../partials/_product_detail', { store, product, variants, productImages, categories, related, cartCount, cartTotal, locals }); %>
-    <% } else if (page === 'cart') { %>
-      <%- include('../../partials/_cart', { store, categories, cartItems, cartCount, cartTotal, locals }); %>
-    <% } else if (page === 'checkout') { %>
-      <%- include('../../partials/_checkout', { store, categories, cartItems, cartCount, cartTotal, locals }); %>
-    <% } else if (['shop','subscriptions','about','contact','login','register','account'].includes(page)) { %>
-      <%- include('../../partials/_page_content', { page, store, categories, products, featured, combos, cartItems, cartCount, cartTotal, query: typeof query !== 'undefined' ? query : {}, priceRange: typeof priceRange !== 'undefined' ? priceRange : null, filterSettings: typeof filterSettings !== 'undefined' ? filterSettings : {}, filterData: typeof filterData !== 'undefined' ? filterData : {}, error: typeof error !== 'undefined' ? error : null, msg: typeof msg !== 'undefined' ? msg : null, customer: typeof customer !== 'undefined' ? customer : null, orders: typeof orders !== 'undefined' ? orders : null }); %>
-    <% } %>
-  </main>
-
-  <!-- Footer -->
-  <footer class="bg-gray-900 text-gray-400 mt-16">
-    <div class="max-w-7xl mx-auto px-4 py-12">
-      <div class="grid md:grid-cols-4 gap-8">
-        <div class="md:col-span-2">
-          <h3 class="text-white font-bold text-lg heading mb-3"><%= store.name %></h3>
-          <p class="text-sm text-gray-500"><%= store.description %></p>
-        </div>
-        <div>
-          <h4 class="text-white font-semibold mb-3 text-xs uppercase tracking-wider">Categorías</h4>
-          <ul class="space-y-1.5"><% categories.forEach(c => { %><li><a href="/<%= store.slug %>/categoria/<%= c.name.toLowerCase().replace(/ /g, '-') %>" class="text-sm hover:text-white"><%= c.name %></a></li><% }); %></ul>
-        </div>
-        <div>
-          <h4 class="text-white font-semibold mb-3 text-xs uppercase tracking-wider">Contacto</h4>
-          <% if (store.whatsapp) { %><a href="https://wa.me/<%= store.whatsapp %>" target="_blank" class="text-sm flex items-center gap-2 text-gray-400 hover:text-green-400"><svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>WhatsApp</a><% } %>
-        </div>
-      </div>
-      <div class="border-t border-gray-800 mt-8 pt-8 text-center text-xs text-gray-600">© 2026 <%= store.name %>. TuFerIA</div>
-    </div>
-  </footer>
-
-  <script>
-    async function addToCart(pId, vId, qty) { const r = await fetch('/api/cart/add', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({store_id:'<%= store.id %>',product_id:pId,variant_id:vId||null,quantity:qty||1})}); if((await r.json()).success) location.reload(); }
-    async function addComboToCart(cId) { const r = await fetch('/api/cart/add', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({store_id:'<%= store.id %>',combo_id:cId,quantity:1})}); if((await r.json()).success) location.reload(); }
-  </script>
-</body>
-</html>
+<%}else if(page==='category'){%><div class="max-w-7xl mx-auto px-4 py-8"><div class="mb-6"><a href="<%=storeBaseUrl || '/'%>" class="text-sm opacity-60 hover:opacity-100">← Todos los productos</a><h1 class="text-3xl font-bold mt-2 section-title"><%=category.name%></h1><%if(category.description){%><p class="opacity-70 mt-1"><%=category.description%></p><%}%></div>
+<%if(products.length>0){%><div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-4 lg:gap-6">
+<%products.forEach(p=>{%><%-include('../../partials/_product_card',{product:p,store,locals})%><%})%></div><%}else{%><div class="text-center py-16 opacity-60"><p>No hay productos en esta categoria todavia.</p></div><%}%></div>
+<%}else if(page==='product'){%><%-include('../../partials/_product_detail',{store,product,variants,productImages,categories,related,cartCount,cartTotal,locals})%>
+<%}else if(page==='cart'){%><%-include('../../partials/_cart',{store,categories,cartItems,cartCount,cartTotal,locals})%>
+<%}else if(page==='checkout'){%><%-include('../../partials/_checkout',{store,categories,cartItems,cartCount,cartTotal,locals})%>
+<%}else if(['shop','subscriptions','about','contact','login','register','account'].includes(page)){%><%-include('../../partials/_page_content',{page,store,categories,products,featured,combos,cartItems,cartCount,cartTotal,query:typeof query!=='undefined'?query:{},priceRange:typeof priceRange!=='undefined'?priceRange:null,filterSettings:typeof filterSettings!=='undefined'?filterSettings:{},filterData:typeof filterData!=='undefined'?filterData:{},error:typeof error!=='undefined'?error:null,msg:typeof msg!=='undefined'?msg:null,customer:typeof customer!=='undefined'?customer:null,orders:typeof orders!=='undefined'?orders:null})%>
+<%}%></main>
+<footer class="mt-16"><div class="max-w-7xl mx-auto px-4 py-12"><div class="flex flex-col md:flex-row items-center justify-between gap-6"><div><p class="text-lg font-semibold"><%=store.name%></p><p class="text-sm mt-1 opacity-70"><%=store.description%></p></div><div class="flex flex-wrap justify-center gap-4 text-sm opacity-60"><a href="<%=storeBaseUrl%>/tienda" class="hover:opacity-100">Tienda</a></div><div class="flex gap-4"><%if(store.whatsapp){%><a href="https://wa.me/<%=store.whatsapp%>" target="_blank" class="opacity-70 hover:opacity-100 transition-opacity"><svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347"/></svg></a><%}%><%if(store.instagram){%><a href="https://instagram.com/<%=store.instagram.replace('@','')%>" target="_blank" class="opacity-70 hover:opacity-100 transition-opacity"><svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069z"/></svg></a><%}%></div></div><div class="border-t mt-8 pt-8 text-center text-sm opacity-50" style="border-color:currentColor">&copy; 2026 <%=store.name%>. Powered by TuFerIA.</div></div></footer>
+<style>.product-card{background:#ffffff;border:1px solid #fed7aa;border-radius:0.5rem;box-shadow:0 4px 6px -1px rgb(0 0 0 / 0.1);transition:.3s;overflow:hidden}.product-card:hover{transform:translateY(-4px);border-color:var(--primary)}.btn-primary{background:var(--primary);color:#fff;border-radius:.5rem;font-weight:600;padding:.625rem 1.25rem;transition:.2s}.btn-primary:hover{opacity:.9}</style>
+<script>
+async function addToCart(pid,vid,qty){const r=await fetch('/api/cart/add',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({store_id:'<%=store.id%>',product_id:pid,variant_id:vid,quantity:qty||1})});const d=await r.json();if(d.success)location.reload()}
+async function addComboToCart(cid){const r=await fetch('/api/cart/add',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({store_id:'<%=store.id%>',combo_id:cid,quantity:1})});const d=await r.json();if(d.success)location.reload()}
+</script>
+<%-include('../../partials/_cart_drawer',{store,cartItems,cartCount,cartTotal,locals})%>
+<%-include('../../partials/_order_success',{order:typeof order!=='undefined'?order:null,whatsappLink:typeof whatsappLink!=='undefined'?whatsappLink:null})%>
+</body></html>

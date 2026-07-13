@@ -6,6 +6,7 @@ const path = require('path');
 const fs = require('fs');
 const db = require('../config/db');
 const { requireAuth } = require('../middleware/auth');
+const { sendOrderNotification } = require('../utils/mail');
 
 // Configure multer for file uploads
 const storage = multer.diskStorage({
@@ -326,7 +327,26 @@ router.post('/order/place', (req, res) => {
   db.prepare('DELETE FROM cart_items WHERE store_id = ? AND session_id = ?').run(store_id, sessionId);
   delete req.session.cartSessionId;
 
-  res.json({ success: true, orderId });
+  // Send notifications
+  if (store) {
+    // Email notification
+    if (store.email_notifications && store.smtp_host) {
+      const fullOrder = db.prepare('SELECT * FROM orders WHERE id = ?').get(orderId);
+      sendOrderNotification(store, fullOrder, cartItems);
+    }
+
+    // WhatsApp notification link
+    let whatsappLink = null;
+    if (store.whatsapp && store.whatsapp_notifications) {
+      const itemsSummary = cartItems.map(i => `${i.quantity}x ${i.name} $${(i.price * i.quantity).toFixed(2)}`).join('\n');
+      const msg = `Nuevo pedido!\nCliente: ${customer_name} ${customer_lastname || ''}\nEmail: ${customer_email}\n${customer_phone ? 'Tel: ' + customer_phone + '\n' : ''}Total: $${finalTotal.toFixed(2)}\n\nProductos:\n${itemsSummary}`;
+      whatsappLink = `https://wa.me/${store.whatsapp.replace(/[^0-9]/g, '')}?text=${encodeURIComponent(msg)}`;
+    }
+
+    res.json({ success: true, orderId, whatsappLink });
+  } else {
+    res.json({ success: true, orderId });
+  }
 });
 
 // Get cart count
