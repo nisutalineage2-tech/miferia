@@ -1,22 +1,177 @@
-<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title><%= (title||store.name||'') %></title><script src="https://cdn.tailwindcss.com"></script><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><% let _t={};try{_t=JSON.parse(store.theme_settings||'{}');}catch(e){}const _c=_t.colors||{};const _f=_t.fonts||{};const _gf={"Inter":"Inter:wght@300;400;500;600;700","Playfair Display":"Playfair+Display:ital,wght@0,400;0,600;0,700;1,400","Lora":"Lora:wght@400;500;600;700","Nunito":"Nunito:wght@300;400;600;700;800","Quicksand":"Quicksand:wght@300;400;500;600;700","Oswald":"Oswald:wght@300;400;500;600;700","Fredoka":"Fredoka:wght@300;400;500;600;700","Noto Serif":"Noto+Serif:wght@400;600;700","Poppins":"Poppins:wght@300;400;500;600;700;800"};const _fb=_f.body||'Inter';const _fh=_f.headings||'Playfair Display';const _fl=[...new Set([_gf[_fb],_gf[_fh]].filter(Boolean))];%><link href="https://fonts.googleapis.com/css2?family=<%=_fl.join('&family=')%>&display=swap" rel="stylesheet"><style>body{font-family:'<%=_fb%>',sans-serif}h1,h2,h3{font-family:'<%=_fh%>',serif;font-weight:600}:root{--primary:<%=_c.btn_primary_bg||'#d97706'%>;--bg:<%=_c.body_bg||'#fafaf9'%>;--text:<%=_c.body_text||'#292524'%>;--footer-bg:<%=_c.footer_bg||'#292524'%>;--footer-text:<%=_c.footer_text||'#d6d3d1'%>;--title:<%=_c.title_text||_c.body_text||'#292524'%>;--label-bg:<%=_c.label_bg||'#d97706'%>}body{background:var(--bg);color:var(--text)}h1,h2,h3,h4,h5,h6{color:var(--title)!important}.product-badge{background:var(--label-bg);color:#fff}.section-title{font-family:'<%=_fh%>',serif;font-weight:600}.nav-link{color:#292524;transition:color .2s}.nav-link:hover{color:var(--primary)}footer{background:var(--footer-bg)!important;color:var(--footer-text)!important}footer a,footer p,footer span{color:var(--footer-text)!important}nav.sticky .flex{justify-content:center!important;gap:2rem!important}<%if(store.advanced_css){%><%=store.advanced_css%><%}%></style></head><body>
+<%
+const ts = store.theme_settings ? (typeof store.theme_settings === 'string' ? JSON.parse(store.theme_settings) : store.theme_settings) : {};
+const gfMap = { 'Poppins': 'Poppins:wght@300;400;500;600;700&display=swap' };
+const gf = gfMap[ts.heading_font] || 'Poppins:wght@300;400;500;600;700&display=swap';
+const hFont = ts.heading_font || 'Poppins';
+const bFont = ts.body_font || 'Poppins';
+const isHome = !page || page === 'home';
+const isShop = page === 'shop';
+const isProduct = page === 'product';
+const isCart = page === 'cart';
+const isCheckout = page === 'checkout';
+%><!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="description" content="<%=store.description%>">
+<title><%=store.name%><%=page&&page!=='home'?' | '+page:''%></title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=<%=gf%>&display=swap" rel="stylesheet">
+<script>tailwind.config={theme:{extend:{fontFamily:{sans:['Poppins','sans-serif'],body:['Poppins','sans-serif']}}}}</script>
+<style>
+:root {
+  --primary: <%=store.primary_color||'#667eea'%>;
+  --bg: <%=store.bg_color||'#0f0c29'%>;
+  --text: <%=store.text_color||'#e0d4f5'%>;
+  --footer-bg: <%=store.footer_bg||'#0a0815'%>;
+  --footer-text: <%=store.footer_text||'#8b7db8'%>;
+  --title: <%=store.title_color||'#ffffff'%>;
+  --label-bg: <%=store.label_bg||'rgba(102,126,234,0.15)'%>;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Poppins',sans-serif;background:var(--bg);color:var(--text);font-weight:300;line-height:1.8;overflow-x:hidden}
+body::before{content:'';position:fixed;inset:0;background:linear-gradient(135deg,rgba(102,126,234,0.08) 0%,rgba(118,75,162,0.08) 50%,rgba(15,12,41,0.95) 100%);pointer-events:none;z-index:-1}
+h1,h2,h3,h4,h5,h6{font-family:'Poppins',sans-serif;font-weight:600;color:var(--title);letter-spacing:-0.02em}
+.section-title{font-size:1.5rem;text-align:center;margin-bottom:2rem;font-weight:500;background:linear-gradient(135deg,var(--primary),#a78bfa);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.btn-primary{display:inline-flex;align-items:center;justify-content:center;font-family:'Poppins',sans-serif;font-weight:500;font-size:0.85rem;padding:0.875rem 2.5rem;background:linear-gradient(135deg,var(--primary),#764ba2);color:#fff;border-radius:12px;border:1px solid rgba(255,255,255,0.1);backdrop-filter:blur(10px);transition:all 0.3s ease;box-shadow:0 4px 15px rgba(102,126,234,0.2)}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 30px rgba(102,126,234,0.4)}
+.glass{background:rgba(255,255,255,0.06);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,0.08);border-radius:16px}
+.glass-card{background:rgba(255,255,255,0.05);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1px solid rgba(255,255,255,0.08);border-radius:20px;transition:all 0.4s ease}
+.glass-card:hover{background:rgba(255,255,255,0.08);border-color:rgba(255,255,255,0.15);transform:translateY(-4px)}
+.product-card{border-radius:20px!important;overflow:hidden;background:rgba(255,255,255,0.05)!important;backdrop-filter:blur(12px)!important;-webkit-backdrop-filter:blur(12px)!important;border:1px solid rgba(255,255,255,0.08)!important;box-shadow:0 8px 32px rgba(0,0,0,0.2)!important;transition:all 0.4s ease!important}
+.product-card:hover{background:rgba(255,255,255,0.08)!important;border-color:rgba(255,255,255,0.18)!important;transform:translateY(-6px)!important;box-shadow:0 16px 48px rgba(0,0,0,0.3)!important}
+.product-card h3{color:var(--title);font-weight:500}
+.product-card span[style*="price"]{background:linear-gradient(135deg,var(--primary),#a78bfa);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.glass-nav{background:rgba(15,12,41,0.7);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border-bottom:1px solid rgba(255,255,255,0.06)}
+.gradient-mesh{position:relative;overflow:hidden}
+.gradient-mesh::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 20% 30%,rgba(102,126,234,0.2) 0%,transparent 50%),radial-gradient(circle at 80% 70%,rgba(118,75,162,0.15) 0%,transparent 50%),radial-gradient(circle at 50% 50%,rgba(168,85,247,0.08) 0%,transparent 60%);pointer-events:none}
+@keyframes float-up{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+@keyframes shimmer{0%{background-position:-200% 0}100%{background-position:200% 0}}
+.float-anim{animation:float-up 4s ease-in-out infinite}
+.gradient-border{position:relative;border-radius:16px}
+.gradient-border::before{content:'';position:absolute;inset:-1px;border-radius:17px;background:linear-gradient(135deg,var(--primary),#a78bfa,var(--primary));z-index:-1;opacity:0.5}
+</style>
+</head>
 <body>
-<nav class="sticky top-0 z-40" style="background:rgba(250,250,249,0.95);border-bottom:1px solid #e7e5e4;backdrop-filter:blur(12px)"><div class="max-w-7xl mx-auto px-4"><div class="flex flex-col items-center py-3"><div class="flex items-center justify-between w-full md:hidden"><a href="<%=storeBaseUrl || '/'%>" class="flex items-center gap-2 shrink-0"><%if(store.logo){%><img src="<%=store.logo%>" alt="<%=store.name%>" class="h-8 w-auto"><%}else{%><span class="text-xl font-bold" style="color:var(--primary)"><%=store.name%></span><%}%></a><button type="button" onclick="toggleCartDrawer()" class="relative p-2"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg><%if(cartCount>0){%><span class="absolute -top-1 -right-1 w-5 h-5 rounded-full text-xs font-bold text-white flex items-center justify-center" style="background:var(--primary)"><%=cartCount%></span><%}%></button><%-include('../../partials/_mobile_menu',{locals:{}})%></div><a href="<%=storeBaseUrl || '/'%>" class="flex items-center gap-2 shrink-0"><%if(store.logo){%><img src="<%=store.logo%>" alt="<%=store.name%>" class="h-10 w-auto"><%}else{%><span class="text-xl font-bold" style="color:var(--primary)"><%=store.name%></span><%}%></a><div class="hidden md:flex items-center gap-6 mt-2 nav-links"><div class="flex items-center gap-6 nav-links"><%-include('../../partials/_nav_links',{locals:{navLinkClass:'nav-link text-sm font-medium'}})%></div><button type="button" onclick="toggleCartDrawer()" class="relative p-2"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg><%if(cartCount>0){%><span class="absolute -top-1 -right-1 w-5 h-5 rounded-full text-xs font-bold text-white flex items-center justify-center" style="background:var(--primary)"><%=cartCount%></span><%}%></button></div></div></div></nav>
-<%-include("../../partials/_banner_carousel",{heroImages:typeof heroImages!=='undefined'?heroImages:[],store})%>
-<main><%-include('../../partials/_flash',{locals})%>
-<%if(page==='home'){%><%-include('../../partials/_home_content',{store,storeBaseUrl,categories,products,featured,combos,locals})%><%}else if(page==='category'){%><div class="max-w-7xl mx-auto px-4 py-8"><div class="mb-6"><a href="<%=storeBaseUrl || '/'%>" class="text-sm opacity-60 hover:opacity-100">← Todos los productos</a><h1 class="text-3xl font-bold mt-2 section-title"><%=category.name%></h1><%if(category.description){%><p class="opacity-70 mt-1"><%=category.description%></p><%}%></div>
-<%if(products.length>0){%><div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-2 gap-4 lg:gap-6">
-<%products.forEach(p=>{%><%-include('../../partials/_product_card',{product:p,store,locals})%><%})%></div><%}else{%><div class="text-center py-16 opacity-60"><p>No hay productos en esta categoria todavia.</p></div><%}%></div>
-<%}else if(page==='product'){%><%-include('../../partials/_product_detail',{store,product,variants,productImages,categories,related,cartCount,cartTotal,locals})%>
-<%}else if(page==='cart'){%><%-include('../../partials/_cart',{store,categories,cartItems,cartCount,cartTotal,locals})%>
-<%}else if(page==='checkout'){%><%-include('../../partials/_checkout',{store,categories,cartItems,cartCount,cartTotal,locals})%>
-<%}else if(['shop','subscriptions','about','contact','login','register','account'].includes(page)){%><%-include('../../partials/_page_content',{page,store,categories,products,featured,combos,cartItems,cartCount,cartTotal,query:typeof query!=='undefined'?query:{},priceRange:typeof priceRange!=='undefined'?priceRange:null,filterSettings:typeof filterSettings!=='undefined'?filterSettings:{},filterData:typeof filterData!=='undefined'?filterData:{},error:typeof error!=='undefined'?error:null,msg:typeof msg!=='undefined'?msg:null,customer:typeof customer!=='undefined'?customer:null,orders:typeof orders!=='undefined'?orders:null})%>
-<%}%></main>
-<footer class="mt-16"><div class="max-w-7xl mx-auto px-4 py-12"><div class="grid grid-cols-1 md:grid-cols-4 gap-8"><div class="md:col-span-2"><p class="text-lg font-semibold mb-2"><%=store.name%></p><p class="text-sm opacity-70 mb-4"><%=store.description%></p><div class="flex gap-3"><%if(store.whatsapp){%><a href="https://wa.me/<%=store.whatsapp%>?text=Hola%2C%20estoy%20interesad%40%20en%20tu%20tienda%2C%20quiero%20tener%20m%C3%A1s%20informaci%C3%B3n%20sobre%20ustedes" target="_blank" class="opacity-70 hover:opacity-100 transition-opacity"><svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347"/></svg></a><%}%><%if(store.instagram){%><a href="https://instagram.com/<%=store.instagram.replace('@','')%>" target="_blank" class="opacity-70 hover:opacity-100 transition-opacity"><svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069z"/></svg></a><%}%></div></div><div><p class="text-xs font-semibold mb-3 uppercase tracking-widest opacity-60">Links</p><%-include('../../partials/_nav_links',{locals:{navLinkClass:'block text-sm opacity-70 hover:opacity-100 mb-2 transition-opacity'}})%></div></div><div class="border-t mt-8 pt-8 text-center text-sm opacity-50" style="border-color:currentColor">&copy; 2026 <%=store.name%>. Powered by TuFerIA.</div></div></footer>
-<style>.product-card{background:#ffffff;border:2px solid #e7e5e4;border-radius:0.125rem;transition:.3s;overflow:hidden}.product-card:hover{transform:translateY(-2px);border-color:var(--primary)}.btn-primary{background:var(--primary);color:#fff;border-radius:0;font-weight:600;padding:.625rem 1.25rem;transition:.2s}.btn-primary:hover{background:#111}</style>
+<%-include('../../partials/_flash',{order:locals.order||null})%>
+
+<!-- Glass Nav -->
+<nav class="glass-nav sticky top-0 z-50">
+  <div class="max-w-7xl mx-auto px-4 lg:px-8">
+    <div class="flex items-center justify-between h-16 lg:h-18">
+      <a href="<%=storeBaseUrl%>" class="text-lg font-semibold tracking-tight" style="color:var(--title);text-decoration:none;background:linear-gradient(135deg,var(--primary),#a78bfa);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text"><%=store.name%></a>
+      <div class="hidden md:flex items-center gap-6">
+        <%- include('../../partials/_nav_links', {locals:{navLinkClass:'text-sm text-white/60 hover:text-white transition-colors font-light'}}); %>
+      </div>
+      <div class="flex items-center gap-3">
+        <button onclick="toggleCartDrawer()" class="p-2 relative glass" style="border-radius:50%;width:40px;height:40px;display:flex;align-items:center;justify-content:center">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 00-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 00-16.536-1.84M7.5 14.25L5.106 5.272"/></svg>
+          <% if (cartCount > 0) { %><span class="absolute -top-0.5 -right-0.5 w-5 h-5 rounded-full flex items-center justify-center text-[9px] font-bold text-white" style="background:linear-gradient(135deg,var(--primary),#764ba2)"><%= cartCount %></span><% } %>
+        </button>
+        <%- include('../../partials/_mobile_menu', { locals: { iconColor: 'text-white/60' } }); %>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<main>
+  <% if (isHome) { %>
+    <!-- Glass Hero -->
+    <div class="gradient-mesh py-16 lg:py-24 px-4 text-center relative">
+      <div class="max-w-3xl mx-auto">
+        <div class="glass p-8 lg:p-12 inline-block mx-auto float-anim" style="min-width:280px">
+          <h1 class="text-4xl lg:text-6xl font-bold mb-4" style="background:linear-gradient(135deg,#fff,var(--primary));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text"><%=store.name%></h1>
+          <p class="text-sm lg:text-base mb-8 max-w-md mx-auto" style="color:rgba(255,255,255,0.5)"><%=store.description%></p>
+          <div class="flex flex-wrap justify-center gap-4">
+            <a href="<%=storeBaseUrl%>/tienda" class="btn-primary">Explorar</a>
+            <% if (store.whatsapp) { %><a href="https://wa.me/<%=store.whatsapp%>" class="glass inline-flex items-center px-6 py-3 text-sm font-medium" style="color:#fff;text-decoration:none;border-radius:12px">WhatsApp</a><% } %>
+          </div>
+        </div>
+      </div>
+    </div>
+    <%- include('../../partials/_banner_carousel', { heroImages, store, storeBaseUrl }); %>
+    <%- include('../../partials/_home_content', { store, storeBaseUrl, categories, products, featured, combos, locals }); %>
+  <% } else if (isCategory) { %>
+    <div class="max-w-7xl mx-auto px-4 lg:px-8 py-12">
+      <h1 class="text-3xl font-semibold mb-8" style="background:linear-gradient(135deg,var(--primary),#a78bfa);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text"><%= category.name %></h1>
+      <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
+        <% products.forEach(p => { %>
+          <%- include('../../partials/_product_card', { product: p, store, locals }); %>
+        <% }); %>
+      </div>
+    </div>
+  <% } else if (isProduct) { %>
+    <%- include('../../partials/_product_detail', { product, productImages, category, variants, volumeDiscounts, related, store, storeBaseUrl, locals }); %>
+  <% } else if (isCart) { %>
+    <%- include('../../partials/_cart', { cartItems, cartTotal, store, storeBaseUrl, locals }); %>
+  <% } else if (isCheckout) { %>
+    <%- include('../../partials/_checkout', { cartItems, cartTotal, store, storeBaseUrl, locals }); %>
+  <% } else { %>
+    <%- include('../../partials/_page_content', { page, store, storeBaseUrl, categories, products, featured, combos, query, priceRange, filterData, customer, orders, error, msg, locals }); %>
+  <% } %>
+</main>
+
+<!-- Glass Footer -->
+<footer style="background:var(--footer-bg);border-top:1px solid rgba(102,126,234,0.1)">
+  <div class="gradient-mesh">
+    <div class="max-w-7xl mx-auto px-4 lg:px-8 py-16">
+      <div class="grid lg:grid-cols-4 gap-8">
+        <div class="lg:col-span-1">
+          <h3 class="text-lg font-semibold mb-4" style="background:linear-gradient(135deg,var(--primary),#a78bfa);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text"><%=store.name%></h3>
+          <p class="text-sm" style="color:rgba(255,255,255,0.35)"><%=store.description%></p>
+        </div>
+        <div>
+          <h4 class="text-xs uppercase tracking-widest mb-5" style="color:rgba(255,255,255,0.25);font-weight:400">Links</h4>
+          <div class="flex flex-col gap-2">
+            <%- include('../../partials/_nav_links', {locals:{navLinkClass:'text-sm text-white/40 hover:text-white/80 transition-colors'}}); %>
+          </div>
+        </div>
+        <div>
+          <h4 class="text-xs uppercase tracking-widest mb-5" style="color:rgba(255,255,255,0.25);font-weight:400">Social</h4>
+          <div class="flex flex-col gap-2">
+            <% if (store.instagram) { %><a href="https://instagram.com/<%=store.instagram.replace('@','')%>" class="text-sm text-white/40 hover:text-white/80 transition-colors">Instagram</a><% } %>
+            <% if (store.whatsapp) { %><a href="https://wa.me/<%=store.whatsapp%>" class="text-sm text-white/40 hover:text-white/80 transition-colors">WhatsApp</a><% } %>
+          </div>
+        </div>
+        <div>
+          <h4 class="text-xs uppercase tracking-widest mb-5" style="color:rgba(255,255,255,0.25);font-weight:400">Info</h4>
+          <div class="flex flex-col gap-2 text-sm text-white/40">
+            <span>Horarios: L a V</span>
+            <% if (store.whatsapp) { %><a href="https://wa.me/<%=store.whatsapp%>" class="hover:text-white/80 transition-colors">Contacto</a><% } %>
+          </div>
+        </div>
+      </div>
+      <div class="mt-12 pt-8 text-center text-xs" style="color:rgba(255,255,255,0.15);border-top:1px solid rgba(255,255,255,0.04)">
+        &copy; <%= new Date().getFullYear() %> <%= store.name %>
+      </div>
+    </div>
+  </div>
+</footer>
+
 <script>
-async function addToCart(pid,vid,qty){const r=await fetch('/api/cart/add',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({store_id:'<%=store.id%>',product_id:pid,variant_id:vid,quantity:qty||1})});const d=await r.json();if(d.success)location.reload()}
-async function addComboToCart(cid){const r=await fetch('/api/cart/add',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({store_id:'<%=store.id%>',combo_id:cid,quantity:1})});const d=await r.json();if(d.success)location.reload()}
+async function addToCart(productId, variantId, qty) {
+  const res = await fetch('/api/cart/add', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ product_id: productId, variant_id: variantId || null, quantity: qty || 1, store_id: '<%= store.id %>' })
+  });
+  const data = await res.json();
+  if (data.success) { toggleCartDrawer(); } else { alert(data.error || 'Error'); }
+}
+async function addComboToCart(comboId) {
+  const res = await fetch('/api/cart/add-combo', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ combo_id: comboId, store_id: '<%= store.id %>' })
+  });
+  const data = await res.json();
+  if (data.success) { toggleCartDrawer(); } else { alert(data.error || 'Error'); }
+}
 </script>
-<%-include('../../partials/_cart_drawer',{store,cartItems,cartCount,cartTotal,locals})%>
-<%-include('../../partials/_order_success',{order:typeof order!=='undefined'?order:null,whatsappLink:typeof whatsappLink!=='undefined'?whatsappLink:null})%>
-</body></html>
+
+<%- include('../../partials/_cart_drawer', { cartItems, cartTotal, store, storeBaseUrl }); %>
+<%- include('../../partials/_order_success', { order: locals.order, whatsappLink: locals.whatsappLink, store, storeBaseUrl, locals }); %>
+</body>
+</html>
