@@ -529,8 +529,36 @@ router.post('/editor', ensureStore, (req, res) => {
   if (onlyTemplate) {
     db.prepare('UPDATE stores SET template = ? WHERE id = ?').run(storeUpdate.template, req.session.storeId);
   } else {
+    // Merge with existing data to preserve fields not in the current form section
+    const current = db.prepare('SELECT * FROM stores WHERE id = ?').get(req.session.storeId);
+
+    // Preserve hero_images if not submitted (carousel section collapsed)
+    const finalHeroImages = heroImages.length > 0 ? heroImages : (current ? JSON.parse(current.hero_images || '[]') : []);
+
+    // Merge theme_settings: keep existing values for keys not in the submitted theme
+    let finalTheme = theme;
+    if (current) {
+      try {
+        const existingTheme = JSON.parse(current.theme_settings || '{}');
+        finalTheme = { ...existingTheme, ...theme };
+        // Deep merge colors
+        if (existingTheme.colors && theme.colors) {
+          finalTheme.colors = { ...existingTheme.colors, ...theme.colors };
+        }
+      } catch(e) {}
+    }
+
+    // Preserve fields that might not be in the form
+    const finalLogo = storeUpdate.logo || (current ? current.logo : null);
+    const finalBanner = storeUpdate.banner || (current ? current.banner : null);
+    const finalDescription = storeUpdate.description || (current ? current.description : '');
+    const finalAbout = storeUpdate.about_text || (current ? current.about_text : '');
+    const finalWhatsApp = storeUpdate.whatsapp !== undefined ? storeUpdate.whatsapp : (current ? current.whatsapp : '');
+    const finalInstagram = storeUpdate.instagram !== undefined ? storeUpdate.instagram : (current ? current.instagram : '');
+    const finalFacebook = storeUpdate.facebook !== undefined ? storeUpdate.facebook : (current ? current.facebook : '');
+
     db.prepare('UPDATE stores SET theme_settings = ?, advanced_css = ?, template = ?, name = ?, description = ?, about_text = ?, logo = ?, banner = ?, primary_color = ?, accent_color = ?, whatsapp = ?, instagram = ?, facebook = ?, filter_settings = ?, hero_images = ? WHERE id = ?')
-      .run(JSON.stringify(theme), advanced_css || '', storeUpdate.template, storeUpdate.name, storeUpdate.description, storeUpdate.about_text, storeUpdate.logo, storeUpdate.banner, storeUpdate.primary_color, storeUpdate.accent_color, storeUpdate.whatsapp, storeUpdate.instagram, storeUpdate.facebook, JSON.stringify(filterSettings), JSON.stringify(heroImages), req.session.storeId);
+      .run(JSON.stringify(finalTheme), advanced_css || '', storeUpdate.template, storeUpdate.name, finalDescription, finalAbout, finalLogo, finalBanner, storeUpdate.primary_color, storeUpdate.accent_color, finalWhatsApp, finalInstagram, finalFacebook, JSON.stringify(filterSettings), JSON.stringify(finalHeroImages), req.session.storeId);
   }
 
   res.redirect('/dashboard/editor');

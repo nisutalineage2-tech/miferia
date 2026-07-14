@@ -1,6 +1,6 @@
 <% const imgs = typeof heroImages !== 'undefined' && heroImages && heroImages.length > 0 ? heroImages : (store.banner ? [store.banner] : []); %>
 <% if (imgs.length > 0) { %>
-<div class="banner-carousel relative w-full overflow-hidden bg-gray-100" data-interval="5000" style="height: 320px;">
+<div class="banner-carousel relative w-full overflow-hidden bg-gray-100" data-interval="5000" style="height: 500px;">
   <div class="banner-carousel-track flex transition-transform duration-700 ease-in-out h-full">
     <% imgs.forEach((img, i) => { %>
       <div class="banner-carousel-slide w-full h-full shrink-0 <%= i === 0 ? 'active' : '' %>">
