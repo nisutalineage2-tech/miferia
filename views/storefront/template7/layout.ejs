@@ -192,25 +192,26 @@
   <%- include('../../partials/_mobile_menu', { store, storeBaseUrl, locals: { iconColor: '#1e3a5f' } }); %>
 
   <script>
-    function addToCart(productId, qty) {
+    function addToCart(productId, qty, variantId) {
       fetch((window.storeBaseUrl || '') + '/api/cart/add', {
         method: 'POST', headers: {'Content-Type':'application/x-www-form-urlencoded'},
-        body: 'product_id=' + productId + '&qty=' + (qty||1)
+        body: 'store_id=' + window.storeId + '&product_id=' + productId + (variantId ? '&variant_id=' + variantId : '') + '&quantity=' + (qty||1)
       }).then(r=>r.json()).then(d=>{
         if(d.cartCount!==undefined) document.querySelectorAll('.cart-count').forEach(e=>e.textContent=d.cartCount);
         if(typeof toggleCartDrawer==='function') toggleCartDrawer();
       });
     }
     function addComboToCart(comboId) {
-      fetch((window.storeBaseUrl || '') + '/api/combo/add', {
+      fetch((window.storeBaseUrl || '') + '/api/cart/add', {
         method: 'POST', headers: {'Content-Type':'application/x-www-form-urlencoded'},
-        body: 'combo_id=' + comboId + '&qty=1'
+        body: 'store_id=' + window.storeId + '&combo_id=' + comboId + '&quantity=1'
       }).then(r=>r.json()).then(d=>{
         if(d.cartCount!==undefined) document.querySelectorAll('.cart-count').forEach(e=>e.textContent=d.cartCount);
         if(typeof toggleCartDrawer==='function') toggleCartDrawer();
       });
     }
     window.storeBaseUrl = '<%= storeBaseUrl %>';
+    window.storeId = '<%= store.id %>';
   </script>
 </body>
 </html>
