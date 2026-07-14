@@ -1,3 +1,4 @@
 <%# Shared nav links for all template navbars %>
           <a href="<%=storeBaseUrl || '/'%>" class="<%= locals.navLinkClass || 'text-sm font-medium text-gray-600 hover:text-gray-900' %>">Inicio</a>
           <a href="<%=storeBaseUrl%>/tienda" class="<%= locals.navLinkClass || 'text-sm font-medium text-gray-600 hover:text-gray-900' %>">Tienda</a>
+          <%if(store.whatsapp){%><a href="https://wa.me/<%=store.whatsapp%>?text=Hola%20<%=encodeURIComponent(store.name)%>%20%F0%9F%91%8B" target="_blank" class="<%= locals.navLinkClass || 'text-sm font-medium text-gray-600 hover:text-gray-900' %>">WhatsApp</a><%}%>

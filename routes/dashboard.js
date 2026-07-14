@@ -554,7 +554,7 @@ router.get('/preview', ensureStore, (req, res) => {
   try { heroImages = JSON.parse(store.hero_images || '[]'); } catch(e) {}
 
   res.render(`storefront/${tmpl}/layout`, {
-    title: store.name, store, categories, products, combos, featured,
+    title: store.name, store, storeBaseUrl: store.custom_domain ? '' : '/' + store.slug, categories, products, combos, featured,
     cartItems: [], cartCount: 0, cartTotal: 0, currentSection: 'home', page: 'home', layout: false,
     locals: {}, heroImages
   });
