@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300" width="400" height="300">
+  <rect width="400" height="300" fill="#f8f8f8"/>
+  <!-- Nav -->
+  <rect x="0" y="0" width="400" height="40" fill="#ffffff" stroke="#e0e0e0" stroke-width="0.5"/>
+  <rect x="20" y="16" width="60" height="8" rx="1" fill="#333"/>
+  <rect x="160" y="18" width="30" height="5" rx="1" fill="#999"/>
+  <rect x="200" y="18" width="30" height="5" rx="1" fill="#999"/>
+  <rect x="240" y="18" width="30" height="5" rx="1" fill="#999"/>
+  <rect x="350" y="14" width="30" height="12" rx="6" fill="#333"/>
+  <!-- Content -->
+  <text x="200" y="70" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" fill="#bbb">Minimal Collection</text>
+  <!-- Cards -->
+  <rect x="20" y="85" width="115" height="140" rx="4" fill="#ffffff" stroke="#e8e8e8" stroke-width="1"/>
+  <rect x="28" y="93" width="100" height="65" rx="2" fill="#f0f0f0"/>
+  <rect x="28" y="166" width="70" height="5" rx="1" fill="#ddd"/>
+  <rect x="28" y="176" width="50" height="4" rx="1" fill="#eee"/>
+  <rect x="28" y="190" width="40" height="8" rx="1" fill="#333"/>
+  <rect x="142.5" y="85" width="115" height="140" rx="4" fill="#ffffff" stroke="#e8e8e8" stroke-width="1"/>
+  <rect x="150.5" y="93" width="100" height="65" rx="2" fill="#f0f0f0"/>
+  <rect x="150.5" y="166" width="70" height="5" rx="1" fill="#ddd"/>
+  <rect x="150.5" y="176" width="50" height="4" rx="1" fill="#eee"/>
+  <rect x="150.5" y="190" width="40" height="8" rx="1" fill="#333"/>
+  <rect x="265" y="85" width="115" height="140" rx="4" fill="#ffffff" stroke="#e8e8e8" stroke-width="1"/>
+  <rect x="273" y="93" width="100" height="65" rx="2" fill="#f0f0f0"/>
+  <rect x="273" y="166" width="70" height="5" rx="1" fill="#ddd"/>
+  <rect x="273" y="176" width="50" height="4" rx="1" fill="#eee"/>
+  <rect x="273" y="190" width="40" height="8" rx="1" fill="#333"/>
+  <!-- Footer -->
+  <rect x="0" y="245" width="400" height="55" fill="#f0f0f0" stroke="#e0e0e0" stroke-width="0.5"/>
+  <rect x="20" y="258" width="50" height="5" rx="1" fill="#bbb"/>
+  <rect x="20" y="268" width="80" height="4" rx="1" fill="#ddd"/>
+  <rect x="20" y="276" width="60" height="4" rx="1" fill="#ddd"/>
+  <rect x="340" y="258" width="40" height="8" rx="4" fill="#333"/>
+</svg>

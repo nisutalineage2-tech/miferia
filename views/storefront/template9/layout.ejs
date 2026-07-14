@@ -1,0 +1,238 @@
+<% const t = store.theme_settings ? JSON.parse(store.theme_settings) : {}; const c = t.colors || {}; %>
+<% const isHome = !page || page === 'home'; %>
+<% const isShop = page === 'shop'; %>
+<% const isProduct = page === 'product'; %>
+<% const isCart = page === 'cart'; %>
+<% const isCheckout = page === 'checkout'; %>
+<% const isCategory = page === 'category'; %>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= store.name || 'Store' %><%= typeof pageTitle !== 'undefined' ? ' — ' + pageTitle : '' %></title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            'space-grotesk': ['"Space Grotesk"', 'sans-serif'],
+            inter: ['Inter', 'sans-serif']
+          },
+          colors: {
+            primary: 'var(--primary)',
+            bg: 'var(--bg)',
+            text: 'var(--text)',
+            'neon-cyan': '#00f0ff',
+            'neon-magenta': '#ff00aa',
+            'neon-dark': '#0d0d0d'
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    :root {
+      --primary: <%= c.btn_primary_bg || '#00f0ff' %>;
+      --bg: <%= c.page_bg || '#0d0d0d' %>;
+      --text: <%= c.text || '#e0e0e0' %>;
+      --footer-bg: <%= c.footer_bg || '#080808' %>;
+      --footer-text: <%= c.footer_text || '#888899' %>;
+      --title: <%= c.heading_color || '#ffffff' %>;
+      --label-bg: <%= c.label_bg || '#1a1a2e' %>;
+    }
+    * { font-family: 'Inter', sans-serif; }
+    h1,h2,h3,h4,h5,h6 { font-family: 'Space Grotesk', sans-serif; color: var(--title); text-transform: uppercase; letter-spacing: 0.04em; }
+    body { background: var(--bg); color: var(--text); }
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+      background-size: 40px 40px;
+      pointer-events: none;
+      z-index: 0;
+    }
+    .neon-glow {
+      text-shadow: 0 0 10px rgba(0,240,255,0.5), 0 0 30px rgba(0,240,255,0.2);
+    }
+    .neon-border {
+      border: 1px solid #222;
+      border-radius: 0.5rem;
+      transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    }
+    .neon-border:hover {
+      border-color: #00f0ff;
+      box-shadow: 0 0 20px rgba(0,240,255,0.15);
+    }
+    .neon-card {
+      background: #111118;
+      border: 1px solid #222;
+      border-radius: 0.5rem;
+      transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    }
+    .neon-card:hover {
+      border-color: #ff00aa;
+      box-shadow: 0 0 20px rgba(255,0,170,0.12);
+    }
+    .neon-underline {
+      position: relative;
+      display: inline-block;
+    }
+    .neon-underline::after {
+      content: '';
+      position: absolute;
+      bottom: -2px;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background: #00f0ff;
+      box-shadow: 0 0 8px rgba(0,240,255,0.6);
+      transition: width 0.3s ease;
+    }
+    .neon-underline:hover::after {
+      width: 100%;
+    }
+    .neon-price {
+      font-family: 'Space Grotesk', monospace;
+      letter-spacing: 0.05em;
+    }
+    .neon-btn {
+      background: transparent;
+      border: 1px solid #00f0ff;
+      color: #00f0ff;
+      padding: 8px 24px;
+      border-radius: 0.25rem;
+      font-family: 'Space Grotesk', sans-serif;
+      text-transform: uppercase;
+      font-size: 0.8rem;
+      letter-spacing: 0.06em;
+      transition: background 0.3s ease, box-shadow 0.3s ease;
+    }
+    .neon-btn:hover {
+      background: rgba(0,240,255,0.1);
+      box-shadow: 0 0 16px rgba(0,240,255,0.25);
+    }
+  </style>
+</head>
+<body class="antialiased min-h-screen flex flex-col relative">
+  <%- include('../../partials/_flash', { locals }); %>
+  <%- include('../../partials/_cart_drawer', { store, storeBaseUrl }); %>
+  <%- include('../../partials/_order_success', { locals }); %>
+
+  <!-- NAV — Dark with neon glow -->
+  <nav class="sticky top-0 z-40" style="background: #0d0d0d; border-bottom: 1px solid #1a1a1a;">
+    <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+      <a href="<%= storeBaseUrl || '/' %>" class="font-space-grotesk text-xl font-bold uppercase tracking-wider neon-glow" style="color: #00f0ff;">
+        <%= store.name || 'Store' %>
+      </a>
+      <div class="hidden md:flex items-center gap-8 text-xs font-medium uppercase tracking-widest" style="color: #999;">
+        <%- include('../../partials/_nav_links', { store, storeBaseUrl, locals: { navLinkClass: 'neon-underline hover:text-white transition-colors' } }); %>
+      </div>
+      <div class="flex items-center gap-5">
+        <a href="<%= storeBaseUrl %>/cart" class="relative neon-underline" style="color: #ccc;">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.3 2.3c-.4.4-.1 1.1.5 1.1H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 100 4 2 2 0 000-4z"/>
+          </svg>
+          <span class="cart-count absolute -top-2 -right-2 text-[#0d0d0d] text-[10px] w-4 h-4 rounded-full flex items-center justify-center font-bold" style="background: #ff00aa;"><%= cartCount || 0 %></span>
+        </a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- MAIN -->
+  <main class="flex-1 relative z-10">
+    <% if (isHome) { %>
+      <%- include('../../partials/_banner_carousel', { heroImages, store, storeBaseUrl }); %>
+      <%- include('../../partials/_home_content', { store, storeBaseUrl, categories, products, featured, combos, locals }); %>
+    <% } else if (isProduct) { %>
+      <div class="max-w-7xl mx-auto px-6 py-14">
+        <%- include('../../partials/_product_detail', { product, productImages, variants, volumeDiscounts, category, related, store, storeBaseUrl, locals }); %>
+      </div>
+    <% } else if (isCart) { %>
+      <div class="max-w-4xl mx-auto px-6 py-14">
+        <%- include('../../partials/_cart', { cartItems, cartTotal, store, storeBaseUrl, locals }); %>
+      </div>
+    <% } else if (isCheckout) { %>
+      <div class="max-w-4xl mx-auto px-6 py-14">
+        <%- include('../../partials/_checkout', { cartItems, cartTotal, store, storeBaseUrl, locals }); %>
+      </div>
+    <% } else if (isCategory) { %>
+      <div class="max-w-7xl mx-auto px-6 py-14">
+        <h1 class="text-2xl font-bold mb-6" style="color: #00f0ff; text-shadow: 0 0 10px rgba(0,240,255,0.3);"><%= category.name %></h1>
+        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
+          <% products.forEach(p => { %>
+            <div class="neon-card p-0 overflow-hidden">
+              <%- include('../../partials/_product_card', { product: p, store, locals }); %>
+            </div>
+          <% }); %>
+        </div>
+      </div>
+    <% } else if (isShop) { %>
+      <div class="max-w-7xl mx-auto px-6 py-14">
+        <h1 class="text-2xl font-bold mb-6" style="color: #00f0ff; text-shadow: 0 0 10px rgba(0,240,255,0.3);">Shop</h1>
+        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
+          <% (products || []).forEach(p => { %>
+            <div class="neon-card p-0 overflow-hidden">
+              <%- include('../../partials/_product_card', { product: p, store, locals }); %>
+            </div>
+          <% }); %>
+        </div>
+      </div>
+    <% } else { %>
+      <%- include('../../partials/_page_content', { page, store, storeBaseUrl, categories, products, featured, combos, locals }); %>
+    <% } %>
+  </main>
+
+  <!-- FOOTER — Dark with neon border glow -->
+  <footer class="mt-20 pt-14 pb-10 relative z-10" style="background: #080808; border-top: 1px solid #1a1a1a; box-shadow: 0 -4px 20px rgba(0,240,255,0.08);">
+    <div class="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-3 gap-10">
+      <div class="neon-border p-6" style="background: #0d0d0d;">
+        <h3 class="font-space-grotesk text-lg font-bold uppercase tracking-wider neon-glow mb-2" style="color: #00f0ff;"><%= store.name || 'Store' %></h3>
+        <p class="text-xs leading-relaxed" style="color: #888899;">The future of shopping.</p>
+      </div>
+      <div class="neon-border p-6" style="background: #0d0d0d;">
+        <h3 class="font-space-grotesk text-xs font-bold uppercase tracking-widest mb-3" style="color: #ff00aa;">Navigate</h3>
+        <div class="flex flex-col gap-2 text-xs" style="color: #888899;">
+          <%- include('../../partials/_nav_links', { store, storeBaseUrl, locals: { navLinkClass: 'hover:text-[#00f0ff] transition-colors uppercase tracking-wider' } }); %>
+        </div>
+      </div>
+      <div class="neon-border p-6" style="background: #0d0d0d;">
+        <h3 class="font-space-grotesk text-xs font-bold uppercase tracking-widest mb-3" style="color: #ff00aa;">Legal</h3>
+        <p class="text-xs" style="color: #888899;">&copy; <%= new Date().getFullYear() %> <%= store.name || 'Store' %>. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- MOBILE MENU -->
+  <%- include('../../partials/_mobile_menu', { store, storeBaseUrl, locals: { iconColor: '#00f0ff' } }); %>
+
+  <script>
+    function addToCart(productId, qty) {
+      fetch((window.storeBaseUrl || '') + '/api/cart/add', {
+        method: 'POST', headers: {'Content-Type':'application/x-www-form-urlencoded'},
+        body: 'product_id=' + productId + '&qty=' + (qty||1)
+      }).then(r=>r.json()).then(d=>{
+        if(d.cartCount!==undefined) document.querySelectorAll('.cart-count').forEach(e=>e.textContent=d.cartCount);
+        if(typeof toggleCartDrawer==='function') toggleCartDrawer();
+      });
+    }
+    function addComboToCart(comboId) {
+      fetch((window.storeBaseUrl || '') + '/api/combo/add', {
+        method: 'POST', headers: {'Content-Type':'application/x-www-form-urlencoded'},
+        body: 'combo_id=' + comboId + '&qty=1'
+      }).then(r=>r.json()).then(d=>{
+        if(d.cartCount!==undefined) document.querySelectorAll('.cart-count').forEach(e=>e.textContent=d.cartCount);
+        if(typeof toggleCartDrawer==='function') toggleCartDrawer();
+      });
+    }
+    window.storeBaseUrl = '<%= storeBaseUrl %>';
+  </script>
+</body>
+</html>

@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300" width="400" height="300">
+  <rect width="400" height="300" fill="#0d0d0d"/>
+  <!-- Grid pattern -->
+  <pattern id="grid" width="20" height="20" patternUnits="userSpaceOnUse">
+    <path d="M 20 0 L 0 0 0 20" fill="none" stroke="#1a1a1a" stroke-width="0.5"/>
+  </pattern>
+  <rect width="400" height="300" fill="url(#grid)"/>
+  <!-- Nav -->
+  <rect x="0" y="0" width="400" height="40" fill="#0d0d0d"/>
+  <text x="20" y="26" font-family="Arial, sans-serif" font-size="13" font-weight="bold" fill="#00f0ff">NEON</text>
+  <rect x="150" y="17" width="25" height="4" rx="2" fill="#00f0ff" opacity="0.4"/>
+  <rect x="185" y="17" width="25" height="4" rx="2" fill="#00f0ff" opacity="0.4"/>
+  <rect x="220" y="17" width="25" height="4" rx="2" fill="#ff00aa" opacity="0.4"/>
+  <rect x="350" y="14" width="30" height="12" rx="2" fill="#00f0ff"/>
+  <!-- Neon glow line under nav -->
+  <line x1="0" y1="41" x2="400" y2="41" stroke="#00f0ff" stroke-width="1" opacity="0.6"/>
+  <line x1="0" y1="42" x2="400" y2="42" stroke="#00f0ff" stroke-width="3" opacity="0.15"/>
+  <!-- Heading -->
+  <text x="200" y="72" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" fill="#00f0ff" opacity="0.9">CYBER MARKETPLACE</text>
+  <!-- Cards with neon borders -->
+  <rect x="20" y="88" width="115" height="105" fill="#111" stroke="#00f0ff" stroke-width="0.5"/>
+  <rect x="20" y="88" width="115" height="105" fill="none" stroke="#00f0ff" stroke-width="1" opacity="0.1" transform="translate(1,1)"/>
+  <rect x="30" y="98" width="50" height="4" fill="#00f0ff"/>
+  <rect x="30" y="108" width="90" height="3" fill="#333"/>
+  <rect x="30" y="115" width="70" height="3" fill="#333"/>
+  <rect x="30" y="128" width="80" height="40" fill="#1a1a1a" stroke="#ff00aa" stroke-width="0.3"/>
+  <rect x="30" y="175" width="35" height="7" fill="#00f0ff"/>
+  <rect x="142.5" y="88" width="115" height="105" fill="#111" stroke="#ff00aa" stroke-width="0.5"/>
+  <rect x="142.5" y="88" width="115" height="105" fill="none" stroke="#ff00aa" stroke-width="1" opacity="0.1" transform="translate(1,1)"/>
+  <rect x="152.5" y="98" width="50" height="4" fill="#ff00aa"/>
+  <rect x="152.5" y="108" width="90" height="3" fill="#333"/>
+  <rect x="152.5" y="115" width="70" height="3" fill="#333"/>
+  <rect x="152.5" y="128" width="80" height="40" fill="#1a1a1a" stroke="#00f0ff" stroke-width="0.3"/>
+  <rect x="152.5" y="175" width="35" height="7" fill="#ff00aa"/>
+  <rect x="265" y="88" width="115" height="105" fill="#111" stroke="#00f0ff" stroke-width="0.5"/>
+  <rect x="265" y="88" width="115" height="105" fill="none" stroke="#00f0ff" stroke-width="1" opacity="0.1" transform="translate(1,1)"/>
+  <rect x="275" y="98" width="50" height="4" fill="#00f0ff"/>
+  <rect x="275" y="108" width="90" height="3" fill="#333"/>
+  <rect x="275" y="115" width="70" height="3" fill="#333"/>
+  <rect x="275" y="128" width="80" height="40" fill="#1a1a1a" stroke="#ff00aa" stroke-width="0.3"/>
+  <rect x="275" y="175" width="35" height="7" fill="#00f0ff"/>
+  <!-- Footer -->
+  <rect x="0" y="210" width="400" height="90" fill="#0a0a0a"/>
+  <line x1="0" y1="210" x2="400" y2="210" stroke="#ff00aa" stroke-width="1" opacity="0.6"/>
+  <line x1="0" y1="211" x2="400" y2="211" stroke="#ff00aa" stroke-width="3" opacity="0.15"/>
+  <rect x="20" y="228" width="45" height="4" fill="#00f0ff" opacity="0.5"/>
+  <rect x="20" y="238" width="60" height="3" fill="#333"/>
+  <rect x="20" y="245" width="50" height="3" fill="#333"/>
+  <rect x="20" y="252" width="40" height="3" fill="#333"/>
+  <rect x="200" y="228" width="45" height="4" fill="#ff00aa" opacity="0.5"/>
+  <rect x="200" y="238" width="60" height="3" fill="#333"/>
+  <rect x="200" y="245" width="50" height="3" fill="#333"/>
+  <rect x="350" y="230" width="30" height="8" fill="#00f0ff"/>
+</svg>

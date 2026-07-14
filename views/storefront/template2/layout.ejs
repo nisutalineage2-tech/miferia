@@ -1,164 +1,183 @@
-<%
-const ts = store.theme_settings ? (typeof store.theme_settings === 'string' ? JSON.parse(store.theme_settings) : store.theme_settings) : {};
-const gfMap = { 'Oswald': 'Oswald:wght@400;500;600;700&display=swap', 'Inter': 'Inter:wght@300;400;500;600;700&display=swap' };
-const gf = gfMap[ts.heading_font] || 'Oswald:wght@400;500;600;700&display=swap';
-const bodyFont = ts.body_font || 'Inter';
-const headingFont = ts.heading_font || 'Oswald';
-const isHome = !page || page === 'home';
-const isShop = page === 'shop';
-const isProduct = page === 'product';
-const isCart = page === 'cart';
-const isCheckout = page === 'checkout';
-const isCategory = page === 'category';
-%><!DOCTYPE html>
-<html lang="es">
+<% const t = store.theme_settings ? JSON.parse(store.theme_settings) : {}; const c = t.colors || {}; %>
+<% const isHome = !page || page === 'home'; %>
+<% const isShop = page === 'shop'; %>
+<% const isProduct = page === 'product'; %>
+<% const isCart = page === 'cart'; %>
+<% const isCheckout = page === 'checkout'; %>
+<% const isCategory = page === 'category'; %>
+<!DOCTYPE html>
+<html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
-<meta name="description" content="<%=store.description%>">
-<title><%=store.name%><%=page&&page!=='home'?' | '+page:''%></title>
-<script src="https://cdn.tailwindcss.com"></script>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=<%=gf%>&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-<script>tailwind.config={theme:{extend:{fontFamily:{sans:['"<%=headingFont%>"','sans-serif'],body:['"<%=bodyFont%>"','sans-serif']}}}}</script>
-<style>
-:root {
-  --primary: <%=store.primary_color||'#000000'%>;
-  --bg: <%=store.bg_color||'#ffffff'%>;
-  --text: <%=store.text_color||'#1a1a1a'%>;
-  --footer-bg: <%=store.footer_bg||'#000000'%>;
-  --footer-text: <%=store.footer_text||'#ffffff'%>;
-  --title: <%=store.title_color||'#000000'%>;
-  --label-bg: <%=store.label_bg||'#f3f4f6'%>;
-}
-*{margin:0;padding:0;box-sizing:border-box}
-body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);font-weight:400}
-h1,h2,h3,h4,h5,h6{font-family:'Oswald',sans-serif;font-weight:600;text-transform:uppercase;letter-spacing:0.02em;color:var(--title)}
-.section-title{font-size:1.5rem;text-align:center;margin-bottom:2rem;letter-spacing:0.1em}
-.btn-primary{display:inline-flex;align-items:center;justify-content:center;font-family:'Inter',sans-serif;font-weight:600;font-size:0.8rem;letter-spacing:0.05em;padding:0.875rem 2rem;background:var(--primary);color:#fff;border-radius:0;transition:all 0.3s ease}
-.btn-primary:hover{background:var(--text);color:var(--bg)}
-.product-card{background:#fff!important;border:1px solid #e5e7eb!important;border-radius:0!important;box-shadow:none!important;transition:all 0.3s ease}
-.product-card:hover{border-color:var(--primary)!important;transform:translateY(-2px)}
-.product-card:first-child{grid-column:span 2}
-.category-card{aspect-ratio:1;overflow:hidden;position:relative}
-.category-card img{width:100%;height:100%;object-fit:cover;filter:grayscale(1);transition:all 0.5s ease}
-.category-card:hover img{filter:grayscale(0);transform:scale(1.05)}
-.fullscreen-menu{position:fixed;inset:0;z-index:60;background:var(--primary);display:flex;flex-direction:column;align-items:center;justify-content:center;transition:all 0.4s cubic-bezier(0.4,0,0.2,1)}
-.fullscreen-menu.hidden{opacity:0;pointer-events:none;transform:scale(0.95)}
-.fullscreen-menu a{color:#fff;font-family:'Oswald',sans-serif;font-size:2rem;text-transform:uppercase;letter-spacing:0.1em;text-decoration:none;padding:0.75rem 0;transition:opacity 0.2s}
-.fullscreen-menu a:hover{opacity:0.6}
-@media(max-width:768px){
-  .product-card:first-child{grid-column:span 1}
-}
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= store.name || 'Store' %><%= typeof pageTitle !== 'undefined' ? ' — ' + pageTitle : '' %></title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            oswald: ['Oswald', 'sans-serif'],
+            inter: ['Inter', 'sans-serif']
+          },
+          colors: {
+            primary: 'var(--primary)',
+            bg: 'var(--bg)',
+            text: 'var(--text)',
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    :root {
+      --primary: <%= c.btn_primary_bg || '#e11d48' %>;
+      --bg: <%= c.page_bg || '#ffffff' %>;
+      --text: <%= c.text || '#1a1a1a' %>;
+      --footer-bg: <%= c.footer_bg || '#0a0a0a' %>;
+      --footer-text: <%= c.footer_text || '#a3a3a3' %>;
+      --title: <%= c.heading_color || '#0a0a0a' %>;
+      --label-bg: <%= c.label_bg || '#fee2e2' %>;
+    }
+    * { font-family: 'Inter', sans-serif; }
+    h1,h2,h3,h4,h5,h6 { font-family: 'Oswald', sans-serif; text-transform: uppercase; letter-spacing: 0.02em; color: var(--title); }
+    body { background: var(--bg); color: var(--text); }
+    .editorial-card { box-shadow: 6px 6px 0 var(--primary); border: 1px solid #e5e7eb; transition: transform 0.2s; }
+    .editorial-card:hover { transform: translate(-2px, -2px); box-shadow: 8px 8px 0 var(--primary); }
+    .fullscreen-menu { position: fixed; inset: 0; z-index: 100; background: rgba(10,10,10,0.97); display: none; align-items: center; justify-content: center; }
+    .fullscreen-menu.active { display: flex; }
+    .fullscreen-menu a { font-family: 'Oswald', sans-serif; font-size: 3rem; text-transform: uppercase; color: #fff; letter-spacing: 0.05em; transition: color 0.2s; }
+    .fullscreen-menu a:hover { color: var(--primary); }
+    .asymmetric-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+    @media(min-width:1024px) { .asymmetric-grid > *:first-child { grid-column: span 2; } }
+  </style>
 </head>
-<body>
-<%-include('../../partials/_flash',{order:locals.order||null})%>
+<body class="antialiased min-h-screen flex flex-col">
+  <%- include('../../partials/_flash', { locals }); %>
+  <%- include('../../partials/_cart_drawer', { store, storeBaseUrl }); %>
+  <%- include('../../partials/_order_success', { locals }); %>
 
-<!-- Bold Nav -->
-<nav class="sticky top-0 z-50" style="background:#fff;border-bottom:1px solid #e5e7eb">
-  <div class="max-w-7xl mx-auto px-4 lg:px-8">
-    <div class="flex items-center justify-between h-16 lg:h-20">
-      <button onclick="toggleFullscreenMenu()" class="p-2 hover:opacity-60 transition-opacity">
-        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
-      </button>
-      <a href="<%=storeBaseUrl%>" class="text-lg font-bold uppercase tracking-widest" style="color:var(--title);font-family:'Oswald',sans-serif;text-decoration:none"><%=store.name%></a>
-      <button onclick="toggleCartDrawer()" class="p-2 relative hover:opacity-60 transition-opacity">
-        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 00-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 00-16.536-1.84M7.5 14.25L5.106 5.272"/></svg>
-        <% if (cartCount > 0) { %><span class="absolute -top-0.5 -right-0.5 w-4 h-4 rounded-full flex items-center justify-center text-[9px] font-bold" style="background:var(--primary);color:#fff"><%= cartCount %></span><% } %>
-      </button>
-    </div>
-  </div>
-</nav>
-
-<!-- Fullscreen Overlay Menu -->
-<div id="fullscreenMenu" class="fullscreen-menu hidden">
-  <button onclick="toggleFullscreenMenu()" class="absolute top-6 right-6 p-2 text-white/60 hover:text-white">
-    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
-  </button>
-  <div class="flex flex-col items-center gap-2">
-    <%- include('../../partials/_nav_links', {locals:{navLinkClass:'font-bold'}}); %>
-  </div>
-</div>
-
-<script>
-function toggleFullscreenMenu() { document.getElementById('fullscreenMenu').classList.toggle('hidden'); document.body.style.overflow = document.getElementById('fullscreenMenu').classList.contains('hidden') ? '' : 'hidden'; }
-</script>
-
-<main>
-  <% if (isHome) { %>
-    <%- include('../../partials/_banner_carousel', { heroImages, store, storeBaseUrl }); %>
-    <%- include('../../partials/_home_content', { store, storeBaseUrl, categories, products, featured, combos, locals }); %>
-  <% } else if (isCategory) { %>
-    <div class="max-w-7xl mx-auto px-4 lg:px-8 py-12">
-      <h1 class="text-4xl lg:text-5xl mb-12 uppercase tracking-wider"><%= category.name %></h1>
-      <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
-        <% products.forEach(p => { %>
-          <%- include('../../partials/_product_card', { product: p, store, locals }); %>
-        <% }); %>
+  <!-- NAV -->
+  <nav class="bg-black text-white sticky top-0 z-40">
+    <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+      <a href="<%= storeBaseUrl || '/' %>" class="font-oswald text-xl uppercase tracking-widest font-semibold">
+        <%= store.name || 'Store' %>
+      </a>
+      <div class="flex items-center gap-5">
+        <a href="<%= storeBaseUrl %>/cart" class="relative">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.3 2.3c-.4.4-.1 1.1.5 1.1H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 100 4 2 2 0 000-4z"/>
+          </svg>
+          <span class="cart-count absolute -top-2 -right-2 bg-rose-600 text-white text-[10px] w-4 h-4 rounded-full flex items-center justify-center"><%= cartCount || 0 %></span>
+        </a>
+        <button id="menuToggle" class="text-white" onclick="document.getElementById('fullscreenMenu').classList.add('active')">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/>
+          </svg>
+        </button>
       </div>
     </div>
-  <% } else if (isProduct) { %>
-    <%- include('../../partials/_product_detail', { product, productImages, category, variants, volumeDiscounts, related, store, storeBaseUrl, locals }); %>
-  <% } else if (isCart) { %>
-    <%- include('../../partials/_cart', { cartItems, cartTotal, store, storeBaseUrl, locals }); %>
-  <% } else if (isCheckout) { %>
-    <%- include('../../partials/_checkout', { cartItems, cartTotal, store, storeBaseUrl, locals }); %>
-  <% } else { %>
-    <%- include('../../partials/_page_content', { page, store, storeBaseUrl, categories, products, featured, combos, locals }); %>
-  <% } %>
-</main>
+  </nav>
 
-<!-- Bold Footer: 3-column with large typography -->
-<footer style="background:var(--footer-bg);color:var(--footer-text)">
-  <div class="max-w-7xl mx-auto px-4 lg:px-8 py-16 lg:py-20">
-    <div class="grid lg:grid-cols-3 gap-12">
+  <!-- FULLSCREEN OVERLAY MENU -->
+  <div id="fullscreenMenu" class="fullscreen-menu">
+    <button class="absolute top-6 right-6 text-white text-3xl" onclick="this.parentElement.classList.remove('active')">&times;</button>
+    <div class="flex flex-col items-center gap-8">
+      <a href="<%= storeBaseUrl || '/' %>" onclick="this.parentElement.parentElement.classList.remove('active')">Home</a>
+      <%- include('../../partials/_nav_links', { store, storeBaseUrl, locals: { navLinkClass: '' } }); %>
+    </div>
+  </div>
+
+  <!-- MAIN -->
+  <main class="flex-1">
+    <% if (isHome) { %>
+      <%- include('../../partials/_banner_carousel', { heroImages, store, storeBaseUrl }); %>
+      <%- include('../../partials/_home_content', { store, storeBaseUrl, categories, products, featured, combos, locals }); %>
+    <% } else if (isProduct) { %>
+      <div class="max-w-7xl mx-auto px-6 py-16">
+        <%- include('../../partials/_product_detail', { product, productImages, variants, volumeDiscounts, category, related, store, storeBaseUrl, locals }); %>
+      </div>
+    <% } else if (isCart) { %>
+      <div class="max-w-4xl mx-auto px-6 py-16">
+        <%- include('../../partials/_cart', { cartItems, cartTotal, store, storeBaseUrl, locals }); %>
+      </div>
+    <% } else if (isCheckout) { %>
+      <div class="max-w-4xl mx-auto px-6 py-16">
+        <%- include('../../partials/_checkout', { cartItems, cartTotal, store, storeBaseUrl, locals }); %>
+      </div>
+    <% } else if (isCategory) { %>
+      <div class="max-w-7xl mx-auto px-6 py-16">
+        <h1 class="text-4xl font-bold mb-8"><%= category.name %></h1>
+        <div class="asymmetric-grid">
+          <% products.forEach(p => { %>
+            <div class="editorial-card p-0">
+              <%- include('../../partials/_product_card', { product: p, store, locals }); %>
+            </div>
+          <% }); %>
+        </div>
+      </div>
+    <% } else if (isShop) { %>
+      <div class="max-w-7xl mx-auto px-6 py-16">
+        <h1 class="text-4xl font-bold mb-8">Shop</h1>
+        <div class="asymmetric-grid">
+          <% (products || []).forEach(p => { %>
+            <div class="editorial-card p-0">
+              <%- include('../../partials/_product_card', { product: p, store, locals }); %>
+            </div>
+          <% }); %>
+        </div>
+      </div>
+    <% } else { %>
+      <%- include('../../partials/_page_content', { page, store, storeBaseUrl, categories, products, featured, combos, locals }); %>
+    <% } %>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="bg-black text-white mt-20 py-16">
+    <div class="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-3 gap-12">
       <div>
-        <h3 class="text-3xl font-bold uppercase tracking-wider mb-6" style="font-family:'Oswald',sans-serif;color:var(--footer-text)"><%=store.name%></h3>
-        <p class="text-sm opacity-60 leading-relaxed"><%=store.description%></p>
+        <h3 class="text-lg uppercase tracking-widest mb-4"><%= store.name || 'Store' %></h3>
+        <p class="text-gray-400 text-sm leading-relaxed">Quality products, delivered with care.</p>
       </div>
       <div>
-        <h4 class="text-xl font-bold uppercase tracking-widest mb-6" style="font-family:'Oswald',sans-serif">Navegación</h4>
-        <div class="flex flex-col gap-3">
-          <%- include('../../partials/_nav_links', {locals:{navLinkClass:'text-sm opacity-60 hover:opacity-100 transition-opacity'}}); %>
+        <h3 class="text-lg uppercase tracking-widest mb-4">Quick Links</h3>
+        <div class="flex flex-col gap-2 text-gray-400 text-sm">
+          <%- include('../../partials/_nav_links', { store, storeBaseUrl, locals: { navLinkClass: 'hover:text-white transition-colors' } }); %>
         </div>
       </div>
       <div>
-        <h4 class="text-xl font-bold uppercase tracking-widest mb-6" style="font-family:'Oswald',sans-serif">Contacto</h4>
-        <div class="flex flex-col gap-3">
-          <% if (store.whatsapp) { %><a href="https://wa.me/<%=store.whatsapp%>" class="text-sm opacity-60 hover:opacity-100 transition-opacity">WhatsApp</a><% } %>
-          <% if (store.instagram) { %><a href="https://instagram.com/<%=store.instagram.replace('@','')%>" class="text-sm opacity-60 hover:opacity-100 transition-opacity">Instagram</a><% } %>
-        </div>
+        <h3 class="text-lg uppercase tracking-widest mb-4">Contact</h3>
+        <p class="text-gray-400 text-sm">&copy; <%= new Date().getFullYear() %> <%= store.name || 'Store' %></p>
       </div>
     </div>
-    <div class="mt-12 pt-8 text-center text-xs opacity-30 uppercase tracking-widest" style="border-top:1px solid rgba(255,255,255,0.1)">
-      &copy; <%= new Date().getFullYear() %> <%= store.name %>
-    </div>
-  </div>
-</footer>
+  </footer>
 
-<script>
-async function addToCart(productId, variantId, qty) {
-  const res = await fetch('/api/cart/add', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ product_id: productId, variant_id: variantId || null, quantity: qty || 1, store_id: '<%= store.id %>' })
-  });
-  const data = await res.json();
-  if (data.success) { toggleCartDrawer(); } else { alert(data.error || 'Error al agregar al carrito'); }
-}
-async function addComboToCart(comboId) {
-  const res = await fetch('/api/cart/add-combo', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ combo_id: comboId, store_id: '<%= store.id %>' })
-  });
-  const data = await res.json();
-  if (data.success) { toggleCartDrawer(); } else { alert(data.error || 'Error al agregar combo'); }
-}
-</script>
+  <!-- MOBILE MENU -->
+  <%- include('../../partials/_mobile_menu', { store, storeBaseUrl, locals: { iconColor: '#ffffff' } }); %>
 
-<%- include('../../partials/_cart_drawer', { cartItems, cartTotal, store, storeBaseUrl }); %>
-<%- include('../../partials/_order_success', { order: locals.order, whatsappLink: locals.whatsappLink, store, storeBaseUrl, locals }); %>
+  <script>
+    function addToCart(productId, qty) {
+      fetch((window.storeBaseUrl || '') + '/api/cart/add', {
+        method: 'POST', headers: {'Content-Type':'application/x-www-form-urlencoded'},
+        body: 'product_id=' + productId + '&qty=' + (qty||1)
+      }).then(r=>r.json()).then(d=>{
+        if(d.cartCount!==undefined) document.querySelectorAll('.cart-count').forEach(e=>e.textContent=d.cartCount);
+        if(typeof toggleCartDrawer==='function') toggleCartDrawer();
+      });
+    }
+    function addComboToCart(comboId) {
+      fetch((window.storeBaseUrl || '') + '/api/combo/add', {
+        method: 'POST', headers: {'Content-Type':'application/x-www-form-urlencoded'},
+        body: 'combo_id=' + comboId + '&qty=1'
+      }).then(r=>r.json()).then(d=>{
+        if(d.cartCount!==undefined) document.querySelectorAll('.cart-count').forEach(e=>e.textContent=d.cartCount);
+        if(typeof toggleCartDrawer==='function') toggleCartDrawer();
+      });
+    }
+    window.storeBaseUrl = '<%= storeBaseUrl %>';
+  </script>
 </body>
 </html>

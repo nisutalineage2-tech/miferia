@@ -1,0 +1,57 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300" width="400" height="300">
+  <rect width="400" height="300" fill="#faf8f5"/>
+  <!-- Nav -->
+  <rect x="0" y="0" width="400" height="42" fill="#faf8f5"/>
+  <line x1="0" y1="42" x2="400" y2="42" stroke="#1e3a5f" stroke-width="0.5"/>
+  <text x="200" y="27" text-anchor="middle" font-family="Georgia, serif" font-size="12" fill="#1e3a5f" letter-spacing="3">ELEGANCE</text>
+  <!-- Thin decorative line -->
+  <line x1="150" y1="52" x2="250" y2="52" stroke="#1e3a5f" stroke-width="0.3"/>
+  <circle cx="200" cy="52" r="2" fill="#1e3a5f" opacity="0.3"/>
+  <!-- Heading -->
+  <text x="200" y="76" text-anchor="middle" font-family="Georgia, serif" font-size="13" fill="#1e3a5f">Featured Selection</text>
+  <!-- 4 Column cards -->
+  <rect x="15" y="90" width="85" height="115" fill="none" stroke="#1e3a5f" stroke-width="0.5"/>
+  <rect x="22" y="97" width="70" height="48" fill="#1e3a5f" opacity="0.06"/>
+  <line x1="22" y1="155" x2="70" y2="155" stroke="#1e3a5f" stroke-width="0.5"/>
+  <rect x="22" y="163" width="50" height="4" rx="1" fill="#1e3a5f" opacity="0.4"/>
+  <rect x="22" y="172" width="35" height="3" rx="1" fill="#ccc"/>
+  <rect x="22" y="182" width="30" height="6" rx="1" fill="#1e3a5f"/>
+  <rect x="108" y="90" width="85" height="115" fill="none" stroke="#1e3a5f" stroke-width="0.5"/>
+  <rect x="115" y="97" width="70" height="48" fill="#1e3a5f" opacity="0.06"/>
+  <line x1="115" y1="155" x2="163" y2="155" stroke="#1e3a5f" stroke-width="0.5"/>
+  <rect x="115" y="163" width="50" height="4" rx="1" fill="#1e3a5f" opacity="0.4"/>
+  <rect x="115" y="172" width="35" height="3" rx="1" fill="#ccc"/>
+  <rect x="115" y="182" width="30" height="6" rx="1" fill="#1e3a5f"/>
+  <rect x="201" y="90" width="85" height="115" fill="none" stroke="#1e3a5f" stroke-width="0.5"/>
+  <rect x="208" y="97" width="70" height="48" fill="#1e3a5f" opacity="0.06"/>
+  <line x1="208" y1="155" x2="256" y2="155" stroke="#1e3a5f" stroke-width="0.5"/>
+  <rect x="208" y="163" width="50" height="4" rx="1" fill="#1e3a5f" opacity="0.4"/>
+  <rect x="208" y="172" width="35" height="3" rx="1" fill="#ccc"/>
+  <rect x="208" y="182" width="30" height="6" rx="1" fill="#1e3a5f"/>
+  <rect x="294" y="90" width="85" height="115" fill="none" stroke="#1e3a5f" stroke-width="0.5"/>
+  <rect x="301" y="97" width="70" height="48" fill="#1e3a5f" opacity="0.06"/>
+  <line x1="301" y1="155" x2="349" y2="155" stroke="#1e3a5f" stroke-width="0.5"/>
+  <rect x="301" y="163" width="50" height="4" rx="1" fill="#1e3a5f" opacity="0.4"/>
+  <rect x="301" y="172" width="35" height="3" rx="1" fill="#ccc"/>
+  <rect x="301" y="182" width="30" height="6" rx="1" fill="#1e3a5f"/>
+  <!-- Divider -->
+  <line x1="100" y1="220" x2="300" y2="220" stroke="#1e3a5f" stroke-width="0.3"/>
+  <!-- Classic 4-column footer -->
+  <rect x="0" y="238" width="400" height="62" fill="#1e3a5f"/>
+  <rect x="20" y="250" width="55" height="5" rx="1" fill="#faf8f5" opacity="0.5"/>
+  <rect x="20" y="260" width="40" height="3" rx="1" fill="#faf8f5" opacity="0.25"/>
+  <rect x="20" y="267" width="45" height="3" rx="1" fill="#faf8f5" opacity="0.25"/>
+  <rect x="20" y="274" width="35" height="3" rx="1" fill="#faf8f5" opacity="0.25"/>
+  <rect x="110" y="250" width="55" height="5" rx="1" fill="#faf8f5" opacity="0.5"/>
+  <rect x="110" y="260" width="40" height="3" rx="1" fill="#faf8f5" opacity="0.25"/>
+  <rect x="110" y="267" width="45" height="3" rx="1" fill="#faf8f5" opacity="0.25"/>
+  <rect x="110" y="274" width="35" height="3" rx="1" fill="#faf8f5" opacity="0.25"/>
+  <rect x="200" y="250" width="55" height="5" rx="1" fill="#faf8f5" opacity="0.5"/>
+  <rect x="200" y="260" width="40" height="3" rx="1" fill="#faf8f5" opacity="0.25"/>
+  <rect x="200" y="267" width="45" height="3" rx="1" fill="#faf8f5" opacity="0.25"/>
+  <rect x="200" y="274" width="35" height="3" rx="1" fill="#faf8f5" opacity="0.25"/>
+  <rect x="290" y="250" width="55" height="5" rx="1" fill="#faf8f5" opacity="0.5"/>
+  <rect x="290" y="260" width="40" height="3" rx="1" fill="#faf8f5" opacity="0.25"/>
+  <rect x="290" y="267" width="45" height="3" rx="1" fill="#faf8f5" opacity="0.25"/>
+  <rect x="290" y="274" width="35" height="3" rx="1" fill="#faf8f5" opacity="0.25"/>
+</svg>

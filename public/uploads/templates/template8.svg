@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300" width="400" height="300">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#667eea"/>
+      <stop offset="100%" stop-color="#764ba2"/>
+    </linearGradient>
+  </defs>
+  <rect width="400" height="300" fill="url(#bg)"/>
+  <!-- Nav glass -->
+  <rect x="10" y="8" width="380" height="30" rx="15" fill="rgba(255,255,255,0.15)"/>
+  <rect x="24" y="17" width="45" height="6" rx="3" fill="#fff"/>
+  <rect x="340" y="15" width="35" height="10" rx="5" fill="rgba(255,255,255,0.3)"/>
+  <!-- Heading -->
+  <text x="200" y="72" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" fill="#fff" opacity="0.9">Premium Collection</text>
+  <!-- Glass cards -->
+  <rect x="20" y="88" width="115" height="105" rx="12" fill="rgba(255,255,255,0.18)" stroke="rgba(255,255,255,0.25)" stroke-width="0.5"/>
+  <rect x="20" y="88" width="115" height="35" rx="12" fill="rgba(255,255,255,0.08)"/>
+  <rect x="30" y="98" width="55" height="5" rx="2" fill="rgba(255,255,255,0.5)"/>
+  <rect x="30" y="135" width="90" height="5" rx="2" fill="rgba(255,255,255,0.6)"/>
+  <rect x="30" y="145" width="70" height="4" rx="2" fill="rgba(255,255,255,0.3)"/>
+  <rect x="30" y="155" width="55" height="4" rx="2" fill="rgba(255,255,255,0.3)"/>
+  <rect x="30" y="172" width="45" height="9" rx="4" fill="rgba(255,255,255,0.35)"/>
+  <rect x="142.5" y="88" width="115" height="105" rx="12" fill="rgba(255,255,255,0.18)" stroke="rgba(255,255,255,0.25)" stroke-width="0.5"/>
+  <rect x="142.5" y="88" width="115" height="35" rx="12" fill="rgba(255,255,255,0.08)"/>
+  <rect x="152.5" y="98" width="55" height="5" rx="2" fill="rgba(255,255,255,0.5)"/>
+  <rect x="152.5" y="135" width="90" height="5" rx="2" fill="rgba(255,255,255,0.6)"/>
+  <rect x="152.5" y="145" width="70" height="4" rx="2" fill="rgba(255,255,255,0.3)"/>
+  <rect x="152.5" y="155" width="55" height="4" rx="2" fill="rgba(255,255,255,0.3)"/>
+  <rect x="152.5" y="172" width="45" height="9" rx="4" fill="rgba(255,255,255,0.35)"/>
+  <rect x="265" y="88" width="115" height="105" rx="12" fill="rgba(255,255,255,0.18)" stroke="rgba(255,255,255,0.25)" stroke-width="0.5"/>
+  <rect x="265" y="88" width="115" height="35" rx="12" fill="rgba(255,255,255,0.08)"/>
+  <rect x="275" y="98" width="55" height="5" rx="2" fill="rgba(255,255,255,0.5)"/>
+  <rect x="275" y="135" width="90" height="5" rx="2" fill="rgba(255,255,255,0.6)"/>
+  <rect x="275" y="145" width="70" height="4" rx="2" fill="rgba(255,255,255,0.3)"/>
+  <rect x="275" y="155" width="55" height="4" rx="2" fill="rgba(255,255,255,0.3)"/>
+  <rect x="275" y="172" width="45" height="9" rx="4" fill="rgba(255,255,255,0.35)"/>
+  <!-- Footer glass -->
+  <rect x="10" y="210" width="380" height="50" rx="12" fill="rgba(255,255,255,0.1)"/>
+  <rect x="25" y="225" width="50" height="5" rx="2" fill="rgba(255,255,255,0.3)"/>
+  <rect x="25" y="235" width="65" height="3" rx="1" fill="rgba(255,255,255,0.15)"/>
+  <rect x="340" y="228" width="35" height="10" rx="5" fill="rgba(255,255,255,0.25)"/>
+  <!-- Bottom credits -->
+  <rect x="10" y="268" width="380" height="24" rx="12" fill="rgba(255,255,255,0.08)"/>
+  <rect x="170" y="277" width="60" height="4" rx="2" fill="rgba(255,255,255,0.2)"/>
+</svg>

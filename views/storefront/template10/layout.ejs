@@ -13,21 +13,24 @@
   <title><%= store.name || 'Store' %><%= typeof pageTitle !== 'undefined' ? ' — ' + pageTitle : '' %></title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
       theme: {
         extend: {
           fontFamily: {
-            poppins: ['Poppins', 'sans-serif']
+            'dm-sans': ['"DM Sans"', 'sans-serif'],
+            inter: ['Inter', 'sans-serif']
           },
           colors: {
             primary: 'var(--primary)',
             bg: 'var(--bg)',
             text: 'var(--text)',
-            'glass-purple': '#667eea',
-            'glass-violet': '#764ba2'
+            'warm-orange': '#d97706',
+            'warm-cream': '#fef3c7',
+            'warm-brown': '#78350f',
+            'warm-light': '#f5e6d3'
           }
         }
       }
@@ -35,62 +38,53 @@
   </script>
   <style>
     :root {
-      --primary: <%= c.btn_primary_bg || '#667eea' %>;
-      --bg: <%= c.page_bg || '#f0f0f8' %>;
-      --text: <%= c.text || '#2d2d3f' %>;
-      --footer-bg: <%= c.footer_bg || '#1a1a2e' %>;
-      --footer-text: <%= c.footer_text || '#a0a0b8' %>;
-      --title: <%= c.heading_color || '#1a1a2e' %>;
-      --label-bg: <%= c.label_bg || '#764ba2' %>;
+      --primary: <%= c.btn_primary_bg || '#d97706' %>;
+      --bg: <%= c.page_bg || '#fef3c7' %>;
+      --text: <%= c.text || '#78350f' %>;
+      --footer-bg: <%= c.footer_bg || '#92400e' %>;
+      --footer-text: <%= c.footer_text || '#fef3c7' %>;
+      --title: <%= c.heading_color || '#78350f' %>;
+      --label-bg: <%= c.label_bg || '#d97706' %>;
     }
-    * { font-family: 'Poppins', sans-serif; }
-    h1,h2,h3,h4,h5,h6 { font-family: 'Poppins', sans-serif; color: var(--title); }
+    * { font-family: 'Inter', sans-serif; }
+    h1,h2,h3,h4,h5,h6 { font-family: 'DM Sans', sans-serif; color: var(--title); }
     body { background: var(--bg); color: var(--text); }
-    .glass-nav {
-      background: rgba(255,255,255,0.6);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      border-bottom: 1px solid rgba(255,255,255,0.3);
-    }
-    .glass-card {
-      background: rgba(255,255,255,0.55);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-      border: 1px solid rgba(255,255,255,0.4);
+    .warm-card {
+      background: white;
       border-radius: 1rem;
+      box-shadow: 0 4px 16px rgba(146,64,14,0.08);
       transition: transform 0.3s ease, box-shadow 0.3s ease;
     }
-    .glass-card:hover {
+    .warm-card:hover {
       transform: translateY(-4px);
-      box-shadow: 0 12px 32px rgba(102,126,234,0.18);
+      box-shadow: 0 8px 24px rgba(146,64,14,0.14);
     }
-    .gradient-border {
-      border: 2px solid transparent;
-      background-clip: padding-box;
-      position: relative;
-    }
-    .gradient-border::before {
-      content: '';
-      position: absolute;
-      inset: -2px;
-      border-radius: inherit;
-      background: linear-gradient(135deg, #667eea, #764ba2);
-      z-index: -1;
-    }
-    .glass-btn {
-      background: linear-gradient(135deg, #667eea, #764ba2);
+    .warm-btn {
+      background: linear-gradient(135deg, #d97706, #f59e0b);
       color: white;
       border-radius: 9999px;
       padding: 10px 28px;
-      font-weight: 500;
+      font-weight: 600;
+      font-family: 'DM Sans', sans-serif;
       transition: opacity 0.3s ease, transform 0.3s ease;
     }
-    .glass-btn:hover { opacity: 0.9; transform: scale(1.03); }
-    @keyframes subtle-float {
-      0%,100% { transform: translateY(0); }
-      50% { transform: translateY(-4px); }
+    .warm-btn:hover { opacity: 0.9; transform: scale(1.03); }
+    .warm-pill {
+      display: inline-block;
+      background: var(--label-bg);
+      color: white;
+      padding: 4px 16px;
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      font-family: 'DM Sans', sans-serif;
     }
-    .float-subtle { animation: subtle-float 4s ease-in-out infinite; }
+    .warm-divider {
+      width: 50px;
+      height: 3px;
+      background: linear-gradient(90deg, #d97706, #fbbf24);
+      border-radius: 9999px;
+    }
   </style>
 </head>
 <body class="antialiased min-h-screen flex flex-col">
@@ -98,21 +92,22 @@
   <%- include('../../partials/_cart_drawer', { store, storeBaseUrl }); %>
   <%- include('../../partials/_order_success', { locals }); %>
 
-  <!-- NAV — Glassmorphism -->
-  <nav class="glass-nav sticky top-0 z-40 rounded-b-2xl mx-2 mt-0">
-    <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
-      <a href="<%= storeBaseUrl || '/' %>" class="font-poppins text-xl font-bold" style="background: linear-gradient(135deg, #667eea, #764ba2); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
+  <!-- NAV — Warm bg, cozy rounded -->
+  <nav class="sticky top-0 z-40 rounded-b-2xl mx-2 mt-1" style="background: #f5e6d3; box-shadow: 0 2px 12px rgba(146,64,14,0.1);">
+    <div class="max-w-7xl mx-auto px-6 py-3 flex items-center justify-between">
+      <a href="<%= storeBaseUrl || '/' %>" class="font-dm-sans text-xl font-bold flex items-center gap-2" style="color: #92400e;">
+        <span style="font-size:1.2em;">🍊</span>
         <%= store.name || 'Store' %>
       </a>
-      <div class="hidden md:flex items-center gap-7 text-sm font-medium" style="color: var(--text)">
-        <%- include('../../partials/_nav_links', { store, storeBaseUrl, locals: { navLinkClass: 'hover:text-purple-600 transition-colors' } }); %>
+      <div class="hidden md:flex items-center gap-6 text-sm font-medium" style="color: #78350f;">
+        <%- include('../../partials/_nav_links', { store, storeBaseUrl, locals: { navLinkClass: 'hover:text-amber-600 transition-colors' } }); %>
       </div>
       <div class="flex items-center gap-4">
-        <a href="<%= storeBaseUrl %>/cart" class="relative" style="color: var(--text)">
-          <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+        <a href="<%= storeBaseUrl %>/cart" class="relative" style="color: #78350f;">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
             <path stroke-linecap="round" stroke-linejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.3 2.3c-.4.4-.1 1.1.5 1.1H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 100 4 2 2 0 000-4z"/>
           </svg>
-          <span class="cart-count absolute -top-2 -right-2 text-white text-[10px] w-4 h-4 rounded-full flex items-center justify-center font-bold" style="background: linear-gradient(135deg, #667eea, #764ba2);"><%= cartCount || 0 %></span>
+          <span class="cart-count absolute -top-2 -right-2 text-white text-[10px] w-5 h-5 rounded-full flex items-center justify-center font-bold" style="background: #d97706;"><%= cartCount || 0 %></span>
         </a>
       </div>
     </div>
@@ -137,10 +132,11 @@
       </div>
     <% } else if (isCategory) { %>
       <div class="max-w-7xl mx-auto px-6 py-12">
-        <h1 class="text-2xl font-bold mb-6"><%= category.name %></h1>
+        <h1 class="text-2xl font-bold mb-2"><%= category.name %></h1>
+        <div class="warm-divider mb-6"></div>
         <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
           <% products.forEach(p => { %>
-            <div class="glass-card p-0 overflow-hidden">
+            <div class="warm-card p-0 overflow-hidden">
               <%- include('../../partials/_product_card', { product: p, store, locals }); %>
             </div>
           <% }); %>
@@ -148,10 +144,11 @@
       </div>
     <% } else if (isShop) { %>
       <div class="max-w-7xl mx-auto px-6 py-12">
-        <h1 class="text-2xl font-bold mb-6">Shop</h1>
+        <h1 class="text-2xl font-bold mb-2">Shop</h1>
+        <div class="warm-divider mb-6"></div>
         <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
           <% (products || []).forEach(p => { %>
-            <div class="glass-card p-0 overflow-hidden">
+            <div class="warm-card p-0 overflow-hidden">
               <%- include('../../partials/_product_card', { product: p, store, locals }); %>
             </div>
           <% }); %>
@@ -162,28 +159,28 @@
     <% } %>
   </main>
 
-  <!-- FOOTER — Dark gradient with glass cards -->
-  <footer class="mt-20 pt-14 pb-10" style="background: linear-gradient(135deg, #1a1a2e, #16213e);">
-    <div class="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-3 gap-8">
-      <div class="glass-card p-6" style="background: rgba(255,255,255,0.08); border-color: rgba(255,255,255,0.1);">
-        <h3 class="font-poppins text-lg font-bold text-white mb-2 float-subtle inline-block"><%= store.name || 'Store' %></h3>
-        <p class="text-sm leading-relaxed" style="color: #a0a0b8;">Modern shopping, redefined.</p>
+  <!-- FOOTER — Warm brown with cream text, rounded -->
+  <footer class="mt-20 pt-14 pb-10 rounded-t-3xl mx-2" style="background: #92400e;">
+    <div class="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-3 gap-10">
+      <div>
+        <h3 class="font-dm-sans text-lg font-bold text-white mb-2">🍊 <%= store.name || 'Store' %></h3>
+        <p class="text-sm leading-relaxed" style="color: #fef3c7;">Warmth in every detail.</p>
       </div>
-      <div class="glass-card p-6" style="background: rgba(255,255,255,0.08); border-color: rgba(255,255,255,0.1);">
-        <h3 class="font-poppins text-sm font-bold uppercase tracking-wider text-white mb-3">Links</h3>
-        <div class="flex flex-col gap-2 text-sm" style="color: #a0a0b8;">
+      <div>
+        <h3 class="font-dm-sans text-sm font-bold uppercase tracking-wider text-white mb-3">Quick Links</h3>
+        <div class="flex flex-col gap-2 text-sm" style="color: #fef3c7;">
           <%- include('../../partials/_nav_links', { store, storeBaseUrl, locals: { navLinkClass: 'hover:text-white transition-colors' } }); %>
         </div>
       </div>
-      <div class="glass-card p-6" style="background: rgba(255,255,255,0.08); border-color: rgba(255,255,255,0.1);">
-        <h3 class="font-poppins text-sm font-bold uppercase tracking-wider text-white mb-3">Legal</h3>
-        <p class="text-xs" style="color: #a0a0b8;">&copy; <%= new Date().getFullYear() %> <%= store.name || 'Store' %>. All rights reserved.</p>
+      <div>
+        <h3 class="font-dm-sans text-sm font-bold uppercase tracking-wider text-white mb-3">Legal</h3>
+        <p class="text-xs" style="color: #fde68a;">&copy; <%= new Date().getFullYear() %> <%= store.name || 'Store' %>. All rights reserved.</p>
       </div>
     </div>
   </footer>
 
   <!-- MOBILE MENU -->
-  <%- include('../../partials/_mobile_menu', { store, storeBaseUrl, locals: { iconColor: '#667eea' } }); %>
+  <%- include('../../partials/_mobile_menu', { store, storeBaseUrl, locals: { iconColor: '#d97706' } }); %>
 
   <script>
     function addToCart(productId, qty) {

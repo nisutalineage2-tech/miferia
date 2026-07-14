@@ -1,149 +1,162 @@
-<%
-const ts = store.theme_settings ? (typeof store.theme_settings === 'string' ? JSON.parse(store.theme_settings) : store.theme_settings) : {};
-const gfMap = { 'Playfair Display': 'Playfair+Display:wght@400;500;600;700&display=swap', 'Lora': 'Lora:wght@400;500;600;700&display=swap' };
-const headFont = ts.heading_font || 'Playfair Display';
-const bFont = ts.body_font || 'Lora';
-const gf = gfMap[headFont] || 'Playfair+Display:wght@400;500;600;700&display=swap';
-const isHome = !page || page === 'home';
-const isShop = page === 'shop';
-const isProduct = page === 'product';
-const isCart = page === 'cart';
-const isCheckout = page === 'checkout';
-const isCategory = page === 'category';
-%><!DOCTYPE html>
-<html lang="es">
+<% const t = store.theme_settings ? JSON.parse(store.theme_settings) : {}; const c = t.colors || {}; %>
+<% const isHome = !page || page === 'home'; %>
+<% const isShop = page === 'shop'; %>
+<% const isProduct = page === 'product'; %>
+<% const isCart = page === 'cart'; %>
+<% const isCheckout = page === 'checkout'; %>
+<% const isCategory = page === 'category'; %>
+<!DOCTYPE html>
+<html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
-<meta name="description" content="<%=store.description%>">
-<title><%=store.name%><%=page&&page!=='home'?' | '+page:''%></title>
-<script src="https://cdn.tailwindcss.com"></script>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=<%=gf%>&family=Lora:wght@400;500;600;700&display=swap" rel="stylesheet">
-<script>tailwind.config={theme:{extend:{fontFamily:{sans:['"<%=headFont%>"','serif'],body:['"<%=bFont%>"','serif']}}}}</script>
-<style>
-:root {
-  --primary: <%=store.primary_color||'#d4a574'%>;
-  --bg: <%=store.bg_color||'#0a0a0a'%>;
-  --text: <%=store.text_color||'#c9c9c9'%>;
-  --footer-bg: <%=store.footer_bg||'#050505'%>;
-  --footer-text: <%=store.footer_text||'#8a8a8a'%>;
-  --title: <%=store.title_color||'#f5f0eb'%>;
-  --label-bg: <%=store.label_bg||'#1a1a1a'%>;
-}
-*{margin:0;padding:0;box-sizing:border-box}
-body{font-family:'Lora',serif;background:var(--bg);color:var(--text);font-weight:400;line-height:1.8}
-h1,h2,h3,h4,h5,h6{font-family:'Playfair Display',serif;font-weight:600;color:var(--title);letter-spacing:0.01em}
-.section-title{font-size:1.75rem;text-align:center;margin-bottom:2.5rem;font-weight:500;font-style:italic;color:var(--primary)}
-.btn-primary{display:inline-flex;align-items:center;justify-content:center;font-family:'Lora',serif;font-weight:500;font-size:0.85rem;letter-spacing:0.03em;padding:0.875rem 2.5rem;background:var(--primary);color:#0a0a0a;border-radius:0;border:1px solid var(--primary);transition:all 0.4s ease;text-transform:uppercase}
-.btn-primary:hover{background:transparent;color:var(--primary)}
-.product-card{background:#111!important;border:1px solid #222!important;border-radius:0!important;box-shadow:none!important;transition:all 0.4s ease;overflow:hidden}
-.product-card:hover{border-color:var(--primary)!important;box-shadow:0 0 30px rgba(212,165,116,0.08)!important}
-.product-card img{filter:brightness(0.9);transition:all 0.5s ease}
-.product-card:hover img{filter:brightness(1);transform:scale(1.03)}
-.product-card .p-3{background:#111}
-.product-card h3{color:var(--title)}
-.border-gold{border-color:rgba(212,165,116,0.25)}
-@keyframes fadeInUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
-.animate-fade-in{animation:fadeInUp 0.8s ease-out forwards}
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= store.name || 'Store' %><%= typeof pageTitle !== 'undefined' ? ' — ' + pageTitle : '' %></title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@300;400;500;600;700&family=Lora:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            playfair: ['"Playfair Display"', 'serif'],
+            lora: ['Lora', 'serif']
+          },
+          colors: {
+            primary: 'var(--primary)',
+            gold: '#d4a574',
+            bg: 'var(--bg)',
+            text: 'var(--text)',
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    :root {
+      --primary: <%= c.btn_primary_bg || '#d4a574' %>;
+      --bg: <%= c.page_bg || '#0a0a0a' %>;
+      --text: <%= c.text || '#e8e0d4' %>;
+      --footer-bg: <%= c.footer_bg || '#0a0a0a' %>;
+      --footer-text: <%= c.footer_text || '#a89a8a' %>;
+      --title: <%= c.heading_color || '#f5f0ea' %>;
+      --label-bg: <%= c.label_bg || '#1a1a1a' %>;
+    }
+    * { font-family: 'Lora', serif; }
+    h1,h2,h3,h4,h5,h6 { font-family: 'Playfair Display', serif; color: var(--title); }
+    body { background: var(--bg); color: var(--text); }
+    .luxury-card {
+      background: #111; border: 1px solid #222; border-radius: 0.25rem;
+      transition: border-color 0.4s ease, box-shadow 0.4s ease;
+    }
+    .luxury-card:hover { border-color: #d4a574; box-shadow: 0 0 30px rgba(212,165,116,0.08); }
+    .gold-border-top { border-top: 1px solid #d4a574; }
+  </style>
 </head>
-<body>
-<%-include('../../partials/_flash',{order:locals.order||null})%>
+<body class="antialiased min-h-screen flex flex-col">
+  <%- include('../../partials/_flash', { locals }); %>
+  <%- include('../../partials/_cart_drawer', { store, storeBaseUrl }); %>
+  <%- include('../../partials/_order_success', { locals }); %>
 
-<!-- Luxury Nav -->
-<nav class="sticky top-0 z-50" style="background:rgba(10,10,10,0.95);backdrop-filter:blur(12px);border-bottom:1px solid rgba(212,165,116,0.15)">
-  <div class="max-w-7xl mx-auto px-4 lg:px-8">
-    <div class="flex items-center justify-between h-16 lg:h-20">
-      <div class="hidden lg:flex items-center gap-8">
-        <%- include('../../partials/_nav_links', {locals:{navLinkClass:'text-xs uppercase tracking-[0.2em] text-gray-400 hover:text-[var(--primary)] transition-colors'}}); %>
+  <!-- NAV -->
+  <nav class="bg-[#0a0a0a] border-b border-[#222] sticky top-0 z-40">
+    <div class="max-w-7xl mx-auto px-6 py-5 flex items-center justify-between">
+      <div class="hidden md:flex items-center gap-8 text-sm" style="color: var(--text)">
+        <%- include('../../partials/_nav_links', { store, storeBaseUrl, locals: { navLinkClass: 'hover:text-[#d4a574] transition-colors tracking-wide' } }); %>
       </div>
-      <a href="<%=storeBaseUrl%>" class="text-xl lg:text-2xl" style="font-family:'Playfair Display',serif;color:var(--title);text-decoration:none;letter-spacing:0.08em"><%=store.name%></a>
-      <div class="flex items-center gap-4">
-        <button onclick="toggleCartDrawer()" class="p-2 relative transition-opacity hover:opacity-70">
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="color:var(--text)"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 00-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 00-16.536-1.84M7.5 14.25L5.106 5.272"/></svg>
-          <% if (cartCount > 0) { %><span class="absolute -top-0.5 -right-0.5 w-4 h-4 rounded-full flex items-center justify-center text-[9px] font-bold" style="background:var(--primary);color:#0a0a0a"><%= cartCount %></span><% } %>
-        </button>
-        <%- include('../../partials/_mobile_menu', { locals: { iconColor: 'text-gray-400' } }); %>
+      <a href="<%= storeBaseUrl || '/' %>" class="font-playfair text-2xl font-semibold tracking-wide" style="color: #d4a574">
+        <%= store.name || 'Store' %>
+      </a>
+      <div class="hidden md:flex items-center gap-6">
+        <a href="<%= storeBaseUrl %>/cart" class="relative" style="color: var(--text)">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.3 2.3c-.4.4-.1 1.1.5 1.1H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 100 4 2 2 0 000-4z"/>
+          </svg>
+          <span class="cart-count absolute -top-2 -right-2 bg-[#d4a574] text-[#0a0a0a] text-[10px] w-4 h-4 rounded-full flex items-center justify-center font-medium"><%= cartCount || 0 %></span>
+        </a>
       </div>
     </div>
-  </div>
-</nav>
+  </nav>
 
-<main>
-  <% if (isHome) { %>
-    <%- include('../../partials/_banner_carousel', { heroImages, store, storeBaseUrl }); %>
-    <%- include('../../partials/_home_content', { store, storeBaseUrl, categories, products, featured, combos, locals }); %>
-  <% } else if (isCategory) { %>
-    <div class="max-w-7xl mx-auto px-4 lg:px-8 py-16">
-      <h1 class="text-4xl lg:text-5xl mb-12" style="font-family:'Playfair Display',serif;color:var(--title)"><%= category.name %></h1>
-      <div class="grid grid-cols-2 lg:grid-cols-4 gap-6">
-        <% products.forEach(p => { %>
-          <%- include('../../partials/_product_card', { product: p, store, locals }); %>
-        <% }); %>
+  <!-- MAIN -->
+  <main class="flex-1">
+    <% if (isHome) { %>
+      <%- include('../../partials/_banner_carousel', { heroImages, store, storeBaseUrl }); %>
+      <%- include('../../partials/_home_content', { store, storeBaseUrl, categories, products, featured, combos, locals }); %>
+    <% } else if (isProduct) { %>
+      <div class="max-w-7xl mx-auto px-6 py-20">
+        <%- include('../../partials/_product_detail', { product, productImages, variants, volumeDiscounts, category, related, store, storeBaseUrl, locals }); %>
       </div>
-    </div>
-  <% } else if (isProduct) { %>
-    <%- include('../../partials/_product_detail', { product, productImages, category, variants, volumeDiscounts, related, store, storeBaseUrl, locals }); %>
-  <% } else if (isCart) { %>
-    <%- include('../../partials/_cart', { cartItems, cartTotal, store, storeBaseUrl, locals }); %>
-  <% } else if (isCheckout) { %>
-    <%- include('../../partials/_checkout', { cartItems, cartTotal, store, storeBaseUrl, locals }); %>
-  <% } else { %>
-    <%- include('../../partials/_page_content', { page, store, storeBaseUrl, categories, products, featured, combos, locals }); %>
-  <% } %>
-</main>
-
-<!-- Luxury Footer -->
-<footer style="background:var(--footer-bg);color:var(--footer-text);border-top:1px solid rgba(212,165,116,0.15)">
-  <div class="max-w-7xl mx-auto px-4 lg:px-8 py-16 lg:py-20">
-    <div class="grid lg:grid-cols-4 gap-8 lg:gap-12">
-      <div class="lg:col-span-2">
-        <h3 class="text-2xl mb-4" style="font-family:'Playfair Display',serif;color:var(--title)"><%=store.name%></h3>
-        <p class="text-sm leading-relaxed opacity-60 max-w-md"><%=store.description%></p>
+    <% } else if (isCart) { %>
+      <div class="max-w-4xl mx-auto px-6 py-20">
+        <%- include('../../partials/_cart', { cartItems, cartTotal, store, storeBaseUrl, locals }); %>
       </div>
-      <div>
-        <h4 class="text-sm uppercase tracking-[0.2em] mb-6" style="color:var(--primary)">Enlaces</h4>
-        <div class="flex flex-col gap-3">
-          <%- include('../../partials/_nav_links', {locals:{navLinkClass:'text-sm text-gray-500 hover:text-[var(--primary)] transition-colors'}}); %>
+    <% } else if (isCheckout) { %>
+      <div class="max-w-4xl mx-auto px-6 py-20">
+        <%- include('../../partials/_checkout', { cartItems, cartTotal, store, storeBaseUrl, locals }); %>
+      </div>
+    <% } else if (isCategory) { %>
+      <div class="max-w-7xl mx-auto px-6 py-20">
+        <h1 class="text-3xl font-playfair font-semibold mb-8" style="color: var(--title)"><%= category.name %></h1>
+        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+          <% products.forEach(p => { %>
+            <div class="luxury-card p-0">
+              <%- include('../../partials/_product_card', { product: p, store, locals }); %>
+            </div>
+          <% }); %>
         </div>
       </div>
-      <div>
-        <h4 class="text-sm uppercase tracking-[0.2em] mb-6" style="color:var(--primary)">Contacto</h4>
-        <div class="flex flex-col gap-3">
-          <% if (store.whatsapp) { %><a href="https://wa.me/<%=store.whatsapp%>" class="text-sm text-gray-500 hover:text-[var(--primary)] transition-colors">WhatsApp</a><% } %>
-          <% if (store.instagram) { %><a href="https://instagram.com/<%=store.instagram.replace('@','')%>" class="text-sm text-gray-500 hover:text-[var(--primary)] transition-colors">Instagram</a><% } %>
+    <% } else if (isShop) { %>
+      <div class="max-w-7xl mx-auto px-6 py-20">
+        <h1 class="text-3xl font-playfair font-semibold mb-8" style="color: var(--title)">Shop</h1>
+        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+          <% (products || []).forEach(p => { %>
+            <div class="luxury-card p-0">
+              <%- include('../../partials/_product_card', { product: p, store, locals }); %>
+            </div>
+          <% }); %>
         </div>
       </div>
-    </div>
-    <div class="mt-12 pt-8 text-center text-xs opacity-30 tracking-wider" style="border-top:1px solid rgba(212,165,116,0.12)">
-      &copy; <%= new Date().getFullYear() %> <%= store.name %>. All rights reserved.
-    </div>
-  </div>
-</footer>
+    <% } else { %>
+      <%- include('../../partials/_page_content', { page, store, storeBaseUrl, categories, products, featured, combos, locals }); %>
+    <% } %>
+  </main>
 
-<script>
-async function addToCart(productId, variantId, qty) {
-  const res = await fetch('/api/cart/add', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ product_id: productId, variant_id: variantId || null, quantity: qty || 1, store_id: '<%= store.id %>' })
-  });
-  const data = await res.json();
-  if (data.success) { toggleCartDrawer(); } else { alert(data.error || 'Error'); }
-}
-async function addComboToCart(comboId) {
-  const res = await fetch('/api/cart/add-combo', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ combo_id: comboId, store_id: '<%= store.id %>' })
-  });
-  const data = await res.json();
-  if (data.success) { toggleCartDrawer(); } else { alert(data.error || 'Error'); }
-}
-</script>
+  <!-- FOOTER -->
+  <footer class="gold-border-top bg-[#0a0a0a] mt-20 py-16">
+    <div class="max-w-7xl mx-auto px-6 text-center">
+      <h3 class="font-playfair text-xl mb-4" style="color: #d4a574"><%= store.name || 'Store' %></h3>
+      <div class="flex justify-center gap-8 text-sm mb-6" style="color: var(--footer-text)">
+        <%- include('../../partials/_nav_links', { store, storeBaseUrl, locals: { navLinkClass: 'hover:text-[#d4a574] transition-colors' } }); %>
+      </div>
+      <p class="text-xs tracking-widest uppercase" style="color: var(--footer-text)">&copy; <%= new Date().getFullYear() %> <%= store.name || 'Store' %>. All rights reserved.</p>
+    </div>
+  </footer>
 
-<%- include('../../partials/_cart_drawer', { cartItems, cartTotal, store, storeBaseUrl }); %>
-<%- include('../../partials/_order_success', { order: locals.order, whatsappLink: locals.whatsappLink, store, storeBaseUrl, locals }); %>
+  <!-- MOBILE MENU -->
+  <%- include('../../partials/_mobile_menu', { store, storeBaseUrl, locals: { iconColor: '#d4a574' } }); %>
+
+  <script>
+    function addToCart(productId, qty) {
+      fetch((window.storeBaseUrl || '') + '/api/cart/add', {
+        method: 'POST', headers: {'Content-Type':'application/x-www-form-urlencoded'},
+        body: 'product_id=' + productId + '&qty=' + (qty||1)
+      }).then(r=>r.json()).then(d=>{
+        if(d.cartCount!==undefined) document.querySelectorAll('.cart-count').forEach(e=>e.textContent=d.cartCount);
+        if(typeof toggleCartDrawer==='function') toggleCartDrawer();
+      });
+    }
+    function addComboToCart(comboId) {
+      fetch((window.storeBaseUrl || '') + '/api/combo/add', {
+        method: 'POST', headers: {'Content-Type':'application/x-www-form-urlencoded'},
+        body: 'combo_id=' + comboId + '&qty=1'
+      }).then(r=>r.json()).then(d=>{
+        if(d.cartCount!==undefined) document.querySelectorAll('.cart-count').forEach(e=>e.textContent=d.cartCount);
+        if(typeof toggleCartDrawer==='function') toggleCartDrawer();
+      });
+    }
+    window.storeBaseUrl = '<%= storeBaseUrl %>';
+  </script>
 </body>
 </html>

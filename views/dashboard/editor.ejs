@@ -21,21 +21,23 @@
       <% if (cur === 'plantilla') { %>
         <p class="text-xs text-gray-500 mb-3">Elegí la plantilla para tu tienda</p>
         <% const tmpls = [
-          { v:'template1', label:'Minimal', desc:'Ultra limpio, whitespace masivo' },
+          { v:'template1', label:'Minimal', desc:'Ultra limpio, whitespace' },
           { v:'template2', label:'Bold', desc:'Editorial, menu fullscreen' },
           { v:'template3', label:'Luxury', desc:'Dark premium, dorado, serif' },
           { v:'template4', label:'Fresh', desc:'Organico, bordes redondos' },
-          { v:'template5', label:'Urban', desc:'Industrial, diagonal, neon' },
+          { v:'template5', label:'Urban', desc:'Industrial, neon, diagonal' },
           { v:'template6', label:'Retro', desc:'Pop colorido, animaciones' },
           { v:'template7', label:'Elegant', desc:'Clasico serif, decorativo' },
-          { v:'template8', label:'Glass', desc:'Glassmorphism, futuristic' }
+          { v:'template8', label:'Glass', desc:'Glassmorphism, gradientes' },
+          { v:'template9', label:'Neon', desc:'Cyber oscuro, neón brillante' },
+          { v:'template10', label:'Warm', desc:'Cálido, acogedor, tierra' }
         ]; const curTmpl = store.template || 'template1'; %>
         <div class="grid grid-cols-3 gap-2">
           <% tmpls.forEach(tm => { %>
             <label class="cursor-pointer relative rounded-lg bg-[#1a1a2e] border-2 overflow-hidden <%= curTmpl === tm.v ? 'border-indigo-500 ring-2 ring-indigo-500/30' : 'border-gray-700/50 hover:border-gray-500' %> transition-all" onclick="switchTemplate('<%= tm.v %>')">
               <input type="radio" name="template" value="<%= tm.v %>" class="sr-only" <%= curTmpl === tm.v ? 'checked' : '' %>>
               <div class="aspect-[4/3] bg-[#0f0f1a] overflow-hidden">
-                <img src="/uploads/templates/<%= tm.v %>.jpg" alt="<%= tm.label %>" class="w-full h-full object-cover" loading="lazy" onerror="this.style.display='none';this.nextSibling.style.display='flex'"><div class="hidden w-full h-full items-center justify-center text-gray-600 text-xs" style="display:none;background:#1a1a2e;">Sin preview</div>
+                <img src="/uploads/templates/<%= tm.v %>.svg" alt="<%= tm.label %>" class="w-full h-full object-cover" loading="lazy" onerror="this.style.display='none';this.nextSibling.style.display='flex'"><div class="hidden w-full h-full items-center justify-center text-gray-600 text-xs" style="display:none;background:#1a1a2e;">Sin preview</div>
               </div>
               <div class="px-1.5 py-1 text-center" style="background: #0f0f1a;">
                 <span class="text-[10px] font-semibold text-white block leading-tight"><%= tm.label %></span>
