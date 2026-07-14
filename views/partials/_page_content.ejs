@@ -1,8 +1,15 @@
 <%# Shared page content for all templates -- new pages: shop, subscriptions, about, contact, account, login, register %>
+<% const _q = typeof query !== 'undefined' ? query : {}; %>
+<% const _pr = typeof priceRange !== 'undefined' ? priceRange : {}; %>
+<% const _fd = typeof filterData !== 'undefined' ? filterData : null; %>
+<% const _cust = typeof customer !== 'undefined' ? customer : null; %>
+<% const _ords = typeof orders !== 'undefined' ? orders : []; %>
+<% const _err = typeof error !== 'undefined' ? error : null; %>
+<% const _msg = typeof msg !== 'undefined' ? msg : null; %>
 
 <% if (page === 'shop') { %>
   <!-- SHOP WITH SIMPLE FILTERS -->
-  <% const q = query || {}; %>
+  <% const q = _q; %>
   <div class="max-w-7xl mx-auto px-4 py-6">
     <div class="flex gap-6">
       <!-- Filters Sidebar - sticky -->
@@ -34,7 +41,7 @@
               <!-- Precio -->
               <div>
                 <h4 class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Precio</h4>
-                <% const pr = priceRange || {}; %>
+                <% const pr = _pr; %>
                 <input type="range" name="max_price" min="<%= pr.min_price || 0 %>" max="<%= pr.max_price || 100000 %>" value="<%= q.max_price || pr.max_price || 100000 %>" class="w-full accent-gray-900" oninput="document.getElementById('priceLabel').textContent = '$' + Number(this.value).toLocaleString(); document.getElementById('priceHidden').value = this.value" onchange="this.form.submit()">
                 <div class="flex justify-between text-xs text-gray-500 mt-1">
                   <span>$<%= (pr.min_price || 0).toLocaleString() %></span>
@@ -44,7 +51,7 @@
               </div>
 
               <!-- Colores / Talles -->
-              <% const allVariants = (typeof filterData !== 'undefined' && filterData && filterData.variants) ? filterData.variants : []; %>
+              <% const allVariants = (_fd && _fd.variants) ? _fd.variants : []; %>
               <% if (allVariants.length > 0) { %>
               <div>
                 <h4 class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Colores / Talles</h4>
@@ -181,7 +188,7 @@
   <div class="max-w-2xl mx-auto px-4 py-16 lg:py-24">
     <h1 class="text-3xl lg:text-4xl font-bold text-gray-900 mb-2">Contacto</h1>
     <p class="text-gray-500 mb-8">Escribinos y te respondemos a la brevedad.</p>
-    <% if (msg === 'ok') { %>
+    <% if (_msg === 'ok') { %>
       <div class="p-4 mb-6 bg-green-50 border border-green-200 rounded-xl text-green-700 text-sm">✅ Mensaje enviado correctamente. Te contactaremos pronto.</div>
     <% } %>
     <form method="POST" action="<%=storeBaseUrl%>/contacto" class="space-y-4">
@@ -205,7 +212,7 @@
   <div class="max-w-md mx-auto px-4 py-16 lg:py-24">
     <h1 class="text-2xl font-bold text-gray-900 text-center mb-2">Iniciar Sesión</h1>
     <p class="text-gray-500 text-center text-sm mb-8">Ingresá a tu cuenta para ver tus pedidos</p>
-    <% if (error) { %><div class="p-3 mb-4 bg-red-50 border border-red-200 rounded-xl text-red-600 text-sm"><%= error %></div><% } %>
+    <% if (_err) { %><div class="p-3 mb-4 bg-red-50 border border-red-200 rounded-xl text-red-600 text-sm"><%= _err %></div><% } %>
     <form method="POST" action="/customer/<%= store.slug %>/login" class="space-y-4">
       <input type="email" name="email" required placeholder="Email" class="w-full px-4 py-3 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-gray-900">
       <input type="password" name="password" required placeholder="Contraseña" class="w-full px-4 py-3 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-gray-900">
@@ -219,7 +226,7 @@
   <div class="max-w-md mx-auto px-4 py-16 lg:py-24">
     <h1 class="text-2xl font-bold text-gray-900 text-center mb-2">Crear Cuenta</h1>
     <p class="text-gray-500 text-center text-sm mb-8">Registrate para gestionar tus pedidos y datos</p>
-    <% if (error) { %><div class="p-3 mb-4 bg-red-50 border border-red-200 rounded-xl text-red-600 text-sm"><%= error %></div><% } %>
+    <% if (_err) { %><div class="p-3 mb-4 bg-red-50 border border-red-200 rounded-xl text-red-600 text-sm"><%= _err %></div><% } %>
     <form method="POST" action="/customer/<%= store.slug %>/registro" class="space-y-4">
       <input type="text" name="name" required placeholder="Nombre completo" class="w-full px-4 py-3 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-gray-900">
       <input type="email" name="email" required placeholder="Email" class="w-full px-4 py-3 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-gray-900">
@@ -241,7 +248,7 @@
       <a href="/customer/<%= store.slug %>/logout" class="text-sm text-red-500 hover:text-red-700">Cerrar Sesión</a>
     </div>
 
-    <% if (msg === 'ok') { %><div class="p-3 mb-6 bg-green-50 border border-green-200 rounded-xl text-green-700 text-sm">✅ Datos actualizados correctamente</div><% } %>
+    <% if (_msg === 'ok') { %><div class="p-3 mb-6 bg-green-50 border border-green-200 rounded-xl text-green-700 text-sm">✅ Datos actualizados correctamente</div><% } %>
 
     <!-- Profile Form -->
     <div class="bg-white border border-gray-100 rounded-2xl p-6 mb-8">
@@ -270,9 +277,9 @@
     <!-- Order History -->
     <div class="bg-white border border-gray-100 rounded-2xl p-6">
       <h2 class="text-lg font-semibold text-gray-900 mb-4">Mis Pedidos</h2>
-      <% if ((orders || []).length > 0) { %>
+      <% if ((_ords || []).length > 0) { %>
         <div class="space-y-3">
-          <% orders.forEach(o => { %>
+          <% _ords.forEach(o => { %>
             <div class="p-4 border border-gray-100 rounded-xl">
               <div class="flex items-center justify-between mb-2">
                 <span class="text-sm font-medium text-gray-900">#<%= o.id.slice(0, 8) %></span>

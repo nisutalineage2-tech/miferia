@@ -9,6 +9,7 @@ const isShop = page === 'shop';
 const isProduct = page === 'product';
 const isCart = page === 'cart';
 const isCheckout = page === 'checkout';
+const isCategory = page === 'category';
 %><!DOCTYPE html>
 <html lang="es">
 <head>
@@ -103,7 +104,7 @@ h1,h2,h3,h4,h5,h6{font-family:'Nunito',sans-serif;font-weight:700;color:var(--ti
   <% } else if (isCheckout) { %>
     <%- include('../../partials/_checkout', { cartItems, cartTotal, store, storeBaseUrl, locals }); %>
   <% } else { %>
-    <%- include('../../partials/_page_content', { page, store, storeBaseUrl, categories, products, featured, combos, query, priceRange, filterData, customer, orders, error, msg, locals }); %>
+    <%- include('../../partials/_page_content', { page, store, storeBaseUrl, categories, products, featured, combos, locals }); %>
   <% } %>
 </main>
 
