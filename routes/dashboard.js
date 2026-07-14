@@ -500,37 +500,53 @@ router.post('/editor', ensureStore, (req, res) => {
     if (url && url.trim()) heroImages.push(url.trim());
   }
 
-  // Filter settings
-  const filterSettings = {};
+  // Filter settings — only set if any filter_* fields are actually in the body
+  let filterSettings = null;
   const filterDefs = ['categories','price_range','search','sort','brands','colors_sizes','gender','free_shipping'];
-  filterDefs.forEach(k => {
-    filterSettings[k] = req.body['filter_' + k] === 'on';
-  });
+  const hasFilterFields = filterDefs.some(k => req.body['filter_' + k] !== undefined);
+  if (hasFilterFields) {
+    filterSettings = {};
+    filterDefs.forEach(k => {
+      filterSettings[k] = req.body['filter_' + k] === 'on';
+    });
+  }
 
-  // Also save store-level fields from the unified editor
-  const storeUpdate = {
-    template: req.body.template || 'template1',
-    name: req.body.name || '',
-    description: req.body.description || '',
-    about_text: req.body.about_text || '',
-    logo: req.body.brand_logo || null,
-    banner: req.body.banner || null,
-    primary_color: req.body.primary_color || '#4f46e5',
-    accent_color: req.body.accent_color || '#e5e7eb',
-    whatsapp: req.body.social_whatsapp || '',
-    instagram: req.body.social_instagram || '',
-    facebook: req.body.social_facebook || '',
-  };
+  // If _partial=template flag was sent (from switchTemplate), do a minimal update
+  const isPartialTemplate = req.body._partial === 'template';
 
-  // If only template was sent (from switchTemplate), do a partial update
-  const bodyKeys = Object.keys(req.body);
-  const onlyTemplate = bodyKeys.length === 1 && bodyKeys[0] === 'template';
-
-  if (onlyTemplate) {
-    db.prepare('UPDATE stores SET template = ? WHERE id = ?').run(storeUpdate.template, req.session.storeId);
+  if (isPartialTemplate) {
+    const tmpl = req.body.template || 'template1';
+    db.prepare('UPDATE stores SET template = ? WHERE id = ?').run(tmpl, req.session.storeId);
   } else {
-    // Merge with existing data to preserve fields not in the current form section
+    // Full save: always merge with existing DB data to preserve fields not in the current form section
     const current = db.prepare('SELECT * FROM stores WHERE id = ?').get(req.session.storeId);
+
+    // Read current DB values as defaults — only overwrite with submitted values
+    const cName = current ? current.name : '';
+    const cDescription = current ? current.description : '';
+    const cAbout = current ? current.about_text : '';
+    const cLogo = current ? current.logo : null;
+    const cBanner = current ? current.banner : null;
+    const cPrimary = current ? current.primary_color : '#4f46e5';
+    const cAccent = current ? current.accent_color : '#e5e7eb';
+    const cWhatsapp = current ? current.whatsapp : '';
+    const cInstagram = current ? current.instagram : '';
+    const cFacebook = current ? current.facebook : '';
+    const cTemplate = current ? current.template : 'template1';
+
+    // Only use submitted value if the field was actually present in the form body
+    const has = (key) => req.body[key] !== undefined && req.body[key] !== null;
+    const finalName = has('name') ? req.body.name : cName;
+    const finalDescription = has('description') ? req.body.description : cDescription;
+    const finalAbout = has('about_text') ? req.body.about_text : cAbout;
+    const finalLogo = has('brand_logo') ? (req.body.brand_logo || null) : cLogo;
+    const finalBanner = has('banner') ? (req.body.banner || null) : cBanner;
+    const finalPrimary = has('primary_color') ? (req.body.primary_color || '#4f46e5') : cPrimary;
+    const finalAccent = has('accent_color') ? (req.body.accent_color || '#e5e7eb') : cAccent;
+    const finalWhatsapp = has('social_whatsapp') ? req.body.social_whatsapp : cWhatsapp;
+    const finalInstagram = has('social_instagram') ? req.body.social_instagram : cInstagram;
+    const finalFacebook = has('social_facebook') ? req.body.social_facebook : cFacebook;
+    const finalTemplate = has('template') ? (req.body.template || cTemplate) : cTemplate;
 
     // Preserve hero_images if not submitted (carousel section collapsed)
     const finalHeroImages = heroImages.length > 0 ? heroImages : (current ? JSON.parse(current.hero_images || '[]') : []);
@@ -541,24 +557,17 @@ router.post('/editor', ensureStore, (req, res) => {
       try {
         const existingTheme = JSON.parse(current.theme_settings || '{}');
         finalTheme = { ...existingTheme, ...theme };
-        // Deep merge colors
         if (existingTheme.colors && theme.colors) {
           finalTheme.colors = { ...existingTheme.colors, ...theme.colors };
         }
       } catch(e) {}
     }
 
-    // Preserve fields that might not be in the form
-    const finalLogo = storeUpdate.logo || (current ? current.logo : null);
-    const finalBanner = storeUpdate.banner || (current ? current.banner : null);
-    const finalDescription = storeUpdate.description || (current ? current.description : '');
-    const finalAbout = storeUpdate.about_text || (current ? current.about_text : '');
-    const finalWhatsApp = storeUpdate.whatsapp !== undefined ? storeUpdate.whatsapp : (current ? current.whatsapp : '');
-    const finalInstagram = storeUpdate.instagram !== undefined ? storeUpdate.instagram : (current ? current.instagram : '');
-    const finalFacebook = storeUpdate.facebook !== undefined ? storeUpdate.facebook : (current ? current.facebook : '');
+    // Merge filter_settings: preserve existing if not in form
+    const finalFilter = filterSettings || (current ? (current.filter_settings || {}) : {});
 
     db.prepare('UPDATE stores SET theme_settings = ?, advanced_css = ?, template = ?, name = ?, description = ?, about_text = ?, logo = ?, banner = ?, primary_color = ?, accent_color = ?, whatsapp = ?, instagram = ?, facebook = ?, filter_settings = ?, hero_images = ? WHERE id = ?')
-      .run(JSON.stringify(finalTheme), advanced_css || '', storeUpdate.template, storeUpdate.name, finalDescription, finalAbout, finalLogo, finalBanner, storeUpdate.primary_color, storeUpdate.accent_color, finalWhatsApp, finalInstagram, finalFacebook, JSON.stringify(filterSettings), JSON.stringify(finalHeroImages), req.session.storeId);
+      .run(JSON.stringify(finalTheme), advanced_css || (current ? current.advanced_css : ''), finalTemplate, finalName, finalDescription, finalAbout, finalLogo, finalBanner, finalPrimary, finalAccent, finalWhatsapp, finalInstagram, finalFacebook, JSON.stringify(finalFilter), JSON.stringify(finalHeroImages), req.session.storeId);
   }
 
   res.redirect('/dashboard/editor');

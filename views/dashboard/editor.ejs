@@ -309,10 +309,14 @@
 
 <script>
 let previewTimer;
+let saveTimer;
 let pendingTemplate = null;
+let templateSwitching = false;
 
 function switchTemplate(val) {
   pendingTemplate = val;
+  templateSwitching = true;
+  clearTimeout(saveTimer);
   document.querySelectorAll('[onclick^="switchTemplate"]').forEach(el => {
     el.classList.remove('border-indigo-500', 'ring-2', 'ring-indigo-500/30');
     el.classList.add('border-gray-700/50');
@@ -325,8 +329,9 @@ function switchTemplate(val) {
   }
   clearTimeout(previewTimer);
   previewTimer = setTimeout(async () => {
-    await fetch('/dashboard/editor', { method: 'POST', body: new URLSearchParams({ template: val }), headers: { 'Content-Type': 'application/x-www-form-urlencoded' } });
+    await fetch('/dashboard/editor', { method: 'POST', body: new URLSearchParams({ template: val, _partial: 'template' }), headers: { 'Content-Type': 'application/x-www-form-urlencoded' } });
     refreshPreview();
+    setTimeout(() => { templateSwitching = false; }, 1500);
   }, 300);
 }
 
@@ -342,8 +347,9 @@ async function refreshPreview() {
 }
 
 function scheduleSave() {
-  clearTimeout(previewTimer);
-  previewTimer = setTimeout(async () => {
+  if (templateSwitching) return;
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(async () => {
     const form = document.getElementById('editorForm');
     if (!form) return;
     const fd = new FormData(form);
