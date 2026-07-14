@@ -21,37 +21,14 @@
       <% if (cur === 'plantilla') { %>
         <p class="text-xs text-gray-500 mb-3">Elegí la plantilla para tu tienda</p>
         <% const tmpls = [
-          { v:'template1', label:'Elegance', desc:'Clásico refinado' },
-          { v:'template2', label:'Minimal', desc:'Limpio y moderno' },
-          { v:'template3', label:'Vibrant', desc:'Colores vivos' },
-          { v:'template4', label:'Dark', desc:'Estilo oscuro' },
-          { v:'template5', label:'Nature', desc:'Verde orgánico' },
-          { v:'template6', label:'Soft', desc:'Pastel suave' },
-          { v:'template7', label:'Sport', desc:'Energía dinámica' },
-          { v:'template8', label:'Luxury', desc:'Oro y elegancia' },
-          { v:'template9', label:'Friendly', desc:'Amigable acogedor' },
-          { v:'template10', label:'Bold', desc:'Audaz moderno' },
-          { v:'template11', label:'Calm', desc:'Sereno relajante' },
-          { v:'template12', label:'Tech', desc:'Futurista digital' },
-          { v:'template13', label:'Warm', desc:'Cálido hogareño' },
-          { v:'template14', label:'Cool', desc:'Azul fresco' },
-          { v:'template15', label:'Urban', desc:'Urbano contemporáneo' },
-          { v:'template16', label:'Playful', desc:'Divertido creativo' },
-          { v:'template17', label:'Clean', desc:'Blanco impecable' },
-          { v:'template18', label:'Rustic', desc:'Rústico natural' },
-          { v:'template19', label:'Neon', desc:'Neón vibrante' },
-          { v:'template20', label:'Zen', desc:'Equilibrio armonía' },
-          { v:'template21', label:'Royal', desc:'Azul profundo' },
-          { v:'template22', label:'Sweet', desc:'Dulce rosado' },
-          { v:'template23', label:'Metal', desc:'Gris industrial' },
-          { v:'template24', label:'Ocean', desc:'Azul marino' },
-          { v:'template25', label:'Sunset', desc:'Naranja atardecer' },
-          { v:'template26', label:'Forest', desc:'Verde bosque' },
-          { v:'template27', label:'Gold', desc:'Dorado elegante' },
-          { v:'template28', label:'Silver', desc:'Plateado moderno' },
-          { v:'template29', label:'Coral', desc:'Coral tropical' },
-          { v:'template30', label:'Lavender', desc:'Lavanda suave' },
-          { v:'template31', label:'Beauty', desc:'Inspirado en BeautyWeb' }
+          { v:'template1', label:'Minimal', desc:'Ultra limpio, whitespace masivo' },
+          { v:'template2', label:'Bold', desc:'Editorial, menu fullscreen' },
+          { v:'template3', label:'Luxury', desc:'Dark premium, dorado, serif' },
+          { v:'template4', label:'Fresh', desc:'Organico, bordes redondos' },
+          { v:'template5', label:'Urban', desc:'Industrial, diagonal, neon' },
+          { v:'template6', label:'Retro', desc:'Pop colorido, animaciones' },
+          { v:'template7', label:'Elegant', desc:'Clasico serif, decorativo' },
+          { v:'template8', label:'Glass', desc:'Glassmorphism, futuristic' }
         ]; const curTmpl = store.template || 'template1'; %>
         <div class="grid grid-cols-3 gap-2">
           <% tmpls.forEach(tm => { %>
