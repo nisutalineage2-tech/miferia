@@ -46,8 +46,6 @@ h1,h2,h3,h4,h5,h6{font-family:'Poppins',sans-serif;font-weight:600;color:var(--t
 .product-card h3{color:var(--title);font-weight:500}
 .product-card span[style*="price"]{background:linear-gradient(135deg,var(--primary),#a78bfa);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
 .glass-nav{background:rgba(15,12,41,0.7);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border-bottom:1px solid rgba(255,255,255,0.06)}
-.gradient-mesh{position:relative;overflow:hidden}
-.gradient-mesh::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 20% 30%,rgba(102,126,234,0.2) 0%,transparent 50%),radial-gradient(circle at 80% 70%,rgba(118,75,162,0.15) 0%,transparent 50%),radial-gradient(circle at 50% 50%,rgba(168,85,247,0.08) 0%,transparent 60%);pointer-events:none}
 @keyframes float-up{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
 @keyframes shimmer{0%{background-position:-200% 0}100%{background-position:200% 0}}
 .float-anim{animation:float-up 4s ease-in-out infinite}
@@ -79,19 +77,6 @@ h1,h2,h3,h4,h5,h6{font-family:'Poppins',sans-serif;font-weight:600;color:var(--t
 
 <main>
   <% if (isHome) { %>
-    <!-- Glass Hero -->
-    <div class="gradient-mesh py-16 lg:py-24 px-4 text-center relative">
-      <div class="max-w-3xl mx-auto">
-        <div class="glass p-8 lg:p-12 inline-block mx-auto float-anim" style="min-width:280px">
-          <h1 class="text-4xl lg:text-6xl font-bold mb-4" style="background:linear-gradient(135deg,#fff,var(--primary));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text"><%=store.name%></h1>
-          <p class="text-sm lg:text-base mb-8 max-w-md mx-auto" style="color:rgba(255,255,255,0.5)"><%=store.description%></p>
-          <div class="flex flex-wrap justify-center gap-4">
-            <a href="<%=storeBaseUrl%>/tienda" class="btn-primary">Explorar</a>
-            <% if (store.whatsapp) { %><a href="https://wa.me/<%=store.whatsapp%>" class="glass inline-flex items-center px-6 py-3 text-sm font-medium" style="color:#fff;text-decoration:none;border-radius:12px">WhatsApp</a><% } %>
-          </div>
-        </div>
-      </div>
-    </div>
     <%- include('../../partials/_banner_carousel', { heroImages, store, storeBaseUrl }); %>
     <%- include('../../partials/_home_content', { store, storeBaseUrl, categories, products, featured, combos, locals }); %>
   <% } else if (isCategory) { %>

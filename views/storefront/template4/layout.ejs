@@ -42,8 +42,6 @@ h1,h2,h3,h4,h5,h6{font-family:'Nunito',sans-serif;font-weight:700;color:var(--ti
 .product-card .aspect-square{border-radius:999px 999px 0 0}
 .product-card h3{font-weight:600;font-size:0.9rem}
 .product-card .p-3{padding:1rem 1.25rem!important}
-.fresh-hero{background:linear-gradient(135deg,var(--primary) 0%,#e8f0e0 50%,var(--bg) 100%);position:relative;overflow:hidden}
-.fresh-hero::before{content:'';position:absolute;top:-50%;left:-50%;width:200%;height:200%;background:radial-gradient(circle at 30% 40%,rgba(90,114,71,0.08) 0%,transparent 50%);pointer-events:none}
 .rounded-card{background:rgba(255,255,255,0.7);backdrop-filter:blur(10px);border-radius:999px}
 .leaf-deco{position:absolute;width:120px;height:120px;border-radius:50%;background:radial-gradient(circle,var(--primary) 0%,transparent 70%);opacity:0.08;pointer-events:none}
 .nav-pill{background:rgba(90,114,71,0.08);backdrop-filter:blur(8px);border:1px solid rgba(90,114,71,0.1);border-radius:999px}
@@ -73,19 +71,6 @@ h1,h2,h3,h4,h5,h6{font-family:'Nunito',sans-serif;font-weight:700;color:var(--ti
 
 <main>
   <% if (isHome) { %>
-    <!-- Fresh Hero -->
-    <div class="fresh-hero pt-10 pb-0">
-      <div class="leaf-deco" style="top:10%;right:5%"></div>
-      <div class="leaf-deco" style="bottom:20%;left:10%;width:80px;height:80px"></div>
-      <div class="max-w-4xl mx-auto px-6 py-16 lg:py-24 text-center relative z-10">
-        <h1 class="text-5xl lg:text-7xl font-extrabold mb-4" style="color:var(--title);line-height:1.1"><%=store.name%></h1>
-        <p class="text-lg lg:text-xl mb-8 max-w-xl mx-auto opacity-70 font-light"><%=store.description%></div>
-        <a href="<%=storeBaseUrl%>/tienda" class="btn-primary">Explorar productos</a>
-      </div>
-      <svg class="w-full h-auto" viewBox="0 0 1200 80" preserveAspectRatio="none" style="display:block">
-        <path d="M0,40 C300,80 600,0 1200,40 L1200,80 L0,80 Z" fill="var(--bg)"></path>
-      </svg>
-    </div>
     <%- include('../../partials/_banner_carousel', { heroImages, store, storeBaseUrl }); %>
     <%- include('../../partials/_home_content', { store, storeBaseUrl, categories, products, featured, combos, locals }); %>
   <% } else if (isCategory) { %>

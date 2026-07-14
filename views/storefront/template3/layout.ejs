@@ -43,8 +43,6 @@ h1,h2,h3,h4,h5,h6{font-family:'Playfair Display',serif;font-weight:600;color:var
 .product-card:hover img{filter:brightness(1);transform:scale(1.03)}
 .product-card .p-3{background:#111}
 .product-card h3{color:var(--title)}
-.dark-hero{position:relative;background:linear-gradient(180deg,var(--bg) 0%,#111 50%,var(--bg) 100%);overflow:hidden}
-.dark-hero::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 50% 50%,rgba(212,165,116,0.06) 0%,transparent 70%);pointer-events:none}
 .border-gold{border-color:rgba(212,165,116,0.25)}
 @keyframes fadeInUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
 .animate-fade-in{animation:fadeInUp 0.8s ease-out forwards}
@@ -74,16 +72,6 @@ h1,h2,h3,h4,h5,h6{font-family:'Playfair Display',serif;font-weight:600;color:var
 
 <main>
   <% if (isHome) { %>
-    <!-- Luxury Hero -->
-    <div class="dark-hero">
-      <div class="max-w-7xl mx-auto px-4 lg:px-8 py-20 lg:py-32 text-center relative z-10">
-        <h1 class="text-5xl lg:text-7xl mb-6 animate-fade-in" style="font-family:'Playfair Display',serif;color:var(--title);font-weight:600"><%=store.name%></h1>
-        <p class="text-lg mb-10 max-w-xl mx-auto animate-fade-in" style="color:var(--text);opacity:0.7;animation-delay:0.2s"><%=store.description%></p>
-        <div class="animate-fade-in" style="animation-delay:0.4s">
-          <a href="<%=storeBaseUrl%>/tienda" class="btn-primary">Explorar Colección</a>
-        </div>
-      </div>
-    </div>
     <%- include('../../partials/_banner_carousel', { heroImages, store, storeBaseUrl }); %>
     <%- include('../../partials/_home_content', { store, storeBaseUrl, categories, products, featured, combos, locals }); %>
   <% } else if (isCategory) { %>
