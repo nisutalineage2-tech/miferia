@@ -384,7 +384,7 @@ for (let i = 0; i < 5; i++) {
     if (this.files?.[0]) {
       const fd = new FormData(); fd.append('file', this.files[0]); fd.append('store_id', '<%= store.id %>');
       fetch('/api/upload/logo', { method: 'POST', body: fd }).then(r => r.json()).then(d => {
-        if (d.url) { document.getElementById('heroUrl' + i).value = d.url; document.getElementById('heroPreview' + i).innerHTML = `<img src="${d.url}" class="w-full h-full object-cover">`; refreshPreview(); }
+        if (d.url) { document.getElementById('heroUrl' + i).value = d.url; document.getElementById('heroPreview' + i).innerHTML = `<img src="${d.url}" class="w-full h-full object-cover">`; scheduleSave(); }
       });
     }
   });
